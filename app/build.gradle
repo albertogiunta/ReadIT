@@ -1,0 +1,61 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    kapt { generateStubs = true }
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "com.jaus.albertogiunta.readit"
+        minSdkVersion 21
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    // utility
+//    implementation "com.chibatching.kotpref:kotpref:2.2.0"
+//    implementation "com.chibatching.kotpref:gson-support:2.2.0"
+//    implementation 'com.google.code.gson:gson:2.8.1'
+    implementation "net.danlew:android.joda:$joda_version"
+    implementation "org.jetbrains.anko:anko-commons:$anko_version"
+    implementation "org.jetbrains.anko:anko-sdk25:$anko_version"
+
+    // room
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    implementation "android.arch.persistence.room:rxjava2:$room_version"
+    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
+    kapt "android.arch.persistence.room:compiler:$room_version"
+
+    // rxJava
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+
+    // networking
+//    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+//    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+//    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+
+    // design
+    implementation "com.android.support:recyclerview-v7:$recyclerview_version"
+    implementation "com.android.support.constraint:constraint-layout:$contraintlayout_version"
+
+    // tests
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "com.android.support.test:runner:$runner_version"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
+}
