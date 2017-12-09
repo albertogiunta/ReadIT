@@ -1,9 +1,9 @@
 package com.jaus.albertogiunta.readit.db
 
-import android.arch.persistence.room.BuildConfig
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
+import com.jaus.albertogiunta.readit.BuildConfig
 import com.jaus.albertogiunta.readit.model.Link
 
 @Database(entities = arrayOf(Link::class), version = 1, exportSchema = false)

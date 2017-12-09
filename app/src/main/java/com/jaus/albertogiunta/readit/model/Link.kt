@@ -11,4 +11,9 @@ data class Link(@PrimaryKey(autoGenerate = true)
                 var url: String = "",
                 var timestamp: DateTime = DateTime.now(),
                 var seen: Boolean = false
-)
+) {
+
+    companion object {
+        val EMPTY_LINK = ""
+    }
+}

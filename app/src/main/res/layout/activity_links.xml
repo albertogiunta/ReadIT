@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.jaus.albertogiunta.readit.main.LinksActivity"
+        tools:context=".viewPresenter.main.LinksActivity"
         >
 
 
@@ -20,18 +20,34 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp"
             android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/btnAddLink"
+            app:layout_constraintBottom_toTopOf="@+id/btnAddLinkManually"
             />
     <Button
-            android:text="Add Link"
+            android:text="Add Link Manually"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnAddLink"
+            android:id="@+id/btnAddLinkManually"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp"
+            app:layout_constraintHorizontal_bias="0.0"
             />
+    <Button
+            android:text="Add From Clipboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnAddLinkFromClipboard"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintHorizontal_bias="1.0"
+            />
+
+
 </android.support.constraint.ConstraintLayout>

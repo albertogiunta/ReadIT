@@ -22,7 +22,7 @@ class MyApplication: Application() {
 
         // setup database
         if (IS_DB_DEBUG_ACTIVE) this.deleteDatabase(DB_NAME)
-        database = Room.databaseBuilder(this, AppDatabase::class.java, DB_NAME).allowMainThreadQueries().build()
+        database = Room.databaseBuilder(this, AppDatabase::class.java, DB_NAME).build()
         doAsync {
             if (IS_DB_DEBUG_ACTIVE) database.linkDao().deleteAll()
         }

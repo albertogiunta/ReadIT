@@ -34,6 +34,8 @@ dependencies {
     implementation "net.danlew:android.joda:$joda_version"
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
     implementation "org.jetbrains.anko:anko-sdk25:$anko_version"
+    implementation "org.jetbrains.anko:anko-design:$anko_version" // For SnackBars
+
 
     // room
     implementation "android.arch.persistence.room:runtime:$room_version"

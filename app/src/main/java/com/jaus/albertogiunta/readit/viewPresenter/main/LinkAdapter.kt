@@ -1,4 +1,4 @@
-package com.jaus.albertogiunta.readit.main
+package com.jaus.albertogiunta.readit.viewPresenter.main
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -19,7 +19,10 @@ class LinkAdapter(val items: List<Link>): RecyclerView.Adapter<LinkAdapter.LinkV
     class LinkViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         fun bind(itemLink: Link) {
-            itemView.tvUrl.text = itemLink.url
+            with(itemView) {
+                tvTitle.text = itemLink.title
+                tvUrl.text = itemLink.url
+            }
         }
 
     }
