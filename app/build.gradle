@@ -25,12 +25,12 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
     // utility
 //    implementation "com.chibatching.kotpref:kotpref:2.2.0"
 //    implementation "com.chibatching.kotpref:gson-support:2.2.0"
-//    implementation 'com.google.code.gson:gson:2.8.1'
+    implementation "com.google.code.gson:gson:$gson_version"
     implementation "net.danlew:android.joda:$joda_version"
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
     implementation "org.jetbrains.anko:anko-sdk25:$anko_version"
@@ -45,10 +45,14 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
 
-    // networking
-//    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-//    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-//    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+//     networking
+    implementation ("com.squareup.retrofit2:retrofit:$retrofit_version") { exclude module: 'okhttp' }
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+    implementation "org.jsoup:jsoup:$jsoup_version"
+
 
     // design
     implementation "com.android.support:recyclerview-v7:$recyclerview_version"
