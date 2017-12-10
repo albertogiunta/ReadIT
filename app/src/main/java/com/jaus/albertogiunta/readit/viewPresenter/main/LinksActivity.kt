@@ -4,13 +4,20 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.widget.EditText
+import android.view.View
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.jaus.albertogiunta.readit.R
+import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.utils.SystemUtils
 import com.jaus.albertogiunta.readit.viewPresenter.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_links.*
-import org.jetbrains.anko.*
+import kotlinx.android.synthetic.main.dialog_manual_input.view.*
+import kotlinx.android.synthetic.main.item_link.view.*
+import org.jetbrains.anko.browse
+import org.jetbrains.anko.indeterminateProgressDialog
+
+
 
 
 class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), LinksContract.View {
@@ -27,9 +34,9 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
 
         // UI initialization
         rvLinks.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
-        rvLinks.adapter = LinkAdapter(presenter.linkList)
+        rvLinks.adapter = LinkAdapter(presenter.linkList, itemOnClick, itemOnLongClick)
 
-        btnAddLinkManually.setOnClickListener { getLinkURLWithManualInput() }
+        btnAddLinkManually.setOnClickListener { getLinkURLWithManualInput(Link.EMPTY_LINK) }
         btnAddLinkFromClipboard.setOnClickListener { getLinkURLFromClipboard() }
 
         getLinkURLFromIntent()
@@ -49,21 +56,21 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         presenter.onLinkAdditionRequest(url)
     }
 
-    private fun getLinkURLWithManualInput() {
-        alert {
-            customView {
-                var et: EditText? = null
-                verticalLayout {
-                    et = editText {
-                        hint = "Write your link HERE"
-                    }
-                }
-                positiveButton("Add") {
-                    addLink(et?.text.toString())
-                }
-                negativeButton("Cancel") {}
-            }
-        }.show()
+    private fun getLinkURLWithManualInput(url: String = Link.EMPTY_LINK) {
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.dialog_manual_input, null)
+        val builder = AlertDialog.Builder(getContext())
+
+        if (url != Link.EMPTY_LINK) dialogView.etUrl.setText(url, TextView.BufferType.EDITABLE)
+
+        val dialog = builder.setTitle("Put a new link inside of me")
+                .setView(dialogView)
+                .setPositiveButton("Add", { _, _ -> addLink(dialogView.etUrl.text.toString()) })
+                .setNeutralButton("Copy from clipboard", { _, _ -> getLinkURLFromClipboard() })
+                .setNegativeButton("Cancel", { _, _ -> })
+                .create()
+
+        dialog.show()
     }
 
     private fun getLinkURLFromClipboard() {
@@ -76,5 +83,13 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
                 getStringExtra(Intent.EXTRA_TEXT)?.let { addLink(it) }
             }
         }
+    }
+
+    val itemOnClick: (View, Int, Int) -> Unit = { view, position, type ->
+        browse(view.tvUrl.text.toString())
+    }
+
+    val itemOnLongClick: (View, Int, Int) -> Unit = { view, position, type ->
+        getLinkURLWithManualInput(view.tvUrl.text.toString())
     }
 }

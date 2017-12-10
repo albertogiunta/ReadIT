@@ -30,10 +30,10 @@ dependencies {
     // utility
 //    implementation "com.chibatching.kotpref:kotpref:2.2.0"
 //    implementation "com.chibatching.kotpref:gson-support:2.2.0"
-    implementation "com.google.code.gson:gson:$gson_version"
+//    implementation "com.google.code.gson:gson:$gson_version"
     implementation "net.danlew:android.joda:$joda_version"
-    implementation "org.jetbrains.anko:anko-commons:$anko_version"
-    implementation "org.jetbrains.anko:anko-sdk25:$anko_version"
+//    implementation "org.jetbrains.anko:anko-commons:$anko_version"
+//    implementation "org.jetbrains.anko:anko-sdk25:$anko_version"
     implementation "org.jetbrains.anko:anko-design:$anko_version" // For SnackBars
 
 
@@ -49,7 +49,7 @@ dependencies {
 
 //     networking
     implementation ("com.squareup.retrofit2:retrofit:$retrofit_version") { exclude module: 'okhttp' }
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+//    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"

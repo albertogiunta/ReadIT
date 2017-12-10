@@ -6,7 +6,6 @@ import android.content.Context
 object SystemUtils {
 
     fun getURLFromClipboard(context: Context): String {
-        saveURLToClipboard(context)
         val clipboard = context.clipboard()
         return clipboard.primaryClip.getItemAt(0).text.toString()
     }
@@ -16,6 +15,5 @@ object SystemUtils {
         val clip = ClipData.newPlainText("url", url)
         context.clipboard().primaryClip = clip
     }
-
 
 }
