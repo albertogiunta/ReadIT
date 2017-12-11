@@ -18,7 +18,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
 
     init {
         doAsync {
-            linkList.addAll(dao.getAllLinks())
+            linkList.addAll(dao.getAllLinksFromMostRecent())
         }
     }
 
@@ -33,7 +33,22 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
                     run {
                         val htmlPage = result.toJsoupDocument()
                         Link(title = htmlPage.title(), url = url).addTo(dao, linkList)
-                        view?.updateLinkListUI()
+
+                        // FAVICON
+//                        var faviconUri = htmlPage.head().select("link[href~=.*\\.ico]").first().attr("href").replace(Regex("^/+"), "")
+//                        if (!faviconUri.contains("www")) faviconUri = "$url$faviconUri"
+//                        println("uriiiii   $faviconUri")
+
+                        /**
+                         * strategies:
+                         * 1) baseurl/favicon.ico
+                         * 2) if failed search with regex for .ico file uri, remove leading // (but note that it doesn't always work
+                         * 3) display placeholder instead of favicon
+                         */
+
+
+                        view?.updateLinkListUI("")
+
                     }
                 }, { error -> println(error) }
                 )

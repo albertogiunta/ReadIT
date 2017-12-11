@@ -58,5 +58,5 @@ fun ResponseBody.toJsoupDocument(): Document {
  */
 fun Link.addTo(dao: LinkDao, linkList: MutableList<Link>) {
     doAsync { dao.insert(this@addTo) }
-    linkList.add(this@addTo)
+    linkList.add(0, this@addTo)
 }

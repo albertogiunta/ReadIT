@@ -6,8 +6,8 @@ import com.jaus.albertogiunta.readit.model.Link
 @Dao
 interface LinkDao {
 
-    @Query("SELECT * FROM link")
-    fun getAllLinks(): List<Link>
+    @Query("SELECT * FROM link ORDER BY id DESC")
+    fun getAllLinksFromMostRecent(): List<Link>
 
     @Insert
     fun insert(vararg repos: Link)

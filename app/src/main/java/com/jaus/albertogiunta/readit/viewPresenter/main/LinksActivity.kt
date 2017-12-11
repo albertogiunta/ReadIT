@@ -11,13 +11,12 @@ import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.utils.SystemUtils
 import com.jaus.albertogiunta.readit.viewPresenter.base.BaseActivity
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_links.*
 import kotlinx.android.synthetic.main.dialog_manual_input.view.*
 import kotlinx.android.synthetic.main.item_link.view.*
 import org.jetbrains.anko.browse
 import org.jetbrains.anko.indeterminateProgressDialog
-
-
 
 
 class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), LinksContract.View {
@@ -29,16 +28,23 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_links)
 
-        urlFetchingWaitDialog = indeterminateProgressDialog(message = "Imma fetch all the info for ya", title = "Noice, you got a new link!")
-        urlFetchingWaitDialog.cancel()
-
         // UI initialization
-        rvLinks.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
-        rvLinks.adapter = LinkAdapter(presenter.linkList, itemOnClick, itemOnLongClick)
+        val itemOnClick: (View, Int, Int) -> Unit = { view, position, type -> browse(view.tvUrl.text.toString()) }
+        val itemOnLongClick: (View, Int, Int) -> Unit = { view, position, type -> getLinkURLWithManualInput(view.tvUrl.text.toString()) }
 
         btnAddLinkManually.setOnClickListener { getLinkURLWithManualInput(Link.EMPTY_LINK) }
         btnAddLinkFromClipboard.setOnClickListener { getLinkURLFromClipboard() }
 
+        // LIST initialization
+        rvLinks.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+        rvLinks.adapter = LinkAdapter(presenter.linkList, itemOnClick, itemOnLongClick)
+        updateLinkListUI("")
+
+        // DIALOG initialization
+        urlFetchingWaitDialog = indeterminateProgressDialog(message = "Imma fetch all the info for ya", title = "Noice, you got a new link!")
+        urlFetchingWaitDialog.cancel()
+
+        // INTENT initialization
         getLinkURLFromIntent()
     }
 
@@ -48,8 +54,18 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
     override fun stopLoadingState() = urlFetchingWaitDialog.cancel()
 
     //////////////////// LINK INTERACTION
-    override fun updateLinkListUI() {
-        runOnUiThread { rvLinks.adapter.notifyDataSetChanged() }
+    override fun updateLinkListUI(url: String) {
+        runOnUiThread {
+            rvLinks.adapter.notifyDataSetChanged()
+            try {
+                Picasso.with(getContext())
+                        .load(url)
+                        .into(ivFavicon)
+            } catch (e: Exception) {
+                println(e.toString())
+            }
+
+        }
     }
 
     private fun addLink(url: String) {
@@ -83,13 +99,5 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
                 getStringExtra(Intent.EXTRA_TEXT)?.let { addLink(it) }
             }
         }
-    }
-
-    val itemOnClick: (View, Int, Int) -> Unit = { view, position, type ->
-        browse(view.tvUrl.text.toString())
-    }
-
-    val itemOnLongClick: (View, Int, Int) -> Unit = { view, position, type ->
-        getLinkURLWithManualInput(view.tvUrl.text.toString())
     }
 }
