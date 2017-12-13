@@ -5,10 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.model.Link
-import com.jaus.albertogiunta.readit.utils.inflate
-import com.jaus.albertogiunta.readit.utils.onClick
-import com.jaus.albertogiunta.readit.utils.onLongClick
+import com.jaus.albertogiunta.readit.utils.*
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_link.view.*
+import org.joda.time.DateTime
+import org.joda.time.Period
 
 class LinkAdapter(private val items: List<Link>,
                   private val onClickListener: (View, Int, Int) -> Unit,
@@ -31,6 +32,17 @@ class LinkAdapter(private val items: List<Link>,
             with(itemView) {
                 tvTitle.text = itemLink.title
                 tvUrl.text = itemLink.url
+                val timeString = Period(itemLink.timestamp.plusDays(1), DateTime.now()).toHHmm()
+                tvTimeLeft.text = "$timeString left"
+
+                try {
+                    Picasso.with(context)
+                            .load("https://${SystemUtils.getHost(itemLink.url)}/favicon.ico")
+                            .placeholder(R.drawable.ic_placeholder)
+                            .into(ivFav)
+                } catch (e: Exception) {
+                    println("ERROR in PICASSO!!! $e")
+                }
             }
         }
     }

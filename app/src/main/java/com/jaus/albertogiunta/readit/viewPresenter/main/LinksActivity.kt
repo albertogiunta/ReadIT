@@ -11,7 +11,6 @@ import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.utils.SystemUtils
 import com.jaus.albertogiunta.readit.viewPresenter.base.BaseActivity
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_links.*
 import kotlinx.android.synthetic.main.dialog_manual_input.view.*
 import kotlinx.android.synthetic.main.item_link.view.*
@@ -38,7 +37,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         // LIST initialization
         rvLinks.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
         rvLinks.adapter = LinkAdapter(presenter.linkList, itemOnClick, itemOnLongClick)
-        updateLinkListUI("")
+        updateLinkListUI()
 
         // DIALOG initialization
         urlFetchingWaitDialog = indeterminateProgressDialog(message = "Imma fetch all the info for ya", title = "Noice, you got a new link!")
@@ -54,17 +53,9 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
     override fun stopLoadingState() = urlFetchingWaitDialog.cancel()
 
     //////////////////// LINK INTERACTION
-    override fun updateLinkListUI(url: String) {
+    override fun updateLinkListUI() {
         runOnUiThread {
             rvLinks.adapter.notifyDataSetChanged()
-            try {
-                Picasso.with(getContext())
-                        .load(url)
-                        .into(ivFavicon)
-            } catch (e: Exception) {
-                println(e.toString())
-            }
-
         }
     }
 

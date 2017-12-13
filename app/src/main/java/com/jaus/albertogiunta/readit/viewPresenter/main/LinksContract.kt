@@ -11,7 +11,7 @@ object LinksContract {
 
         fun stopLoadingState()
 
-        fun updateLinkListUI(url: String)
+        fun updateLinkListUI()
     }
 
     interface Presenter : BasePresenter<View> {

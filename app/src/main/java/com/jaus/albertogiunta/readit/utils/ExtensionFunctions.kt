@@ -10,8 +10,11 @@ import com.jaus.albertogiunta.readit.db.LinkDao
 import com.jaus.albertogiunta.readit.model.Link
 import okhttp3.ResponseBody
 import org.jetbrains.anko.doAsync
+import org.joda.time.Period
+import org.joda.time.format.PeriodFormatterBuilder
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+
 
 /**
  * VIEWS
@@ -59,4 +62,16 @@ fun ResponseBody.toJsoupDocument(): Document {
 fun Link.addTo(dao: LinkDao, linkList: MutableList<Link>) {
     doAsync { dao.insert(this@addTo) }
     linkList.add(0, this@addTo)
+}
+
+fun Period.toHHmm(): String {
+    val retVal = PeriodFormatterBuilder()
+            .printZeroNever()
+            .appendHours()
+            .appendSuffix("h")
+            .appendSeparator(" ")
+            .appendMinutes()
+            .appendSuffix("m")
+            .toFormatter()
+    return retVal.print(this)
 }

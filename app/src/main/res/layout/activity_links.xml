@@ -9,10 +9,10 @@
         >
 
     <ImageView
-            android:src="@color/appBG"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
             android:id="@+id/ivFavicon"
+            android:src="@color/appBG"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
             app:layout_constraintBottom_toBottomOf="parent"

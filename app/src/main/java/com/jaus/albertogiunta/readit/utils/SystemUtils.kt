@@ -2,6 +2,7 @@ package com.jaus.albertogiunta.readit.utils
 
 import android.content.ClipData
 import android.content.Context
+import java.net.URL
 
 object SystemUtils {
 
@@ -15,5 +16,7 @@ object SystemUtils {
         val clip = ClipData.newPlainText("url", url)
         context.clipboard().primaryClip = clip
     }
+
+    fun getHost(url: String): String = URL(url).host
 
 }
