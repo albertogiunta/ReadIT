@@ -23,6 +23,11 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
     }
 
     override fun onLinkAdditionRequest(url: String) {
+        if (url == Link.EMPTY_LINK) {
+            view?.showError("Your link seems to be not valid :/"); return
+        }
+
+
         NetworkingFactory
                 .createService(LinkService::class.java)
                 .contactWebsite(url)
@@ -30,13 +35,13 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
                 .doOnSubscribe { view?.startLoadingState() }
                 .doAfterTerminate { view?.stopLoadingState() }
                 .subscribe({ result ->
-                    run {
-                        val htmlPage = result.toJsoupDocument()
-                        Link(title = htmlPage.title(), url = url).addTo(dao, linkList)
-                        view?.updateLinkListUI()
-                    }
-                }, { error -> println(error) }
-                )
+                    val htmlPage = result.toJsoupDocument()
+                    Link(title = htmlPage.title(), url = url).addTo(dao, linkList)
+                    view?.updateLinkListUI()
+                }, { error ->
+                    println(error)
+                    view?.showError("Your link seems to be invalid :/")
+                })
     }
 
     override fun onLinkOpeningRequest() {

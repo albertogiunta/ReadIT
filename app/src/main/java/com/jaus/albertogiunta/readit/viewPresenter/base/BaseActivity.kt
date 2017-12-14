@@ -10,7 +10,7 @@ interface BaseView {
 
     fun getContext(): Context
 
-    fun showError(error: String?)
+    fun showError(error: String)
 
     fun showError(@StringRes stringResId: Int)
 
@@ -36,7 +36,9 @@ abstract class BaseActivity<in V : BaseView, P : BasePresenter<V>> : Activity(),
 
     override fun getContext(): Context = this@BaseActivity
 
-    override fun showError(error: String?) {
+    override fun showError(error: String) {
+//        Snackbar.make(findViewById<View>(android.R.id.content).rootView, error, Snackbar.LENGTH_INDEFINITE).show()
+//        snackbar(window.decorView.rootView, error)
         Toast.makeText(this, error, Toast.LENGTH_LONG).show()
     }
 

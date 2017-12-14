@@ -11,7 +11,6 @@ import com.jaus.albertogiunta.readit.model.Link
 import okhttp3.ResponseBody
 import org.jetbrains.anko.doAsync
 import org.joda.time.Period
-import org.joda.time.format.PeriodFormatterBuilder
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
@@ -64,14 +63,18 @@ fun Link.addTo(dao: LinkDao, linkList: MutableList<Link>) {
     linkList.add(0, this@addTo)
 }
 
-fun Period.toHHmm(): String {
-    val retVal = PeriodFormatterBuilder()
-            .printZeroNever()
-            .appendHours()
-            .appendSuffix("h")
-            .appendSeparator(" ")
-            .appendMinutes()
-            .appendSuffix("m")
-            .toFormatter()
-    return retVal.print(this)
+fun Period.toCustomString(): String {
+    var time = ""
+    if (hours != 0) {
+        time += "${Math.abs(hours)} hours"
+    }
+
+    if (minutes != 0) {
+        if (hours != 0) time += " and "
+        time += "${Math.abs(minutes)} minutes"
+    }
+
+    time += " left"
+
+    return time
 }

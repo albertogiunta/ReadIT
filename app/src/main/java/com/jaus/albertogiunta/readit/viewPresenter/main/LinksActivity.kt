@@ -81,7 +81,9 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
     }
 
     private fun getLinkURLFromClipboard() {
-        addLink(SystemUtils.getURLFromClipboard(getContext()))
+        val url: String? = SystemUtils.getURLFromClipboard(getContext())
+        // i.e. url is null right after a reboot
+        if (url != null) addLink(url) else this.showError("No Link found in clipboard")
     }
 
     private fun getLinkURLFromIntent() {

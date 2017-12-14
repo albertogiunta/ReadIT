@@ -32,8 +32,7 @@ class LinkAdapter(private val items: List<Link>,
             with(itemView) {
                 tvTitle.text = itemLink.title
                 tvUrl.text = itemLink.url
-                val timeString = Period(itemLink.timestamp.plusDays(1), DateTime.now()).toHHmm()
-                tvTimeLeft.text = "$timeString left"
+                tvTimeLeft.text = Period(itemLink.timestamp.plusDays(1), DateTime.now()).toCustomString()
 
                 try {
                     Picasso.with(context)
