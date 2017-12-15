@@ -27,7 +27,6 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
             view?.showError("Your link seems to be not valid :/"); return
         }
 
-
         NetworkingFactory
                 .createService(LinkService::class.java)
                 .contactWebsite(url)

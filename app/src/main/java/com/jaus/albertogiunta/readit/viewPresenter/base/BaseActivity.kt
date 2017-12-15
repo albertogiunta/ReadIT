@@ -1,10 +1,10 @@
 package com.jaus.albertogiunta.readit.viewPresenter.base
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.support.annotation.StringRes
-import android.widget.Toast
+import android.support.v7.app.AppCompatActivity
+import org.jetbrains.anko.design.snackbar
 
 interface BaseView {
 
@@ -12,21 +12,21 @@ interface BaseView {
 
     fun showError(error: String)
 
-    fun showError(@StringRes stringResId: Int)
-
-    fun showMessage(@StringRes srtResId: Int)
+    fun showError(@StringRes errorResId: Int)
 
     fun showMessage(message: String)
 
+    fun showMessage(@StringRes messageResId: Int)
+
 }
 
-abstract class BaseActivity<in V : BaseView, P : BasePresenter<V>> : Activity(), BaseView {
+abstract class BaseActivity<in V : BaseView, P : BasePresenter<V>> : AppCompatActivity(), BaseView {
 
     protected abstract var presenter: P
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter.attachView(this as V)
+        presenter.attachView(view = this as V)
     }
 
     override fun onDestroy() {
@@ -37,21 +37,19 @@ abstract class BaseActivity<in V : BaseView, P : BasePresenter<V>> : Activity(),
     override fun getContext(): Context = this@BaseActivity
 
     override fun showError(error: String) {
-//        Snackbar.make(findViewById<View>(android.R.id.content).rootView, error, Snackbar.LENGTH_INDEFINITE).show()
-//        snackbar(window.decorView.rootView, error)
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+        snackbar(findViewById(android.R.id.content), error)
     }
 
-    override fun showError(stringResId: Int) {
-        Toast.makeText(this, stringResId, Toast.LENGTH_LONG).show()
-    }
-
-    override fun showMessage(srtResId: Int) {
-        Toast.makeText(this, srtResId, Toast.LENGTH_LONG).show()
+    override fun showError(errorResId: Int) {
+        snackbar(findViewById(android.R.id.content), errorResId)
     }
 
     override fun showMessage(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        snackbar(findViewById(android.R.id.content), message)
+    }
+
+    override fun showMessage(messageResId: Int) {
+        snackbar(findViewById(android.R.id.content), messageResId)
     }
 
 }
