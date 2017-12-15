@@ -68,6 +68,7 @@
                     android:layout_marginStart="8dp"
                     app:layout_constraintHorizontal_bias="0.0"
                     android:paddingStart="40dp"
+                    android:textSize="18sp"
                     />
             <TextView
                     android:id="@+id/tvUrl"
@@ -78,7 +79,7 @@
                     android:textStyle="italic"
                     android:textAlignment="viewStart"
                     android:paddingStart="40dp"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="8dp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -100,7 +101,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_marginBottom="8dp"
                     app:layout_constraintHorizontal_bias="0.0"
-                    android:textSize="10sp"
+                    android:textSize="14sp"
                     android:textColor="@color/cardTxtPrimary"
                     tools:text="3:17 hours left"
                     android:typeface="normal"

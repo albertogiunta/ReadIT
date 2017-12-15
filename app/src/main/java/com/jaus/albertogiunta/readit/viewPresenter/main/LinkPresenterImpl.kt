@@ -10,6 +10,7 @@ import com.jaus.albertogiunta.readit.utils.toJsoupDocument
 import com.jaus.albertogiunta.readit.viewPresenter.base.BasePresenterImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.jetbrains.anko.doAsync
+import org.joda.time.DateTime
 
 class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract.Presenter {
 
@@ -18,7 +19,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
 
     init {
         doAsync {
-            linkList.addAll(dao.getAllLinksFromMostRecent())
+            linkList.addAll(dao.getAllLinksFromMostRecent().filter { it.timestamp.isAfter(DateTime.now().minusHours(24)) })
         }
     }
 

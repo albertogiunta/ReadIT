@@ -6,48 +6,42 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".viewPresenter.main.LinksActivity"
+        android:background="@color/appBG"
         >
 
+    <Button
+            android:text="Add From Clipboard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnAddLinkFromClipboard"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/btnAddLinkManually"
+            />
+    <Button
+            android:text="Add Link Manually"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnAddLinkManually"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btnAddLinkFromClipboard"
+            app:layout_constraintHorizontal_bias="0.5"
+            />
     <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="match_parent"
             android:id="@+id/rvLinks"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/btnAddLinkManually"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
             android:background="@color/appBG"
             tools:listitem="@layout/item_link"
             android:clipChildren="false"
             android:clipToPadding="false"
-            />
-
-    <Button
-            android:text="Add Link Manually"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnAddLinkManually"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            />
-    <Button
-            android:text="Add From Clipboard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnAddLinkFromClipboard"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintBottom_toTopOf="@+id/btnAddLinkManually"
+            android:layout_marginBottom="44dp"
             />
 
 
