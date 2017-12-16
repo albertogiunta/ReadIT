@@ -1,4 +1,4 @@
-package com.jaus.albertogiunta.readit.viewPresenter.main
+package com.jaus.albertogiunta.readit.viewPresenter.linksHome
 
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.viewPresenter.base.BasePresenter

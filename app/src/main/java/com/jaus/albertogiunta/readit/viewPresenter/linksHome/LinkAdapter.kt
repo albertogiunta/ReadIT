@@ -1,4 +1,4 @@
-package com.jaus.albertogiunta.readit.viewPresenter.main
+package com.jaus.albertogiunta.readit.viewPresenter.linksHome
 
 import android.support.v7.widget.RecyclerView
 import android.view.View

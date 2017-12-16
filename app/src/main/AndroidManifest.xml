@@ -13,7 +13,7 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
             >
-        <activity android:name="com.jaus.albertogiunta.readit.viewPresenter.main.LinksActivity">
+        <activity android:name="com.jaus.albertogiunta.readit.viewPresenter.linksHome.LinksActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

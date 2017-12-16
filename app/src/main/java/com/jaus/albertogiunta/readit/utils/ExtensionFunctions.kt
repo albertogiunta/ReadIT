@@ -64,17 +64,21 @@ fun Link.addTo(dao: LinkDao, linkList: MutableList<Link>) {
 }
 
 fun Period.toCustomString(): String {
-    var time = ""
-    if (hours != 0) {
-        time += "${Math.abs(hours)} hours"
+    var timeString = ""
+    val h = Math.abs(hours)
+    val m = Math.abs(minutes)
+    if (h != 0) {
+        timeString += "$h hour"
+        if (h == 1) timeString += "s"
     }
 
-    if (minutes != 0) {
-        if (hours != 0) time += " and "
-        time += "${Math.abs(minutes)} minutes"
+    if (m != 0) {
+        if (h != 0) timeString += " and "
+        timeString += "$m minute"
+        if (m == 1) timeString += "s"
     }
 
-    time += " left"
+    timeString += " left"
 
-    return time
+    return timeString
 }

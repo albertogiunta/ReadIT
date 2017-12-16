@@ -55,7 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/tvTitle"
-                    tools:text="title"
+                    tools:text="Google Wins Trial Against Oracle, Saves $9 Billion "
                     android:visibility="visible"
                     android:textColor="@color/cardTxtPrimary"
                     android:textStyle="bold"
@@ -69,12 +69,13 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     android:paddingStart="40dp"
                     android:textSize="18sp"
+                    android:paddingEnd="16dp"
                     />
             <TextView
                     android:id="@+id/tvUrl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="url"
+                    tools:text="https://motherboard.vice.com/en_us/article/kb77gv/google-wins-trial-against-oracle-saves-9-billion"
                     android:textColor="@color/cardTxtSecondary"
                     android:textStyle="italic"
                     android:textAlignment="viewStart"
@@ -87,6 +88,7 @@
                     android:layout_marginTop="8dp"
                     app:layout_constraintTop_toBottomOf="@+id/tvTitle"
                     app:layout_constraintHorizontal_bias="0.0"
+                    android:paddingEnd="16dp"
                     />
             <TextView
                     android:layout_width="wrap_content"

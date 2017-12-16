@@ -1,4 +1,4 @@
-package com.jaus.albertogiunta.readit.viewPresenter.main
+package com.jaus.albertogiunta.readit.viewPresenter.linksHome
 
 import com.jaus.albertogiunta.readit.MyApplication
 import com.jaus.albertogiunta.readit.db.LinkDao
@@ -19,13 +19,17 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
 
     init {
         doAsync {
-            linkList.addAll(dao.getAllLinksFromMostRecent().filter { it.timestamp.isAfter(DateTime.now().minusHours(24)) })
+            if (!Link.IS_ALL_LINKS_DEBUG_ACTIVE) {
+                linkList.addAll(dao.getAllLinksFromMostRecent().filter { it.timestamp.isAfter(DateTime.now().minusHours(24)) })
+            } else {
+                linkList.addAll(dao.getAllLinksFromMostRecent())
+            }
         }
     }
 
     override fun onLinkAdditionRequest(url: String) {
         if (url == Link.EMPTY_LINK) {
-            view?.showError("Your link seems to be not valid :/"); return
+            view?.showError("Your link seems to be empty or not a valid link :/"); return
         }
 
         NetworkingFactory
@@ -40,7 +44,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
                     view?.updateLinkListUI()
                 }, { error ->
                     println(error)
-                    view?.showError("Your link seems to be invalid :/")
+                    view?.showError("Your link seems to be not a valid link :/")
                 })
     }
 

@@ -9,4 +9,10 @@
     <color name="cardBG">#2c435b</color>
     <color name="cardTxtPrimary">#FFFFFF</color>
     <color name="cardTxtSecondary">#9dadb2</color>
+
+    <color name="btnHomeAddManually">#4389c1</color>
+    <color name="btnHomeAddClipboard">#1d72a6</color>
+    <color name="btnTextPrimary">#FFFFFF</color>
+
+
 </resources>

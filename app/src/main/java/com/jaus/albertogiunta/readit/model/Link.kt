@@ -2,6 +2,7 @@ package com.jaus.albertogiunta.readit.model
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import com.jaus.albertogiunta.readit.BuildConfig
 import org.joda.time.DateTime
 
 @Entity
@@ -14,6 +15,7 @@ data class Link(@PrimaryKey(autoGenerate = true)
 ) {
 
     companion object {
+        val IS_ALL_LINKS_DEBUG_ACTIVE = if (!BuildConfig.DEBUG) BuildConfig.DEBUG else true
         val EMPTY_LINK = ""
     }
 }

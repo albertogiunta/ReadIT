@@ -1,4 +1,4 @@
-package com.jaus.albertogiunta.readit.viewPresenter.main
+package com.jaus.albertogiunta.readit.viewPresenter.linksHome
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -28,8 +28,8 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         setContentView(R.layout.activity_links)
 
         // UI initialization
-        val itemOnClick: (View, Int, Int) -> Unit = { view, position, type -> browse(view.tvUrl.text.toString()) }
-        val itemOnLongClick: (View, Int, Int) -> Unit = { view, position, type -> getLinkURLWithManualInput(view.tvUrl.text.toString()) }
+        val itemOnClick: (View, Int, Int) -> Unit = { view, _, _ -> browse(view.tvUrl.text.toString()) }
+        val itemOnLongClick: (View, Int, Int) -> Unit = { view, _, _ -> getLinkURLWithManualInput(view.tvUrl.text.toString()) }
 
         btnAddLinkManually.setOnClickListener { getLinkURLWithManualInput(Link.EMPTY_LINK) }
         btnAddLinkFromClipboard.setOnClickListener { getLinkURLFromClipboard() }
