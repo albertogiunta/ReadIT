@@ -31,8 +31,10 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         val itemOnClick: (View, Int, Int) -> Unit = { view, _, _ -> browse(view.tvUrl.text.toString()) }
         val itemOnLongClick: (View, Int, Int) -> Unit = { view, _, _ -> getLinkURLWithManualInput(view.tvUrl.text.toString()) }
 
-        btnAddLinkManually.setOnClickListener { getLinkURLWithManualInput(Link.EMPTY_LINK) }
-        btnAddLinkFromClipboard.setOnClickListener { getLinkURLFromClipboard() }
+        fabAdd.setOnClickListener { getLinkURLWithManualInput(Link.EMPTY_LINK) }
+
+//        btnAddLinkManually.setOnClickListener { getLinkURLWithManualInput(Link.EMPTY_LINK) }
+//        btnAddLinkFromClipboard.setOnClickListener { getLinkURLFromClipboard() }
 
         // LIST initialization
         rvLinks.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)

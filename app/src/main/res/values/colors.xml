@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#0D2339</color>
     <color name="colorPrimaryDark">#0D2339</color>
-    <color name="colorAccent">#FF0402</color>
+    <color name="colorAccent">#ff0402</color>
 
     <color name="appBG">#0d2339</color>
 
@@ -16,6 +16,5 @@
     <color name="btnHomeAddClipboardTXT">#fff</color>
 
     <color name="btnTextPrimary">#FFFFFF</color>
-
 
 </resources>

@@ -63,19 +63,28 @@ fun Link.addTo(dao: LinkDao, linkList: MutableList<Link>) {
     linkList.add(0, this@addTo)
 }
 
-fun Period.toCustomString(): String {
+fun Period.toCustomString(verbose: Boolean): String {
     var timeString = ""
     val h = Math.abs(hours)
     val m = Math.abs(minutes)
-    if (h != 0) {
-        timeString += "$h hour"
-        if (h != 1) timeString += "s"
-    }
 
-    if (m != 0) {
-        if (h != 0) timeString += " and "
-        timeString += "$m minute"
-        if (m != 1) timeString += "s"
+    when (verbose) {
+        true -> {
+            if (h != 0) {
+                timeString += "$h hour"
+                if (h != 1) timeString += "s"
+            }
+
+            if (m != 0) {
+                if (h != 0) timeString += " and "
+                timeString += "$m minute"
+                if (m != 1) timeString += "s"
+            }
+        }
+        false -> {
+            if (h != 0) timeString += "${h}h "
+            if (m != 0) timeString += "${m}m"
+        }
     }
 
     timeString += " left"
