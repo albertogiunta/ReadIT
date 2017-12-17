@@ -20,7 +20,11 @@ object LinksContract {
 
         fun onLinkAdditionRequest(url: String)
 
-        fun onLinkOpeningRequest()
+        fun onLinkCopyRequest(position: Int)
+
+        fun onLinkRemovalRequest(position: Int)
+
+        fun onLinkSharingRequest(position: Int)
 
     }
 

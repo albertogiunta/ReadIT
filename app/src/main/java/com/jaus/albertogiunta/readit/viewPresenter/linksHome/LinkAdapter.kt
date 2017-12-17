@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.utils.*
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_link.view.*
 import org.joda.time.DateTime
 import org.joda.time.Period
@@ -33,15 +32,8 @@ class LinkAdapter(private val items: List<Link>,
                 tvTitle.text = itemLink.title
                 tvUrl.text = itemLink.url
                 tvTimeLeft.text = Period(itemLink.timestamp.plusDays(1), DateTime.now()).toCustomString(false)
-
-                try {
-                    Picasso.with(context)
-                            .load("https://${SystemUtils.getHost(itemLink.url)}/favicon.ico")
-                            .placeholder(R.drawable.ic_placeholder)
-                            .into(ivFav)
-                } catch (e: Exception) {
-                    println("ERROR in PICASSO!!! $e")
-                }
+                ivFav.loadFavicon(itemLink.faviconURL())
+                clEditButtons.gone()
             }
         }
     }

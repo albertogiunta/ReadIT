@@ -42,13 +42,25 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
                     val htmlPage = result.toJsoupDocument()
                     Link(title = htmlPage.title(), url = url).addTo(dao, linkList)
                     view?.updateLinkListUI()
+                    result.close()
                 }, { error ->
                     println(error)
                     view?.showError("Your link seems to be not a valid link :/")
                 })
     }
 
-    override fun onLinkOpeningRequest() {
-        NotImplementedError()
+    override fun onLinkSharingRequest(position: Int) {
+//        TODO()
+    }
+
+    override fun onLinkCopyRequest(position: Int) {
+//        TODO()
+
+        view?.showMessage("Link copied to your Clipboard!")
+    }
+
+    override fun onLinkRemovalRequest(position: Int) {
+//        TODO()
+        view?.showMessage("Link removed successfully")
     }
 }

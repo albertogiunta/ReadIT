@@ -10,6 +10,8 @@ import android.widget.TextView
 import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.utils.SystemUtils
+import com.jaus.albertogiunta.readit.utils.consumeEditButton
+import com.jaus.albertogiunta.readit.utils.toggleVisibility
 import com.jaus.albertogiunta.readit.viewPresenter.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_links.*
 import kotlinx.android.synthetic.main.dialog_manual_input.view.*
@@ -29,12 +31,20 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
 
         // UI initialization
         val itemOnClick: (View, Int, Int) -> Unit = { view, _, _ -> browse(view.tvUrl.text.toString()) }
-        val itemOnLongClick: (View, Int, Int) -> Unit = { view, _, _ -> getLinkURLWithManualInput(view.tvUrl.text.toString()) }
+        val itemOnLongClick: (View, Int, Int) -> Unit = { view, position, type ->
+            run {
+                view.clEditButtons.toggleVisibility()
+                with(view.clEditButtons) {
+                    ibShare.setOnClickListener { consumeEditButton { presenter.onLinkSharingRequest(position) } }
+                    ibShare.setOnClickListener { consumeEditButton { presenter.onLinkSharingRequest(position) } }
+                    ibEdit.setOnClickListener { consumeEditButton { getLinkURLWithManualInput(view.tvUrl.text.toString()) } }
+                    ibCopy.setOnClickListener { consumeEditButton { presenter.onLinkCopyRequest(position) } }
+                    ibRemove.setOnClickListener { consumeEditButton { presenter.onLinkRemovalRequest(position) } }
+                }
+            }
+        }
 
         fabAdd.setOnClickListener { getLinkURLWithManualInput(Link.EMPTY_LINK) }
-
-//        btnAddLinkManually.setOnClickListener { getLinkURLWithManualInput(Link.EMPTY_LINK) }
-//        btnAddLinkFromClipboard.setOnClickListener { getLinkURLFromClipboard() }
 
         // LIST initialization
         rvLinks.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)

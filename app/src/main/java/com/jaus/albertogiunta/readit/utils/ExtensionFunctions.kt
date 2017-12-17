@@ -3,27 +3,42 @@ package com.jaus.albertogiunta.readit.utils
 import android.content.ClipboardManager
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.db.LinkDao
 import com.jaus.albertogiunta.readit.model.Link
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.item_link.view.*
 import okhttp3.ResponseBody
 import org.jetbrains.anko.doAsync
 import org.joda.time.Period
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
-
 /**
  * VIEWS
  */
+
+fun View.toggleVisibility() {
+    if (this.visibility == View.VISIBLE) this.gone() else this.visible()
+}
+
 fun View.visible() {
     visibility = View.VISIBLE
 }
 
 fun View.gone() {
     visibility = View.GONE
+}
+
+inline fun View.consumeEditButton(f: () -> Unit) {
+    f()
+    this.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+    this.gone()
 }
 
 fun ViewGroup.inflate(layoutRes: Int): View {
@@ -45,6 +60,16 @@ fun <T : RecyclerView.ViewHolder> T.onLongClick(event: (view: View, position: In
     return this
 }
 
+fun ImageView.loadFavicon(url: String) {
+    try {
+        Picasso.with(context)
+                .load(url)
+                .placeholder(R.drawable.ic_placeholder)
+                .into(ivFav)
+    } catch (e: Exception) {
+        println("ERROR in PICASSO!!! $e")
+    }
+}
 
 fun Context.clipboard(): ClipboardManager = this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
@@ -62,6 +87,8 @@ fun Link.addTo(dao: LinkDao, linkList: MutableList<Link>) {
     doAsync { dao.insert(this@addTo) }
     linkList.add(0, this@addTo)
 }
+
+fun Link.faviconURL() = "https://${SystemUtils.getHost(this.url)}/favicon.ico"
 
 fun Period.toCustomString(verbose: Boolean): String {
     var timeString = ""
