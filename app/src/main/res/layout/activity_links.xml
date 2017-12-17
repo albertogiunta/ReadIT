@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".viewPresenter.linksHome.LinksActivity"
-        android:background="@color/appBG"
+        android:background="#e7e7e7"
         >
 
     <Button
@@ -18,12 +18,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/btnAddLinkManually"
-            android:background="@color/btnHomeAddClipboard"
-            android:textColor="@color/btnTextPrimary"
-            android:elevation="5dp"
+            android:background="@drawable/shape_corner_radius_button"
+            android:textColor="@color/btnHomeAddClipboardTXT"
+            android:elevation="3dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/cardView2"
             />
     <Button
-            android:text="Add Link Manually"
+            android:text="Add Manually"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/btnAddLinkManually"
@@ -31,24 +36,40 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btnAddLinkFromClipboard"
             app:layout_constraintHorizontal_bias="0.5"
-            android:background="@color/btnHomeAddManually"
-            android:textColor="@color/btnTextPrimary"
-            android:elevation="5dp"
+            android:background="@drawable/shape_corner_radius_button"
+            android:textColor="@color/btnHomeAddManuallyTXT"
+            android:elevation="3dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/cardView2"
             />
-    <android.support.v7.widget.RecyclerView
+    <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/rvLinks"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:background="@color/appBG"
-            tools:listitem="@layout/item_link"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            app:layout_constraintBottom_toTopOf="@+id/btnAddLinkManually"
-            android:layout_marginBottom="44dp"
-            />
+            app:cardElevation="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="70dp"
+            android:id="@+id/cardView2"
+            app:cardCornerRadius="0dp"
+            >
+        <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/rvLinks"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@color/appBG"
+                tools:listitem="@layout/item_link"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                >
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v7.widget.CardView>
 
 
 </android.support.constraint.ConstraintLayout>

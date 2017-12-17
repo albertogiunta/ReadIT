@@ -10,8 +10,11 @@
     <color name="cardTxtPrimary">#FFFFFF</color>
     <color name="cardTxtSecondary">#9dadb2</color>
 
-    <color name="btnHomeAddManually">#4389c1</color>
-    <color name="btnHomeAddClipboard">#1d72a6</color>
+    <color name="btnHomeAddManuallyBG">#43458b</color>
+    <color name="btnHomeAddManuallyTXT">#fff</color>
+    <color name="btnHomeAddClipboardBG">#6772e5</color>
+    <color name="btnHomeAddClipboardTXT">#fff</color>
+
     <color name="btnTextPrimary">#FFFFFF</color>
 
 

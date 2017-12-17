@@ -69,13 +69,13 @@ fun Period.toCustomString(): String {
     val m = Math.abs(minutes)
     if (h != 0) {
         timeString += "$h hour"
-        if (h == 1) timeString += "s"
+        if (h != 1) timeString += "s"
     }
 
     if (m != 0) {
         if (h != 0) timeString += " and "
         timeString += "$m minute"
-        if (m == 1) timeString += "s"
+        if (m != 1) timeString += "s"
     }
 
     timeString += " left"
