@@ -1,5 +1,6 @@
 package com.jaus.albertogiunta.readit.utils
 
+import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -73,6 +74,27 @@ fun ImageView.loadFavicon(url: String) {
 
 fun Context.clipboard(): ClipboardManager = this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
+fun Context.clearClipboard() {
+    clipboard().primaryClip = ClipData.newPlainText("", Link.EMPTY_LINK)
+}
+
+fun Context.hasItemInClipboard(): Boolean = clipboard().primaryClip != null
+
+fun Context.getURLFromClipboard(): String? {
+    val clipboard = clipboard()
+    return if (clipboard.primaryClip != null) clipboard.primaryClip.getItemAt(0).text.toString() else null
+}
+
+fun Context.saveURLToClipboard(url: String) {
+    val url = url
+    val clip = ClipData.newPlainText("url", url)
+    clipboard().primaryClip = clip
+}
+
+fun String.sanitize() {
+
+}
+
 /**
  * RETROFIT
  */
@@ -88,7 +110,17 @@ fun Link.addTo(dao: LinkDao, linkList: MutableList<Link>) {
     linkList.add(0, this@addTo)
 }
 
-fun Link.faviconURL() = "https://${SystemUtils.getHost(this.url)}/favicon.ico"
+fun Link.update(dao: LinkDao, linkList: MutableList<Link>, position: Int) {
+    doAsync { dao.update(this@update) }
+    linkList[position] = this
+}
+
+fun Link.remove(dao: LinkDao, linkList: MutableList<Link>, position: Int) {
+    doAsync { dao.delete(this@remove) }
+    linkList.removeAt(position)
+}
+
+fun Link.faviconURL() = "https://${SystemUtils.getHostOfURL(this.url)}/favicon.ico"
 
 fun Period.toCustomString(verbose: Boolean): String {
     var timeString = ""

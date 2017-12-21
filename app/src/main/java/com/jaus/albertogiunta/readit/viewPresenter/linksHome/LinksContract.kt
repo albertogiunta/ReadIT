@@ -12,13 +12,21 @@ object LinksContract {
         fun stopLoadingState()
 
         fun updateLinkListUI()
+
+        fun launchBrowser(link: Link)
+
+        fun displayUpdateDialog(link: Link)
+
+        fun displayNewLinkDialog()
     }
 
     interface Presenter : BasePresenter<View> {
 
         var linkList: MutableList<Link>
 
-        fun onLinkAdditionRequest(url: String)
+        fun onLinkBrowsingRequest(position: Int)
+
+        fun onLinkAdditionRequest(isNew: Boolean, url: String)
 
         fun onLinkCopyRequest(position: Int)
 
@@ -26,6 +34,7 @@ object LinksContract {
 
         fun onLinkSharingRequest(position: Int)
 
+        fun onLinkUpdateRequest(position: Int)
     }
 
 }

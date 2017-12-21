@@ -27,5 +27,4 @@ class MyApplication: Application() {
             if (IS_DB_DEBUG_ACTIVE) database.linkDao().deleteAll()
         }
     }
-
 }

@@ -33,6 +33,7 @@ class LinkAdapter(private val items: List<Link>,
                 tvUrl.text = itemLink.url
                 tvTimeLeft.text = Period(itemLink.timestamp.plusDays(1), DateTime.now()).toCustomString(false)
                 ivFav.loadFavicon(itemLink.faviconURL())
+                clCard.background = if (itemLink.seen) context.getDrawable(R.drawable.shape_border_cardview_seen) else context.getDrawable(R.drawable.shape_border_cardview_unseen)
                 clEditButtons.gone()
             }
         }

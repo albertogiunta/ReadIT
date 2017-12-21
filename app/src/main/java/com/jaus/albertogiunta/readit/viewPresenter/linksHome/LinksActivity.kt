@@ -9,8 +9,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.model.Link
-import com.jaus.albertogiunta.readit.utils.SystemUtils
 import com.jaus.albertogiunta.readit.utils.consumeEditButton
+import com.jaus.albertogiunta.readit.utils.getURLFromClipboard
 import com.jaus.albertogiunta.readit.utils.toggleVisibility
 import com.jaus.albertogiunta.readit.viewPresenter.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_links.*
@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.dialog_manual_input.view.*
 import kotlinx.android.synthetic.main.item_link.view.*
 import org.jetbrains.anko.browse
 import org.jetbrains.anko.indeterminateProgressDialog
+import org.jetbrains.anko.share
 
 
 class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), LinksContract.View {
@@ -30,21 +31,21 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         setContentView(R.layout.activity_links)
 
         // UI initialization
-        val itemOnClick: (View, Int, Int) -> Unit = { view, _, _ -> browse(view.tvUrl.text.toString()) }
+        val itemOnClick: (View, Int, Int) -> Unit = { _, position, _ -> presenter.onLinkBrowsingRequest(position) }
         val itemOnLongClick: (View, Int, Int) -> Unit = { view, position, type ->
             run {
                 view.clEditButtons.toggleVisibility()
                 with(view.clEditButtons) {
+                    ibShare.setOnClickListener { consumeEditButton { share("a", "b") } }
                     ibShare.setOnClickListener { consumeEditButton { presenter.onLinkSharingRequest(position) } }
-                    ibShare.setOnClickListener { consumeEditButton { presenter.onLinkSharingRequest(position) } }
-                    ibEdit.setOnClickListener { consumeEditButton { getLinkURLWithManualInput(view.tvUrl.text.toString()) } }
+                    ibEdit.setOnClickListener { consumeEditButton { presenter.onLinkUpdateRequest(position) } }
                     ibCopy.setOnClickListener { consumeEditButton { presenter.onLinkCopyRequest(position) } }
                     ibRemove.setOnClickListener { consumeEditButton { presenter.onLinkRemovalRequest(position) } }
                 }
             }
         }
 
-        fabAdd.setOnClickListener { getLinkURLWithManualInput(Link.EMPTY_LINK) }
+        fabAdd.setOnClickListener { displayNewLinkDialog() }
 
         // LIST initialization
         rvLinks.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
@@ -71,37 +72,54 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         }
     }
 
-    private fun addLink(url: String) {
-        presenter.onLinkAdditionRequest(url)
+    override fun displayUpdateDialog(link: Link) {
+        displayInputDialog(false, link.url)
     }
 
-    private fun getLinkURLWithManualInput(url: String = Link.EMPTY_LINK) {
+    override fun displayNewLinkDialog() {
+        displayInputDialog(true)
+    }
+
+    override fun launchBrowser(link: Link) {
+        try {
+            browse(link.url)
+        } catch (e: IllegalArgumentException) {
+            showError("This link seems to be broken :O")
+        }
+    }
+
+    private fun displayInputDialog(isNew: Boolean, url: String = Link.EMPTY_LINK) {
         val inflater = layoutInflater
         val dialogView = inflater.inflate(R.layout.dialog_manual_input, null)
         val builder = AlertDialog.Builder(getContext())
 
         if (url != Link.EMPTY_LINK) dialogView.etUrl.setText(url, TextView.BufferType.EDITABLE)
 
-        val dialog = builder.setTitle("Put a new link inside of me")
+        val positiveButtonText = if (isNew) "Add" else "Update"
+
+        val dialog = builder.setTitle("Adding links is fun")
                 .setView(dialogView)
-                .setPositiveButton("Add", { _, _ -> addLink(dialogView.etUrl.text.toString()) })
-                .setNeutralButton("Copy from clipboard", { _, _ -> getLinkURLFromClipboard() })
+                .setPositiveButton(positiveButtonText, { _, _ ->
+                    presenter.onLinkAdditionRequest(isNew, dialogView.etUrl.text.toString())
+                })
+                .setNeutralButton("Copy from clipboard", { _, _ ->
+                    run {
+                        val urlFromClipboard: String? = getURLFromClipboard()
+                        urlFromClipboard?.let { presenter.onLinkAdditionRequest(isNew, urlFromClipboard) } ?: this.showError("No Link found in clipboard")
+                    }
+                })
                 .setNegativeButton("Cancel", { _, _ -> })
                 .create()
 
         dialog.show()
     }
 
-    private fun getLinkURLFromClipboard() {
-        val url: String? = SystemUtils.getURLFromClipboard(getContext())
-        // i.e. url is null right after a reboot
-        if (url != null) addLink(url) else this.showError("No Link found in clipboard")
-    }
-
     private fun getLinkURLFromIntent() {
         with(intent) {
             if (Intent.ACTION_SEND == action && type != null && "text/plain" == type) {
-                getStringExtra(Intent.EXTRA_TEXT)?.let { addLink(it) }
+                getStringExtra(Intent.EXTRA_TEXT)?.let {
+                    if (it != Link.EMPTY_LINK) presenter.onLinkAdditionRequest(true, it)
+                }
             }
         }
     }
