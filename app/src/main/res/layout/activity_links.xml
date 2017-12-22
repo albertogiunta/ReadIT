@@ -83,7 +83,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:background="@color/appBG"
-                tools:listitem="@layout/item_link"
+                tools:listitem="@layout/item_link_1"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 app:layout_constraintBottom_toBottomOf="parent"

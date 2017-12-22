@@ -13,9 +13,10 @@ import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.db.LinkDao
 import com.jaus.albertogiunta.readit.model.Link
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.item_link.view.*
+import kotlinx.android.synthetic.main.item_link_1.view.*
 import okhttp3.ResponseBody
 import org.jetbrains.anko.doAsync
+import org.joda.time.DateTime
 import org.joda.time.Period
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -66,7 +67,7 @@ fun ImageView.loadFavicon(url: String) {
         Picasso.with(context)
                 .load(url)
                 .placeholder(R.drawable.ic_placeholder)
-                .into(ivFav)
+                .into(ivFavicon)
     } catch (e: Exception) {
         println("ERROR in PICASSO!!! $e")
     }
@@ -90,6 +91,8 @@ fun Context.saveURLToClipboard(url: String) {
     val clip = ClipData.newPlainText("url", url)
     clipboard().primaryClip = clip
 }
+
+fun DateTime.getRemainingTime() = Period(this.plusDays(1), DateTime.now()).toCustomString(false)
 
 /**
  * RETROFIT

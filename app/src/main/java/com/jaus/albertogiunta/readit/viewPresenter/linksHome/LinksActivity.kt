@@ -18,7 +18,7 @@ import com.jaus.albertogiunta.readit.utils.toggleVisibility
 import com.jaus.albertogiunta.readit.viewPresenter.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_links.*
 import kotlinx.android.synthetic.main.dialog_manual_input.view.*
-import kotlinx.android.synthetic.main.item_link.view.*
+import kotlinx.android.synthetic.main.section_link_options.view.*
 import org.jetbrains.anko.browse
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.share
@@ -35,7 +35,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
 
         // UI initialization
         val itemOnClick: (View, Int, Int) -> Unit = { _, position, _ -> presenter.onLinkBrowsingRequest(position) }
-        val itemOnLongClick: (View, Int, Int) -> Unit = { view, position, type ->
+        val itemOnLongClick: (View, Int, Int) -> Unit = { view, position, _ ->
             run {
                 view.clEditButtons.toggleVisibility()
                 with(view.clEditButtons) {

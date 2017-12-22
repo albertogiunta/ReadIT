@@ -21,9 +21,9 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
     init {
         doAsync {
             if (!Link.IS_ALL_LINKS_DEBUG_ACTIVE) {
-                linkList.addAll(dao.getAllLinksFromMostRecent().filter { it.timestamp.isAfter(DateTime.now().minusHours(24)) })
+                linkList.addAll(dao.getAllLinksFromMostRecent().filter { it.timestamp.isAfter(DateTime.now().minusHours(24)) }.sortedBy { it.seen })
             } else {
-                linkList.addAll(dao.getAllLinksFromMostRecent())
+                linkList.addAll(dao.getAllLinksFromMostRecent().sortedBy { it.seen })
             }
         }
     }
