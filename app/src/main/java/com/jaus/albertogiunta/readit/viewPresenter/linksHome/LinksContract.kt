@@ -7,9 +7,12 @@ import com.jaus.albertogiunta.readit.viewPresenter.base.BaseView
 object LinksContract {
 
     interface View : BaseView {
+
         fun startLoadingState()
 
         fun stopLoadingState()
+
+        fun completelyRedrawList()
 
         fun updateLinkListUI()
 
@@ -25,6 +28,8 @@ object LinksContract {
     interface Presenter : BasePresenter<View> {
 
         var linkList: MutableList<Link>
+
+        fun onActivityResumed()
 
         fun onLinkBrowsingRequest(position: Int)
 

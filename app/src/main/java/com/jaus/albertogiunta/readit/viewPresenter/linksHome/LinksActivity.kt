@@ -28,14 +28,17 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
 
     override var presenter: LinkPresenterImpl = LinkPresenterImpl()
     private lateinit var urlFetchingWaitDialog: AlertDialog
+    private lateinit var itemOnClick: (View, Int, Int) -> Unit
+    private lateinit var itemOnLongClick: (View, Int, Int) -> Unit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_links)
 
         // UI initialization
-        val itemOnClick: (View, Int, Int) -> Unit = { _, position, _ -> presenter.onLinkBrowsingRequest(position) }
-        val itemOnLongClick: (View, Int, Int) -> Unit = { view, position, _ ->
+
+        itemOnClick = { _, position, _ -> presenter.onLinkBrowsingRequest(position) }
+        itemOnLongClick = { view, position, _ ->
             run {
                 view.clEditButtons.toggleVisibility()
                 with(view.clEditButtons) {
@@ -62,12 +65,27 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         getLinkURLFromIntent()
     }
 
+    override fun onResume() {
+        super.onResume()
+        presenter.onActivityResumed()
+    }
+
     //////////////////// LOADING
     override fun startLoadingState() = urlFetchingWaitDialog.show()
 
     override fun stopLoadingState() = urlFetchingWaitDialog.cancel()
 
     //////////////////// LINK INTERACTION
+    override fun completelyRedrawList() {
+        runOnUiThread {
+            rvLinks.adapter = null
+            rvLinks.layoutManager = null
+            rvLinks.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+            rvLinks.adapter = LinkAdapter(presenter.linkList, itemOnClick, itemOnLongClick)
+            rvLinks.adapter.notifyDataSetChanged()
+        }
+    }
+
     override fun updateLinkListUI() {
         runOnUiThread {
             rvLinks.adapter.notifyDataSetChanged()

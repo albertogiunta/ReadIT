@@ -28,16 +28,25 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
         }
     }
 
+    override fun onActivityResumed() {
+        linkList.sortBy { it.seen }
+        doAsync {
+            uiThread {
+                view?.completelyRedrawList()
+            }
+        }
+    }
+
     override fun onLinkAdditionRequest(isNew: Boolean, url: String) {
         if (url == Link.EMPTY_LINK) {
             view?.showError("Your link seems to be empty or not a valid link :/"); return
         }
 
-        val polishedURL: String
+        var polishedURL: String = Link.EMPTY_LINK
         val indexOfProtocol = url.indexOf("http")
 
         if (indexOfProtocol == -1) {
-            TODO("polishedURL = url has no protocol")
+            // TODO link has no protocol
         } else {
             polishedURL = url.substring(indexOfProtocol).replace("\\s+", "")
         }

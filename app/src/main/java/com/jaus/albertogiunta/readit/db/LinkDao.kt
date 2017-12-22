@@ -6,6 +6,9 @@ import com.jaus.albertogiunta.readit.model.Link
 @Dao
 interface LinkDao {
 
+    @Query("SELECT MAX(id) FROM link")
+    fun getMaxId(): Int
+
     @Query("SELECT * FROM link WHERE id = :arg0")
     fun getLinkById(id: Int): Link
 

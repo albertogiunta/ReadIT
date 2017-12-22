@@ -105,8 +105,11 @@ fun ResponseBody.toJsoupDocument(): Document {
  * MODEL
  */
 fun Link.addTo(dao: LinkDao, linkList: MutableList<Link>) {
-    doAsync { dao.insert(this@addTo) }
-    linkList.add(0, this@addTo)
+    doAsync {
+        dao.insert(this@addTo)
+        val linkId = dao.getMaxId()
+        linkList.add(0, this@addTo.apply { id = linkId })
+    }
 }
 
 fun Link.update(dao: LinkDao, linkList: MutableList<Link>, position: Int) {
