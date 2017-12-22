@@ -6,7 +6,7 @@ import android.arch.persistence.room.TypeConverters
 import com.jaus.albertogiunta.readit.BuildConfig
 import com.jaus.albertogiunta.readit.model.Link
 
-@Database(entities = arrayOf(Link::class), version = 1, exportSchema = false)
+@Database(entities = [(Link::class)], version = 1, exportSchema = false)
 @TypeConverters(DBConverters::class)
 abstract class AppDatabase : RoomDatabase() {
 

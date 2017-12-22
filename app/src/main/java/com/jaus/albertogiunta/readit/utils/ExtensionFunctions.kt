@@ -87,9 +87,7 @@ fun Context.getURLFromClipboard(): String? {
 }
 
 fun Context.saveURLToClipboard(url: String) {
-    val url = url
-    val clip = ClipData.newPlainText("url", url)
-    clipboard().primaryClip = clip
+    clipboard().primaryClip = ClipData.newPlainText("url", url)
 }
 
 fun DateTime.getRemainingTime() = Period(this.plusDays(1), DateTime.now()).toCustomString(false)

@@ -26,7 +26,9 @@
             app:layout_constraintEnd_toStartOf="@+id/ibEdit"
             android:background="@android:color/transparent"
             android:padding="8dp"
+            android:contentDescription="Share link"
             />
+
     <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,7 +39,9 @@
             app:layout_constraintEnd_toStartOf="@+id/ibCopy"
             android:background="@android:color/transparent"
             android:padding="8dp"
+            android:contentDescription="Edit link"
             />
+
     <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,7 +52,9 @@
             app:layout_constraintEnd_toStartOf="@+id/ibRemove"
             android:background="@android:color/transparent"
             android:padding="8dp"
+            android:contentDescription="Copy link"
             />
+
     <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,5 +65,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:background="@android:color/transparent"
             android:padding="8dp"
+            android:contentDescription="Delete link"
             />
 </android.support.constraint.ConstraintLayout>

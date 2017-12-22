@@ -44,6 +44,7 @@
                     android:layout_marginTop="8dp"
                     android:paddingStart="25dp"
                     android:textSize="18sp"
+                    tools:ignore="RtlSymmetry"
                     />
             <TextView
                     android:id="@+id/tvUrl"
@@ -62,6 +63,7 @@
                     android:layout_marginTop="8dp"
                     app:layout_constraintTop_toBottomOf="@+id/tvTitle"
                     app:layout_constraintHorizontal_bias="0.0"
+                    tools:ignore="RtlSymmetry"
                     />
             <TextView
                     android:layout_width="wrap_content"
@@ -103,6 +105,8 @@
             app:srcCompat="@drawable/ic_placeholder"
             android:padding="8dp"
             android:paddingStart="14dp"
+            android:contentDescription="Favicon image"
+            tools:ignore="RtlSymmetry"
             />
 
     <include layout="@layout/section_link_options"/>

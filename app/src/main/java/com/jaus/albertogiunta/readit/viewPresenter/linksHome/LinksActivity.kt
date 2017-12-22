@@ -1,13 +1,12 @@
 package com.jaus.albertogiunta.readit.viewPresenter.linksHome
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.jaus.albertogiunta.readit.R
@@ -36,7 +35,6 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         setContentView(R.layout.activity_links)
 
         // UI initialization
-
         itemOnClick = { _, position, _ -> presenter.onLinkBrowsingRequest(position) }
         itemOnLongClick = { view, position, _ ->
             run {
@@ -112,13 +110,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         share(link.url)
     }
 
-    fun showSoftKeyboard(view: View) {
-        if (view.requestFocus()) {
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
-        }
-    }
-
+    @SuppressLint("InflateParams")
     private fun displayInputDialog(isNew: Boolean, url: String = Link.EMPTY_LINK) {
         val inflater = layoutInflater
         val dialogView = inflater.inflate(R.layout.dialog_manual_input, null)
