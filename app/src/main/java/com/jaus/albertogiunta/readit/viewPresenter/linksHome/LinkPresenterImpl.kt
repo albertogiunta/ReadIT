@@ -76,7 +76,9 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
     }
 
     override fun onLinkSharingRequest(position: Int) {
-
+        doAsync {
+            view?.launchShare(dao.getLinkById(linkList[position].id))
+        }
     }
 
     override fun onLinkCopyRequest(position: Int) {

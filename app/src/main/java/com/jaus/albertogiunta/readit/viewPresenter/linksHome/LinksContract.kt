@@ -15,6 +15,8 @@ object LinksContract {
 
         fun launchBrowser(link: Link)
 
+        fun launchShare(link: Link)
+
         fun displayUpdateDialog(link: Link)
 
         fun displayNewLinkDialog()

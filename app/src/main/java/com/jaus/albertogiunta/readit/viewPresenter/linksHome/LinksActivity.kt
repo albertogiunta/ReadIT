@@ -1,10 +1,13 @@
 package com.jaus.albertogiunta.readit.viewPresenter.linksHome
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.jaus.albertogiunta.readit.R
@@ -36,7 +39,6 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
             run {
                 view.clEditButtons.toggleVisibility()
                 with(view.clEditButtons) {
-                    ibShare.setOnClickListener { consumeEditButton { share("a", "b") } }
                     ibShare.setOnClickListener { consumeEditButton { presenter.onLinkSharingRequest(position) } }
                     ibEdit.setOnClickListener { consumeEditButton { presenter.onLinkUpdateRequest(position) } }
                     ibCopy.setOnClickListener { consumeEditButton { presenter.onLinkCopyRequest(position) } }
@@ -88,6 +90,17 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         }
     }
 
+    override fun launchShare(link: Link) {
+        share(link.url)
+    }
+
+    fun showSoftKeyboard(view: View) {
+        if (view.requestFocus()) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+        }
+    }
+
     private fun displayInputDialog(isNew: Boolean, url: String = Link.EMPTY_LINK) {
         val inflater = layoutInflater
         val dialogView = inflater.inflate(R.layout.dialog_manual_input, null)
@@ -96,13 +109,14 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         if (url != Link.EMPTY_LINK) dialogView.etUrl.setText(url, TextView.BufferType.EDITABLE)
 
         val positiveButtonText = if (isNew) "Add" else "Update"
+        val titleText = if (isNew) "Oh hey you! Got a new link for me?" else "Links like to change"
 
-        val dialog = builder.setTitle("Adding links is fun")
+        val dialog = builder.setTitle(titleText)
                 .setView(dialogView)
                 .setPositiveButton(positiveButtonText, { _, _ ->
                     presenter.onLinkAdditionRequest(isNew, dialogView.etUrl.text.toString())
                 })
-                .setNeutralButton("Copy from clipboard", { _, _ ->
+                .setNeutralButton("Paste from clipboard", { _, _ ->
                     run {
                         val urlFromClipboard: String? = getURLFromClipboard()
                         urlFromClipboard?.let { presenter.onLinkAdditionRequest(isNew, urlFromClipboard) } ?: this.showError("No Link found in clipboard")
@@ -111,6 +125,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
                 .setNegativeButton("Cancel", { _, _ -> })
                 .create()
 
+        dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         dialog.show()
     }
 

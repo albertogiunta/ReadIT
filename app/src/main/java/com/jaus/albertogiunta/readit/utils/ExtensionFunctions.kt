@@ -91,10 +91,6 @@ fun Context.saveURLToClipboard(url: String) {
     clipboard().primaryClip = clip
 }
 
-fun String.sanitize() {
-
-}
-
 /**
  * RETROFIT
  */
