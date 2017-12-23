@@ -19,3 +19,8 @@ data class Link(@PrimaryKey(autoGenerate = true)
         val EMPTY_LINK = ""
     }
 }
+
+data class WebsiteInfo(
+        var url: String,
+        var title: String
+)

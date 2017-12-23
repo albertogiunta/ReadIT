@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.model.Link
+import com.jaus.albertogiunta.readit.notifications.NotificationBuilder
 import com.jaus.albertogiunta.readit.utils.consumeEditButton
 import com.jaus.albertogiunta.readit.utils.getURLFromClipboard
 import com.jaus.albertogiunta.readit.utils.toggleVisibility
@@ -112,6 +113,10 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
 
     @SuppressLint("InflateParams")
     private fun displayInputDialog(isNew: Boolean, url: String = Link.EMPTY_LINK) {
+
+        val notBuild = NotificationBuilder.instance
+        notBuild.sendBundledNotification()
+
         val inflater = layoutInflater
         val dialogView = inflater.inflate(R.layout.dialog_manual_input, null)
         val builder = AlertDialog.Builder(getContext())

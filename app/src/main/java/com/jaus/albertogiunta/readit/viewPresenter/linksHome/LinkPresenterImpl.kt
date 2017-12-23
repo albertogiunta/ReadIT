@@ -3,11 +3,13 @@ package com.jaus.albertogiunta.readit.viewPresenter.linksHome
 import com.jaus.albertogiunta.readit.MyApplication
 import com.jaus.albertogiunta.readit.db.LinkDao
 import com.jaus.albertogiunta.readit.model.Link
+import com.jaus.albertogiunta.readit.model.WebsiteInfo
 import com.jaus.albertogiunta.readit.networking.LinkService
 import com.jaus.albertogiunta.readit.networking.NetworkingFactory
 import com.jaus.albertogiunta.readit.utils.*
 import com.jaus.albertogiunta.readit.viewPresenter.base.BasePresenterImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
+import okhttp3.ResponseBody
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
@@ -57,16 +59,19 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { view?.startLoadingState() }
                 .doAfterTerminate { view?.stopLoadingState() }
-                .subscribe({ result ->
-                    val htmlPage = result.toJsoupDocument()
-                    if (isNew) Link(title = htmlPage.title(), url = polishedURL).addTo(dao, linkList)
+                .map { result: ResponseBody ->
+                    with(result.toJsoupDocument()) {
+                        result.close()
+                        WebsiteInfo(polishedURL, title())
+                    }
+                }
+                .subscribe({ siteInfo: WebsiteInfo ->
+                    if (isNew) Link(title = siteInfo.title, url = siteInfo.url).addTo(dao, linkList)
                     else linkList[editingIndex].apply {
-                        this.title = htmlPage.title()
-                        this.url = polishedURL
+                        this.title = siteInfo.title
+                        this.url = siteInfo.url
                     }.update(dao, linkList, editingIndex)
-
                     view?.updateLinkListUI()
-                    result.close()
                 }, { error ->
                     println(error)
                     view?.showError("Your link seems to be not a valid link :/")

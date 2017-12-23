@@ -5,6 +5,7 @@ import android.arch.persistence.room.Room
 import com.jaus.albertogiunta.readit.db.AppDatabase
 import com.jaus.albertogiunta.readit.db.AppDatabase.Companion.DB_NAME
 import com.jaus.albertogiunta.readit.db.AppDatabase.Companion.IS_DB_DEBUG_ACTIVE
+import com.jaus.albertogiunta.readit.notifications.NotificationBuilder
 import net.danlew.android.joda.JodaTimeAndroid
 import org.jetbrains.anko.doAsync
 
@@ -19,6 +20,7 @@ class MyApplication: Application() {
 
         // init all the things
         JodaTimeAndroid.init(this)
+        NotificationBuilder.init(this)
 
         // setup database
         if (IS_DB_DEBUG_ACTIVE) this.deleteDatabase(DB_NAME)
