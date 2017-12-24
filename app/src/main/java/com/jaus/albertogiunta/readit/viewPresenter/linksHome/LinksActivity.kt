@@ -30,6 +30,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
     private lateinit var urlFetchingWaitDialog: AlertDialog
     private lateinit var itemOnClick: (View, Int, Int) -> Unit
     private lateinit var itemOnLongClick: (View, Int, Int) -> Unit
+    private val notificationManager = NotificationBuilder.instance
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +76,13 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
     override fun stopLoadingState() = urlFetchingWaitDialog.cancel()
 
     //////////////////// LINK INTERACTION
+    override fun updateLinkListUI() {
+        runOnUiThread {
+            rvLinks.adapter.notifyDataSetChanged()
+            notificationManager.sendBundledNotification()
+        }
+    }
+
     override fun completelyRedrawList() {
         runOnUiThread {
             rvLinks.adapter = null
@@ -82,13 +90,12 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
             rvLinks.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
             rvLinks.adapter = LinkAdapter(presenter.linkList, itemOnClick, itemOnLongClick)
             rvLinks.adapter.notifyDataSetChanged()
+            notificationManager.sendBundledNotification()
         }
     }
 
-    override fun updateLinkListUI() {
-        runOnUiThread {
-            rvLinks.adapter.notifyDataSetChanged()
-        }
+    override fun updateNotification() {
+        notificationManager.sendBundledNotification()
     }
 
     override fun displayUpdateDialog(link: Link) {
@@ -113,10 +120,6 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
 
     @SuppressLint("InflateParams")
     private fun displayInputDialog(isNew: Boolean, url: String = Link.EMPTY_LINK) {
-
-        val notBuild = NotificationBuilder.instance
-        notBuild.sendBundledNotification()
-
         val inflater = layoutInflater
         val dialogView = inflater.inflate(R.layout.dialog_manual_input, null)
         val builder = AlertDialog.Builder(getContext())

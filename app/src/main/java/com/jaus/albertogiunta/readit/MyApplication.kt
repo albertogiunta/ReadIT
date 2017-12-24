@@ -18,15 +18,15 @@ class MyApplication: Application() {
     override fun onCreate() {
         super.onCreate()
 
-        // init all the things
-        JodaTimeAndroid.init(this)
-        NotificationBuilder.init(this)
-
         // setup database
         if (IS_DB_DEBUG_ACTIVE) this.deleteDatabase(DB_NAME)
         database = Room.databaseBuilder(this, AppDatabase::class.java, DB_NAME).build()
         doAsync {
             if (IS_DB_DEBUG_ACTIVE) database.linkDao().deleteAll()
         }
+
+        // init all the things
+        JodaTimeAndroid.init(this)
+        NotificationBuilder.init(this)
     }
 }

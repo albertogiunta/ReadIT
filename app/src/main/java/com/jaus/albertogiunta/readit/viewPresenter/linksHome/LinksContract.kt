@@ -16,6 +16,8 @@ object LinksContract {
 
         fun updateLinkListUI()
 
+        fun updateNotification()
+
         fun launchBrowser(link: Link)
 
         fun launchShare(link: Link)

@@ -120,7 +120,7 @@ fun Link.remove(dao: LinkDao, linkList: MutableList<Link>, position: Int) {
     linkList.removeAt(position)
 }
 
-fun Link.faviconURL() = "https://${SystemUtils.getHostOfURL(this.url)}/favicon.ico"
+fun Link.faviconURL() = "https://${Utils.getHostOfURL(this.url)}/favicon.ico"
 
 fun Period.toCustomString(verbose: Boolean): String {
     var timeString = ""
