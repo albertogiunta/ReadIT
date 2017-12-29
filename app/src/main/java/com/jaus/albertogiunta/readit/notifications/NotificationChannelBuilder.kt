@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import com.jaus.albertogiunta.readit.utils.Utils.atLeast
 
 class NotificationChannelBuilder(
         context: Context,
@@ -16,13 +17,15 @@ class NotificationChannelBuilder(
 
     @TargetApi(Build.VERSION_CODES.O)
     private fun NotificationManager.ensureChannelsExist(createChannel: (channelId: String) -> NotificationChannel?) {
-        channelIds
-                .filter { !notificationChannelIds().contains(it) }
-                .forEach {
-                    createChannel(it)?.also {
-                        notificationManager.createNotificationChannel(it)
+        if (atLeast(Build.VERSION_CODES.O)) {
+            channelIds
+                    .filter { !notificationChannelIds().contains(it) }
+                    .forEach {
+                        createChannel(it)?.also {
+                            notificationManager.createNotificationChannel(it)
+                        }
                     }
-                }
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.O)

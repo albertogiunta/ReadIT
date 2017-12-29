@@ -11,11 +11,15 @@ import android.content.Intent
 import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
+import com.jaus.albertogiunta.readit.BuildConfig
 import com.jaus.albertogiunta.readit.MyApplication
 import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.db.LinkDao
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.utils.Utils.atLeast
+import com.jaus.albertogiunta.readit.utils.getRemainingTime
+import com.jaus.albertogiunta.readit.utils.isNotExpired24h
+import com.jaus.albertogiunta.readit.utils.toHHmm
 import com.jaus.albertogiunta.readit.viewPresenter.linksHome.LinksActivity
 import org.jetbrains.anko.doAsync
 import java.util.concurrent.atomic.AtomicBoolean
@@ -101,14 +105,13 @@ class NotificationBuilder private constructor(ctx: Context) {
         fillLinksList()
         val intent = buildOnNotificationClickIntent()
         val (title, body, expandToSeeMore) = buildStrings()
-        println(title + body + expandToSeeMore)
         return with(NotificationCompat.Builder(context, channelId)) {
             setContentTitle(title)
             setTicker(title)
             setContentText(expandToSeeMore)
             setStyle(NotificationCompat.BigTextStyle().bigText(body))
             setSmallIcon(R.drawable.ic_copy)
-            setShowWhen(false)
+            if (BuildConfig.DEBUG) setShowWhen(true)
             setAutoCancel(false)
             setOngoing(true)
             setNumber(linkList.size)
@@ -122,21 +125,27 @@ class NotificationBuilder private constructor(ctx: Context) {
     private fun fillLinksList() {
         doAsync {
             linkList.clear()
-            linkList.addAll(dao.getAllLinksFromMostRecent().filter { !it.seen })
+            if (!Link.IS_ALL_LINKS_DEBUG_ACTIVE) {
+                linkList.addAll(dao.getAllLinksFromMostRecent().reversed().filter { !it.seen && it.timestamp.isNotExpired24h() })
+            } else {
+                linkList.addAll(dao.getAllLinksFromMostRecent().reversed().filter { !it.seen })
+            }
         }.get()
     }
 
     private fun buildStrings(): Triple<String, String, String> {
-        val title = "${linkList.size} link${if (linkList.size == 1) "s" else ""} to be read"
-        val expandToSeeMore = "Expand to see the more"
+        val title = "${linkList.size} link${if (linkList.size != 1) "s" else ""} to be read"
+        val expandToSeeMore = if (linkList.isNotEmpty()) "Expand to see the more" else ""
         val body: String =
                 if (linkList.isEmpty()) "You're all set!"
                 else linkList
                         .map {
-                            if (it.title.length >= 50) it.title.substring(0, 50) + "..."
-                            else it.title
+                            if (it.title.length >= 50) Pair(it.title.substring(0, 45) + "...", it.timestamp)
+                            else Pair(it.title, it.timestamp)
                         }
-                        .map { "• $it\n" }
+                        .map {
+                            "• ${it.second.getRemainingTime().toHHmm()} - ${it.first}\n"
+                        }
                         .reduce { acc, s -> "$acc$s" }
 
         return Triple(title, body, expandToSeeMore)

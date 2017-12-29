@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -14,6 +12,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -26,6 +25,11 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    // firebase
+    compile "com.google.firebase:firebase-core:$firebase_version"
+    compile "com.google.firebase:firebase-ads:$firebase_version"
+    compile "com.google.firebase:firebase-crash:$firebase_version"
 
     // utility
 //    implementation "com.chibatching.kotpref:kotpref:2.2.0"
@@ -67,3 +71,5 @@ dependencies {
     androidTestImplementation "com.android.support.test:runner:$runner_version"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
 }
+
+apply plugin: 'com.google.gms.google-services'

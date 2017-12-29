@@ -15,7 +15,7 @@ data class Link(@PrimaryKey(autoGenerate = true)
 ) {
 
     companion object {
-        val IS_ALL_LINKS_DEBUG_ACTIVE = if (!BuildConfig.DEBUG) BuildConfig.DEBUG else true
+        val IS_ALL_LINKS_DEBUG_ACTIVE = if (!BuildConfig.DEBUG) BuildConfig.DEBUG else false
         val EMPTY_LINK = ""
     }
 }

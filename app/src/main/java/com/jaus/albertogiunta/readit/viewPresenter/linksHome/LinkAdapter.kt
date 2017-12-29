@@ -30,7 +30,7 @@ class LinkAdapter(private val items: List<Link>,
             with(itemView) {
                 tvTitle.text = itemLink.title
                 tvUrl.text = itemLink.url
-                tvTimeLeft.text = itemLink.timestamp.getRemainingTime()
+                tvTimeLeft.text = itemLink.timestamp.getRemainingTime().toLiteralString(false)
                 ivFavicon.loadFavicon(itemLink.faviconURL())
                 clCard.background = if (itemLink.seen) context.getDrawable(R.drawable.shape_border_cardview_seen) else context.getDrawable(R.drawable.shape_border_cardview_unseen)
                 clEditButtons.gone()

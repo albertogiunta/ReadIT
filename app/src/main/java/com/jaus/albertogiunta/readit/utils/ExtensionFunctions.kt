@@ -18,8 +18,10 @@ import okhttp3.ResponseBody
 import org.jetbrains.anko.doAsync
 import org.joda.time.DateTime
 import org.joda.time.Period
+import org.joda.time.format.PeriodFormatterBuilder
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+
 
 /**
  * VIEWS
@@ -90,7 +92,7 @@ fun Context.saveURLToClipboard(url: String) {
     clipboard().primaryClip = ClipData.newPlainText("url", url)
 }
 
-fun DateTime.getRemainingTime() = Period(this.plusDays(1), DateTime.now()).toCustomString(false)
+fun DateTime.getRemainingTime() = Period(this.plusDays(1), DateTime.now())
 
 /**
  * RETROFIT
@@ -122,7 +124,7 @@ fun Link.remove(dao: LinkDao, linkList: MutableList<Link>, position: Int) {
 
 fun Link.faviconURL() = "https://${Utils.getHostOfURL(this.url)}/favicon.ico"
 
-fun Period.toCustomString(verbose: Boolean): String {
+fun Period.toLiteralString(verbose: Boolean): String {
     var timeString = ""
     val h = Math.abs(hours)
     val m = Math.abs(minutes)
@@ -150,3 +152,13 @@ fun Period.toCustomString(verbose: Boolean): String {
 
     return timeString
 }
+
+fun Period.toHHmm(): String = PeriodFormatterBuilder()
+        .printZeroAlways()
+        .appendHours()
+        .appendSeparator(":")
+        .appendMinutes()
+        .toFormatter()
+        .print(this)
+
+fun DateTime.isNotExpired24h(): Boolean = this.isAfter(DateTime.now().minusHours(24))

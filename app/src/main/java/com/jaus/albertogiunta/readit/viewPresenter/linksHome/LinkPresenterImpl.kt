@@ -12,7 +12,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import okhttp3.ResponseBody
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import org.joda.time.DateTime
 
 class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract.Presenter {
 
@@ -23,7 +22,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
     init {
         doAsync {
             if (!Link.IS_ALL_LINKS_DEBUG_ACTIVE) {
-                linkList.addAll(dao.getAllLinksFromMostRecent().filter { it.timestamp.isAfter(DateTime.now().minusHours(24)) }.sortedBy { it.seen })
+                linkList.addAll(dao.getAllLinksFromMostRecent().filter { it.timestamp.isNotExpired24h() }.sortedBy { it.timestamp })
             } else {
                 linkList.addAll(dao.getAllLinksFromMostRecent().sortedBy { it.seen })
             }
