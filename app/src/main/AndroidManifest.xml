@@ -15,7 +15,10 @@
             android:supportsRtl="true"
             android:theme="@style/MyCustomTheme"
             >
-        <activity android:name="com.jaus.albertogiunta.readit.viewPresenter.linksHome.LinksActivity">
+        <activity
+                android:name="com.jaus.albertogiunta.readit.viewPresenter.linksHome.LinksActivity"
+                android:launchMode="singleInstance"
+                >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

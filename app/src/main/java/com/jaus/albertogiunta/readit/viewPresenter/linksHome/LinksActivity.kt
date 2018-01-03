@@ -64,9 +64,6 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         // DIALOG initialization
         urlFetchingWaitDialog = indeterminateProgressDialog(message = "Imma fetch all the info for ya", title = "Noice, you got a new link!")
         urlFetchingWaitDialog.cancel()
-
-        // INTENT initialization
-        getLinkURLFromIntent()
     }
 
     override fun onResume() {
@@ -81,14 +78,17 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
 
     //////////////////// EMPTY ACTIVITY
     override fun showContent(showContent: Boolean) {
-        cvContent.toggleVisibility(showContent)
-        clEmptyActivity.toggleVisibility(!showContent)
+        rvLinks.toggleVisibility(showContent)
+        adLayout.toggleVisibility(showContent)
+        emptyLayout.toggleVisibility(!showContent)
     }
 
     //////////////////// LINK INTERACTION
     override fun updateLinkListUI() {
         runOnUiThread {
-            rvLinks.adapter.notifyDataSetChanged()
+            // show content if list is not empty, show empty state activity otherwise
+            showContent(presenter.shouldShowLinkList())
+            if (presenter.shouldShowLinkList()) rvLinks.adapter.notifyDataSetChanged()
             notificationManager.sendBundledNotification()
         }
     }
@@ -99,8 +99,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
             rvLinks.layoutManager = null
             rvLinks.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
             rvLinks.adapter = LinkAdapter(presenter.linkList, itemOnClick, itemOnLongClick)
-            rvLinks.adapter.notifyDataSetChanged()
-            notificationManager.sendBundledNotification()
+            updateLinkListUI()
         }
     }
 
@@ -157,7 +156,8 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         dialog.show()
     }
 
-    private fun getLinkURLFromIntent() {
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
         with(intent) {
             if (Intent.ACTION_SEND == action && type != null && "text/plain" == type) {
                 getStringExtra(Intent.EXTRA_TEXT)?.let {

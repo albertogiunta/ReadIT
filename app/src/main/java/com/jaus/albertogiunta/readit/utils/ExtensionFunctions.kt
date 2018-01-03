@@ -109,20 +109,32 @@ fun Link.addTo(dao: LinkDao, linkList: MutableList<Link>) {
         dao.insert(this@addTo)
         val linkId = dao.getMaxId()
         linkList.add(0, this@addTo.apply { id = linkId })
-    }
+    }.get()
 }
 
 fun Link.update(dao: LinkDao, linkList: MutableList<Link>, position: Int) {
-    doAsync { dao.update(this@update) }
     linkList[position] = this
+    doAsync { dao.update(this@update) }.get()
 }
 
 fun Link.remove(dao: LinkDao, linkList: MutableList<Link>, position: Int) {
-    doAsync { dao.delete(this@remove) }
     linkList.removeAt(position)
+    doAsync { dao.delete(this@remove) }.get()
 }
 
 fun Link.faviconURL() = "https://${Utils.getHostOfURL(this.url)}/favicon.ico"
+
+fun List<Link>.filterAndSortForLinksActivity() =
+        if (!Link.IS_ALL_LINKS_DEBUG_ACTIVE)
+            this.filter { it.timestamp.isNotExpired24h() }.sortedWith(compareBy(Link::seen, Link::timestamp))
+        else
+            this.sortedWith(compareBy(Link::seen, Link::timestamp))
+
+fun List<Link>.filterAndSortForNotification() =
+        if (!Link.IS_ALL_LINKS_DEBUG_ACTIVE)
+            this.reversed().filter { !it.seen && it.timestamp.isNotExpired24h() }
+        else
+            this.reversed().filter { !it.seen }
 
 fun Period.toLiteralString(verbose: Boolean): String {
     var timeString = ""

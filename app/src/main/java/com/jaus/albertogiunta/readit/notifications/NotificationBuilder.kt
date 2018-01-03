@@ -17,8 +17,8 @@ import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.db.LinkDao
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.utils.Utils.atLeast
+import com.jaus.albertogiunta.readit.utils.filterAndSortForNotification
 import com.jaus.albertogiunta.readit.utils.getRemainingTime
-import com.jaus.albertogiunta.readit.utils.isNotExpired24h
 import com.jaus.albertogiunta.readit.utils.toHHmm
 import com.jaus.albertogiunta.readit.viewPresenter.linksHome.LinksActivity
 import org.jetbrains.anko.doAsync
@@ -126,11 +126,7 @@ class NotificationBuilder private constructor(ctx: Context) {
     private fun fillLinksList() {
         doAsync {
             linkList.clear()
-            if (!Link.IS_ALL_LINKS_DEBUG_ACTIVE) {
-                linkList.addAll(dao.getAllLinksFromMostRecent().reversed().filter { !it.seen && it.timestamp.isNotExpired24h() })
-            } else {
-                linkList.addAll(dao.getAllLinksFromMostRecent().reversed().filter { !it.seen })
-            }
+            linkList.addAll(dao.getAllLinksFromMostRecent().filterAndSortForNotification())
         }.get()
     }
 

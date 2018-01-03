@@ -46,6 +46,8 @@ object LinksContract {
         fun onLinkSharingRequest(position: Int)
 
         fun onLinkUpdateRequest(position: Int)
+
+        fun shouldShowLinkList(): Boolean
     }
 
 }

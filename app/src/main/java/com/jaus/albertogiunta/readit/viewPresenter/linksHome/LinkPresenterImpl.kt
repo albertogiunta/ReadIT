@@ -15,30 +15,18 @@ import org.jetbrains.anko.uiThread
 
 class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract.Presenter {
 
-    override var linkList = mutableListOf<Link>()
+    override var linkList = mutableListOf<Link>() // treated as FIFO queue (newer links go to the bottom)
     private val dao: LinkDao = MyApplication.database.linkDao()
     private var editingIndex: Int = 0
 
     init {
         doAsync {
-            if (!Link.IS_ALL_LINKS_DEBUG_ACTIVE) {
-                linkList.addAll(dao.getAllLinksFromMostRecent().filter { it.timestamp.isNotExpired24h() }.sortedBy { it.timestamp })
-            } else {
-                linkList.addAll(dao.getAllLinksFromMostRecent().sortedBy { it.seen })
-            }
+            linkList.addAll(dao.getAllLinksFromMostRecent().filterAndSortForLinksActivity())
         }
     }
 
     override fun onActivityResumed() {
-        linkList.sortBy { it.seen }
-        doAsync {
-            uiThread {
-                // show content if list is not empty, show empty state activity otherwise
-                view?.showContent(linkList.isNotEmpty())
-                // update list only if list is not empty
-                if (linkList.isNotEmpty()) view?.completelyRedrawList()
-            }
-        }
+        updateListInView(true)
     }
 
     override fun onLinkAdditionRequest(isNew: Boolean, url: String) {
@@ -73,7 +61,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
                         this.title = siteInfo.title
                         this.url = siteInfo.url
                     }.update(dao, linkList, editingIndex)
-                    view?.updateLinkListUI()
+                    updateListInView()
                 }, { error ->
                     println(error)
                     view?.showError("Your link seems to be not a valid link :/")
@@ -85,9 +73,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
             val link = dao.getLinkById(linkList[position].id)
             link.apply { seen = true }.update(dao, linkList, position)
             view?.launchBrowser(link)
-            uiThread {
-                view?.updateLinkListUI()
-            }
+            updateListInView()
         }
     }
 
@@ -107,8 +93,8 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
     override fun onLinkRemovalRequest(position: Int) {
         doAsync {
             linkList[position].remove(dao, linkList, position)
+            updateListInView()
             uiThread {
-                view?.updateLinkListUI()
                 view?.showMessage("Link removed successfully")
             }
         }
@@ -120,6 +106,19 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
             val link = dao.getLinkById(linkList[position].id)
             uiThread {
                 view?.displayUpdateDialog(link)
+            }
+        }
+    }
+
+    override fun shouldShowLinkList(): Boolean = linkList.isNotEmpty()
+
+    private fun updateListInView(forceRefresh: Boolean = false) {
+        val list = linkList.filterAndSortForLinksActivity()// sort & filter
+        linkList.clear()
+        linkList.addAll(list)
+        doAsync {
+            uiThread {
+                if (!forceRefresh) view?.updateLinkListUI() else view?.completelyRedrawList() // update UI
             }
         }
     }
