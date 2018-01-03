@@ -27,9 +27,9 @@ import org.jsoup.nodes.Document
  * VIEWS
  */
 
-fun View.toggleVisibility() {
-    if (this.visibility == View.VISIBLE) this.gone() else this.visible()
-}
+fun View.toggleVisibility(setAsVisible: Boolean) = if (setAsVisible) this.visible() else this.gone()
+
+fun View.toggleVisibility() = if (this.visibility == View.VISIBLE) this.gone() else this.visible()
 
 fun View.visible() {
     visibility = View.VISIBLE
@@ -153,12 +153,15 @@ fun Period.toLiteralString(verbose: Boolean): String {
     return timeString
 }
 
-fun Period.toHHmm(): String = PeriodFormatterBuilder()
-        .printZeroAlways()
-        .appendHours()
-        .appendSeparator(":")
-        .appendMinutes()
-        .toFormatter()
-        .print(this)
+fun Period.toHHmm(): String {
+    return with(PeriodFormatterBuilder()) {
+        printZeroAlways()
+        minimumPrintedDigits(2)
+        appendHours()
+        appendSeparator(":")
+        appendMinutes()
+        toFormatter()
+    }.print(this).replace("-", "")
+}
 
 fun DateTime.isNotExpired24h(): Boolean = this.isAfter(DateTime.now().minusHours(24))

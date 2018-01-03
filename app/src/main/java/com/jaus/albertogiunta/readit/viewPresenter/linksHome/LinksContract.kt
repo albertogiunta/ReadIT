@@ -12,6 +12,8 @@ object LinksContract {
 
         fun stopLoadingState()
 
+        fun showContent(showContent: Boolean)
+
         fun completelyRedrawList()
 
         fun updateLinkListUI()

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.google.android.gms.ads.AdRequest
 import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.notifications.NotificationBuilder
@@ -18,6 +19,7 @@ import com.jaus.albertogiunta.readit.utils.toggleVisibility
 import com.jaus.albertogiunta.readit.viewPresenter.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_links.*
 import kotlinx.android.synthetic.main.dialog_manual_input.view.*
+import kotlinx.android.synthetic.main.section_ad.*
 import kotlinx.android.synthetic.main.section_link_options.view.*
 import org.jetbrains.anko.browse
 import org.jetbrains.anko.indeterminateProgressDialog
@@ -50,6 +52,8 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
             }
         }
 
+        adView.loadAd(AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build())
+
         fabAdd.setOnClickListener { displayNewLinkDialog() }
 
         // LIST initialization
@@ -74,6 +78,12 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
     override fun startLoadingState() = urlFetchingWaitDialog.show()
 
     override fun stopLoadingState() = urlFetchingWaitDialog.cancel()
+
+    //////////////////// EMPTY ACTIVITY
+    override fun showContent(showContent: Boolean) {
+        cvContent.toggleVisibility(showContent)
+        clEmptyActivity.toggleVisibility(!showContent)
+    }
 
     //////////////////// LINK INTERACTION
     override fun updateLinkListUI() {

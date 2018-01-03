@@ -33,7 +33,10 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
         linkList.sortBy { it.seen }
         doAsync {
             uiThread {
-                view?.completelyRedrawList()
+                // show content if list is not empty, show empty state activity otherwise
+                view?.showContent(linkList.isNotEmpty())
+                // update list only if list is not empty
+                if (linkList.isNotEmpty()) view?.completelyRedrawList()
             }
         }
     }

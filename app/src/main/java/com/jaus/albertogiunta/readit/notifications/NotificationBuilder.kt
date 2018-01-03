@@ -117,7 +117,8 @@ class NotificationBuilder private constructor(ctx: Context) {
             setNumber(linkList.size)
             setContentIntent(intent)
             setGroup(GROUP_KEY)
-            setVibrate(longArrayOf(-1))
+            setDefaults(0)
+            setOnlyAlertOnce(true)
             build()
         }
     }
@@ -144,7 +145,7 @@ class NotificationBuilder private constructor(ctx: Context) {
                             else Pair(it.title, it.timestamp)
                         }
                         .map {
-                            "• ${it.second.getRemainingTime().toHHmm()} - ${it.first}\n"
+                            "⌛️ ${it.second.getRemainingTime().toHHmm()} ➡️ ${it.first}\n"
                         }
                         .reduce { acc, s -> "$acc$s" }
 

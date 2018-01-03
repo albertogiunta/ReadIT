@@ -30,6 +30,8 @@ dependencies {
     compile "com.google.firebase:firebase-core:$firebase_version"
     compile "com.google.firebase:firebase-ads:$firebase_version"
     compile "com.google.firebase:firebase-crash:$firebase_version"
+    compile "com.google.android.gms:play-services-ads:$firebase_version"
+
 
     // utility
 //    implementation "com.chibatching.kotpref:kotpref:2.2.0"

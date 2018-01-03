@@ -7,7 +7,7 @@
     <color name="appBG">#0d2339</color>
 
     <color name="cardBG">#2c435b</color>
-    <color name="cardTxtPrimary">#FFFFFF</color>
+    <color name="cardTxtPrimary">#ffffff</color>
     <color name="cardTxtSecondary">#9dadb2</color>
 
     <color name="btnHomeAddManuallyBG">#43458b</color>
