@@ -64,6 +64,8 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         // DIALOG initialization
         urlFetchingWaitDialog = indeterminateProgressDialog(message = "Imma fetch all the info for ya", title = "Noice, you got a new link!")
         urlFetchingWaitDialog.cancel()
+
+        onNewIntent(intent)
     }
 
     override fun onResume() {
