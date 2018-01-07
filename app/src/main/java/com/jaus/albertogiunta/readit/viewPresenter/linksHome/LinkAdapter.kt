@@ -7,7 +7,7 @@ import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.utils.*
 import kotlinx.android.synthetic.main.item_link_1.view.*
-import kotlinx.android.synthetic.main.section_blank_item_bottom_space.view.*
+import kotlinx.android.synthetic.main.section_empty_bottom_spacing.view.*
 import kotlinx.android.synthetic.main.section_link_options.view.*
 
 class LinkAdapter(private val items: List<Link>,

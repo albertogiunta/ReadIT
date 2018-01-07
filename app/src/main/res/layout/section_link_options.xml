@@ -68,5 +68,4 @@
             android:contentDescription="Delete linkList"
             />
 
-
 </android.support.constraint.ConstraintLayout>

@@ -110,6 +110,6 @@
 
     <include layout="@layout/section_link_options"/>
 
-    <include layout="@layout/section_blank_item_bottom_space"/>
+    <include layout="@layout/section_empty_bottom_spacing"/>
 
 </RelativeLayout>
