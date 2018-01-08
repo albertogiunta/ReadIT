@@ -9,6 +9,29 @@
     <string name="low_channel_description">This channel is for low priority messages</string>
     <string name="adsLinksList">ca-app-pub-8963908741443055/8718544618</string>
     <string name="testadsLinksList">ca-app-pub-3940256099942544/6300978111</string>
+    <!--<string name="empty_list_desc">-->
+    <!--Oh, and what if you want to save\n-->
+    <!--a tweet, a post or a link for later?\n\n-->
 
+    <!--Use the Share button to share it to this app when you see it, thats\'it!\n\n-->
+
+    <!--Don\'t worry, you can also add it manually\n-->
+    <!--by clicking on that red big button below, see?-->
+    <!--</string>-->
+    <!--<string name="empty_list_desc">-->
+    <!--Now when you see a link, a video or whatever \n-->
+    <!--you want to checkout later-->
+    <!--just use the share button on the app you\'re on, to share it to ReadIT!-->
+
+    <!--Or just add it manually (or from the clipboard) by hitting on that red big button down there, see?-->
+    <!--</string>-->
+    <string name="empty_list_desc">
+        Add any link (tweets, posts, videos…) \n
+        by simply <b>sharing them to ReadIT</b>\n
+        from whichever app you\'re on!\n\n
+        Also, checkout the remaining <b>time in the notification</b>\n
+        to know how much time you have \'til they disappear.\n\n
+        <b>It\'s as simple as that!</b>
+    </string>
 
 </resources>

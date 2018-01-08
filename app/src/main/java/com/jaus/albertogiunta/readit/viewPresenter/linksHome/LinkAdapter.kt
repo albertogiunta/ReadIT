@@ -1,5 +1,6 @@
 package com.jaus.albertogiunta.readit.viewPresenter.linksHome
 
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import com.jaus.albertogiunta.readit.utils.*
 import kotlinx.android.synthetic.main.item_link_1.view.*
 import kotlinx.android.synthetic.main.section_empty_bottom_spacing.view.*
 import kotlinx.android.synthetic.main.section_link_options.view.*
+import org.jetbrains.anko.textColor
 
 class LinkAdapter(private val items: List<Link>,
                   private val onClickListener: (View, Int, Int) -> Unit,
@@ -33,7 +35,14 @@ class LinkAdapter(private val items: List<Link>,
                 tvUrl.text = itemLink.url
                 tvTimeLeft.text = itemLink.timestamp.getRemainingTime().toLiteralString(false)
                 ivFavicon.loadFavicon(itemLink.faviconURL())
-                clCard.background = if (itemLink.seen) context.getDrawable(R.drawable.shape_border_cardview_seen) else context.getDrawable(R.drawable.shape_border_cardview_unseen)
+                if (!itemLink.seen) {
+                    clCard.background = context.getDrawable(R.drawable.shape_border_cardview_unseen)
+                    tvTitle.textColor = ContextCompat.getColor(context, R.color.cardTxtPrimary)
+                } else {
+                    clCard.background = context.getDrawable(R.drawable.shape_border_cardview_seen)
+                    tvTitle.textColor = ContextCompat.getColor(context, R.color.cardTxtPrimarySeen)
+                }
+
                 clEditButtons.gone()
                 if (isLast) blankBottomSpace.visible() else blankBottomSpace.gone()
             }

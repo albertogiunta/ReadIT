@@ -9,10 +9,10 @@
                     />
             <corners android:radius="2dip"/>
             <padding
-                    android:bottom="2dip"
-                    android:left="2dip"
-                    android:right="2dip"
-                    android:top="2dip"
+                    android:bottom="3dip"
+                    android:left="3dip"
+                    android:right="3dip"
+                    android:top="3dip"
                     />
         </shape>
     </item>

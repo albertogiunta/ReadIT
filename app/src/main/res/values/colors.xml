@@ -8,13 +8,11 @@
 
     <color name="cardBG">#2c435b</color>
     <color name="cardTxtPrimary">#ffffff</color>
+    <color name="cardTxtPrimarySeen">#9dadb2</color>
     <color name="cardTxtSecondary">#9dadb2</color>
 
-    <color name="btnHomeAddManuallyBG">#43458b</color>
-    <color name="btnHomeAddManuallyTXT">#fff</color>
-    <color name="btnHomeAddClipboardBG">#6772e5</color>
-    <color name="btnHomeAddClipboardTXT">#fff</color>
-
     <color name="btnTextPrimary">#FFFFFF</color>
+
+    <color name="pandaBlack">#5b6ba3</color>
 
 </resources>
