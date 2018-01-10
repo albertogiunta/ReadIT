@@ -29,6 +29,8 @@ object LinksContract {
         fun displayNewLinkDialog()
 
         fun toggleSeenLinks(displaySeenLink: Boolean)
+
+        fun toggleCardLayoutMenuItems()
     }
 
     interface Presenter : BasePresenter<View> {
@@ -50,6 +52,8 @@ object LinksContract {
         fun onLinkUpdateRequest(position: Int)
 
         fun onSeenToggleRequest()
+
+        fun onCardToggleRequest(cardLayout: CARD_LAYOUT)
 
         fun shouldShowLinkList(): Boolean
     }

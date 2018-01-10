@@ -110,7 +110,7 @@ class NotificationBuilder private constructor(ctx: Context) {
             setTicker(title)
             setContentText(expandToSeeMore)
             setStyle(NotificationCompat.BigTextStyle().bigText(body))
-            setSmallIcon(R.drawable.ic_copy)
+            setSmallIcon(R.drawable.ic_notification)
             if (BuildConfig.DEBUG) setShowWhen(true)
             setAutoCancel(false)
             setOngoing(true)

@@ -14,12 +14,13 @@ import org.jetbrains.anko.textColor
 
 class LinkAdapter(private val items: List<Link>,
                   private val onClickListener: (View, Int, Int) -> Unit,
-                  private val onLongClickListener: (View, Int, Int) -> Unit) : RecyclerView.Adapter<LinkAdapter.LinkViewHolder>() {
+                  private val onLongClickListener: (View, Int, Int) -> Unit,
+                  private val preferredCardLayout: CARD_LAYOUT = Settings.cardLayout) : RecyclerView.Adapter<LinkAdapter.LinkViewHolder>() {
 
     override fun onBindViewHolder(holder: LinkViewHolder, position: Int) = holder.bind(items[position], position == items.size - 1)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LinkViewHolder {
-        val holder = LinkViewHolder(parent.inflate(R.layout.item_link_2))
+        val holder = LinkViewHolder(parent.inflate(preferredCardLayout.layout))
         holder.onClick(onClickListener)
         holder.onLongClick(onLongClickListener)
         return holder
@@ -48,4 +49,11 @@ class LinkAdapter(private val items: List<Link>,
             }
         }
     }
+}
+
+enum class CARD_LAYOUT(val id: Int, val layout: Int, val action: Int) {
+
+    CARD1(1, R.layout.item_link_1, R.id.action_toggle_card_1),
+    CARD2(2, R.layout.item_link_2, R.id.action_toggle_card_2)
+
 }

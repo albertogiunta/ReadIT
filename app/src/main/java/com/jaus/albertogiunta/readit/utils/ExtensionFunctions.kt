@@ -8,6 +8,7 @@ import android.widget.ImageView
 import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.db.LinkDao
 import com.jaus.albertogiunta.readit.model.Link
+import com.jaus.albertogiunta.readit.viewPresenter.linksHome.CARD_LAYOUT
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_link_1.view.*
 import okhttp3.ResponseBody
@@ -47,6 +48,16 @@ inline fun MenuItem.consumeOptionButton(f: () -> Unit): Boolean {
 }
 
 fun Menu.toggleSeen(displaySeenLinks: Boolean) = this.findItem(R.id.action_toggle_seen).setIcon(if (displaySeenLinks) R.drawable.ic_seen_enabled else R.drawable.ic_seen_disabled)
+
+fun Menu.togglePreferredCardRadioButton() = this.findItem(Settings.cardLayout.action).setIcon(R.drawable.ic_radio_button_checked)
+
+fun Menu.toggleCardsRadioButtons(preferredCard: CARD_LAYOUT = Settings.cardLayout) =
+        CARD_LAYOUT.values().forEach {
+            when (preferredCard.action) {
+                it.action -> this.findItem(it.action).setIcon(R.drawable.ic_radio_button_checked)
+                else -> this.findItem(it.action).setIcon(R.drawable.ic_radio_button_unchecked)
+            }
+        }
 
 fun ViewGroup.inflate(layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)

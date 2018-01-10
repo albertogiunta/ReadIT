@@ -83,6 +83,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menu.toggleSeen(Settings.showSeen)
+        menu.togglePreferredCardRadioButton()
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -90,11 +91,23 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         return with(item) {
             when (itemId) {
                 R.id.action_toggle_seen -> consumeOptionButton { presenter.onSeenToggleRequest() }
-                R.id.action_settings -> consumeOptionButton { TODO() }
+                R.id.action_toggle_card_1 -> consumeOptionButton { presenter.onCardToggleRequest(CARD_LAYOUT.CARD1) }
+                R.id.action_toggle_card_2 -> consumeOptionButton { presenter.onCardToggleRequest(CARD_LAYOUT.CARD2) }
                 R.id.action_refer -> consumeOptionButton { share("Try ReadIT for Android, and never forget to read a link again: https://play.google.com/store/apps/details?id=$packageName") }
                 R.id.action_review -> consumeOptionButton { openPlayStore() }
                 R.id.action_about -> consumeOptionButton { TODO() }
                 else -> super.onOptionsItemSelected(this)
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        with(intent) {
+            if (Intent.ACTION_SEND == action && type != null && "text/plain" == type) {
+                getStringExtra(Intent.EXTRA_TEXT)?.let {
+                    if (it != Link.EMPTY_LINK) presenter.onLinkAdditionRequest(true, it)
+                }
             }
         }
     }
@@ -160,6 +173,11 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         completelyRedrawList()
     }
 
+    override fun toggleCardLayoutMenuItems() {
+        menu.toggleCardsRadioButtons()
+        completelyRedrawList()
+    }
+
     @SuppressLint("InflateParams")
     private fun displayInputDialog(isNew: Boolean, url: String = Link.EMPTY_LINK) {
         val inflater = layoutInflater
@@ -187,16 +205,5 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
 
         dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         dialog.show()
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        with(intent) {
-            if (Intent.ACTION_SEND == action && type != null && "text/plain" == type) {
-                getStringExtra(Intent.EXTRA_TEXT)?.let {
-                    if (it != Link.EMPTY_LINK) presenter.onLinkAdditionRequest(true, it)
-                }
-            }
-        }
     }
 }

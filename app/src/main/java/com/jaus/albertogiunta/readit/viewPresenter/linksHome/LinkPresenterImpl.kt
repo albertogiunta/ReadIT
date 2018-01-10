@@ -127,6 +127,11 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
         view?.toggleSeenLinks(Settings.showSeen)
     }
 
+    override fun onCardToggleRequest(cardLayout: CARD_LAYOUT) {
+        if (Settings.cardLayout.id != cardLayout.id) Settings.cardLayout = cardLayout
+        view?.toggleCardLayoutMenuItems()
+    }
+
     private fun updateListInView(forceRefresh: Boolean = false) {
         val list = linkList.filterAndSortForLinksActivity() // sort & filter
         linkList.clear()
