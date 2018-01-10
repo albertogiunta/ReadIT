@@ -155,7 +155,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         share(link.url)
     }
 
-    override fun toggleSeen(displaySeenLink: Boolean) {
+    override fun toggleSeenLinks(displaySeenLink: Boolean) {
         menu.toggleSeen(displaySeenLink)
         completelyRedrawList()
     }

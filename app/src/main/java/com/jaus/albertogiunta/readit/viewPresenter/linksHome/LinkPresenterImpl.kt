@@ -115,16 +115,20 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
 
     override fun onSeenToggleRequest() {
         doAsync {
+            // toggle shared preferences
             Settings.showSeen = !Settings.showSeen
+
+            // re-init linkList because otherwise un-toggling doesn't work (the whole fresh list is needed)
             linkList.clear()
             linkList.addAll(dao.getAllLinksFromMostRecent())
         }.get()
+
         updateListInView(true)
-        view?.toggleSeen(Settings.showSeen)
+        view?.toggleSeenLinks(Settings.showSeen)
     }
 
     private fun updateListInView(forceRefresh: Boolean = false) {
-        val list = linkList.filterAndSortForLinksActivity()// sort & filter
+        val list = linkList.filterAndSortForLinksActivity() // sort & filter
         linkList.clear()
         linkList.addAll(list)
         doAsync {

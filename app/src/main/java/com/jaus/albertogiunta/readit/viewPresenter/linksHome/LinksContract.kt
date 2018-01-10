@@ -28,7 +28,7 @@ object LinksContract {
 
         fun displayNewLinkDialog()
 
-        fun toggleSeen(displaySeenLink: Boolean)
+        fun toggleSeenLinks(displaySeenLink: Boolean)
     }
 
     interface Presenter : BasePresenter<View> {
