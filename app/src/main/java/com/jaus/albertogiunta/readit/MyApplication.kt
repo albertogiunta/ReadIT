@@ -2,6 +2,7 @@ package com.jaus.albertogiunta.readit
 
 import android.app.Application
 import android.arch.persistence.room.Room
+import com.chibatching.kotpref.Kotpref
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.crash.FirebaseCrash
 import com.jaus.albertogiunta.readit.db.AppDatabase
@@ -32,6 +33,7 @@ class MyApplication: Application() {
         FirebaseCrash.setCrashCollectionEnabled(!BuildConfig.DEBUG)
         MobileAds.initialize(this, "ca-app-pub-8963908741443055~5545586366")
         JodaTimeAndroid.init(this)
+        Kotpref.init(this)
         NotificationBuilder.init(this)
         NotificationService.schedule(this)
     }

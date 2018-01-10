@@ -9,6 +9,16 @@
         android:background="@color/appBG"
         >
 
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            />
+
     <include
             android:id="@+id/emptyLayout"
             layout="@layout/section_empty_link_list"
@@ -57,12 +67,13 @@
             android:layout_height="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:background="@color/appBG"
             tools:listitem="@layout/item_link_1"
             android:clipChildren="false"
             android:clipToPadding="false"
             app:layout_constraintBottom_toTopOf="@+id/adLayout"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
             >
     </android.support.v7.widget.RecyclerView>
 

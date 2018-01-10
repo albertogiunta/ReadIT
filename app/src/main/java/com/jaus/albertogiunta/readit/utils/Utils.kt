@@ -2,6 +2,7 @@ package com.jaus.albertogiunta.readit.utils
 
 import java.net.URL
 
+
 object Utils {
 
     fun getHostOfURL(url: String): String = URL(url).host

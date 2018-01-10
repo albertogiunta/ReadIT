@@ -12,27 +12,33 @@
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:supportsRtl="true"
-            android:theme="@style/MyCustomTheme"
-            >
+            android:theme="@style/MyCustomTheme">
         <activity
-                android:name="com.jaus.albertogiunta.readit.viewPresenter.linksHome.LinksActivity"
-                android:launchMode="singleInstance"
-                >
+                android:name=".viewPresenter.linksHome.LinksActivity"
+                android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
+
                 <action android:name="android.intent.action.SEND"/>
+
                 <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity>
+
         <service
                 android:name=".notifications.NotificationService"
-                android:permission="android.permission.BIND_JOB_SERVICE"
                 android:exported="true"
-                />
+                android:permission="android.permission.BIND_JOB_SERVICE"/>
+
+        <activity
+                android:name=".viewPresenter.SettingsActivity"
+                android:label="@string/title_activity_settings">
+        </activity>
     </application>
 
 </manifest>

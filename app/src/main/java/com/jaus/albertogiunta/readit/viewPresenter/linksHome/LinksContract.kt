@@ -27,6 +27,8 @@ object LinksContract {
         fun displayUpdateDialog(link: Link)
 
         fun displayNewLinkDialog()
+
+        fun toggleSeen(displaySeenLink: Boolean)
     }
 
     interface Presenter : BasePresenter<View> {
@@ -46,6 +48,8 @@ object LinksContract {
         fun onLinkSharingRequest(position: Int)
 
         fun onLinkUpdateRequest(position: Int)
+
+        fun onSeenToggleRequest()
 
         fun shouldShowLinkList(): Boolean
     }

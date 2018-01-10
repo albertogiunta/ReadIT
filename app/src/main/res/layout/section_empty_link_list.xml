@@ -13,7 +13,7 @@
             android:id="@+id/imageView"
             android:layout_width="300dp"
             android:layout_height="150dp"
-            app:srcCompat="@drawable/ic_panda"
+            app:srcCompat="@drawable/img_panda"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
             app:layout_constraintStart_toStartOf="parent"

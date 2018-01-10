@@ -1,10 +1,11 @@
 <resources>
 
-    <style name="MyCustomTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="MyCustomTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:navigationBarColor">@color/appBG</item>
         <item name="android:statusBarColor">@color/appBG</item>
         <item name="colorPrimary">@color/appBG</item>
+        <item name="android:textColorPrimary">@color/btnTextPrimary</item>
     </style>
 
 </resources>

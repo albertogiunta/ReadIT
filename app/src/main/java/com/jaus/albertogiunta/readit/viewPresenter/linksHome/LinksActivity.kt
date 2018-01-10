@@ -5,6 +5,8 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.LinearLayout
@@ -13,9 +15,7 @@ import com.google.android.gms.ads.AdRequest
 import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.notifications.NotificationBuilder
-import com.jaus.albertogiunta.readit.utils.consumeEditButton
-import com.jaus.albertogiunta.readit.utils.getURLFromClipboard
-import com.jaus.albertogiunta.readit.utils.toggleVisibility
+import com.jaus.albertogiunta.readit.utils.*
 import com.jaus.albertogiunta.readit.viewPresenter.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_links.*
 import kotlinx.android.synthetic.main.dialog_manual_input.view.*
@@ -33,10 +33,12 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
     private lateinit var itemOnClick: (View, Int, Int) -> Unit
     private lateinit var itemOnLongClick: (View, Int, Int) -> Unit
     private val notificationManager = NotificationBuilder.instance
+    private lateinit var menu: Menu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_links)
+        setSupportActionBar(toolbar)
 
         // UI initialization
         itemOnClick = { _, position, _ -> presenter.onLinkBrowsingRequest(position) }
@@ -71,6 +73,30 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
     override fun onResume() {
         super.onResume()
         presenter.onActivityResumed()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        this.menu = menu
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        menu.toggleSeen(Settings.showSeen)
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return with(item) {
+            when (itemId) {
+                R.id.action_toggle_seen -> consumeOptionButton { presenter.onSeenToggleRequest() }
+                R.id.action_settings -> consumeOptionButton { TODO() }
+                R.id.action_refer -> consumeOptionButton { share("Try ReadIT for Android, and never forget to read a link again: https://play.google.com/store/apps/details?id=$packageName") }
+                R.id.action_review -> consumeOptionButton { openPlayStore() }
+                R.id.action_about -> consumeOptionButton { TODO() }
+                else -> super.onOptionsItemSelected(this)
+            }
+        }
     }
 
     //////////////////// LOADING
@@ -127,6 +153,11 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
 
     override fun launchShare(link: Link) {
         share(link.url)
+    }
+
+    override fun toggleSeen(displaySeenLink: Boolean) {
+        menu.toggleSeen(displaySeenLink)
+        completelyRedrawList()
     }
 
     @SuppressLint("InflateParams")

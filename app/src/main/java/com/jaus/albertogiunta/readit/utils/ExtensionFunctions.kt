@@ -1,13 +1,9 @@
 package com.jaus.albertogiunta.readit.utils
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
+import android.content.*
+import android.net.Uri
 import android.support.v7.widget.RecyclerView
-import android.view.HapticFeedbackConstants
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.db.LinkDao
@@ -45,6 +41,13 @@ inline fun View.consumeEditButton(f: () -> Unit) {
     this.gone()
 }
 
+inline fun MenuItem.consumeOptionButton(f: () -> Unit): Boolean {
+    f()
+    return true
+}
+
+fun Menu.toggleSeen(displaySeenLinks: Boolean) = this.findItem(R.id.action_toggle_seen).setIcon(if (displaySeenLinks) R.drawable.ic_seen_enabled else R.drawable.ic_seen_disabled)
+
 fun ViewGroup.inflate(layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
 }
@@ -75,6 +78,9 @@ fun ImageView.loadFavicon(url: String) {
     }
 }
 
+/**
+ * CONTEXT
+ */
 fun Context.clipboard(): ClipboardManager = this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
 fun Context.clearClipboard() {
@@ -90,6 +96,14 @@ fun Context.getURLFromClipboard(): String? {
 
 fun Context.saveURLToClipboard(url: String) {
     clipboard().primaryClip = ClipData.newPlainText("url", url)
+}
+
+fun Context.openPlayStore() {
+    try {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)))
+    } catch (anfe: ActivityNotFoundException) {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packageName)))
+    }
 }
 
 fun DateTime.getRemainingTime() = Period(this.plusDays(1), DateTime.now())
@@ -124,11 +138,13 @@ fun Link.remove(dao: LinkDao, linkList: MutableList<Link>, position: Int) {
 
 fun Link.faviconURL() = "https://${Utils.getHostOfURL(this.url)}/favicon.ico"
 
-fun List<Link>.filterAndSortForLinksActivity() =
-        if (!Link.IS_ALL_LINKS_DEBUG_ACTIVE)
-            this.filter { it.timestamp.isNotExpired24h() }.sortedWith(compareBy(Link::seen, Link::timestamp))
-        else
-            this.sortedWith(compareBy(Link::seen, Link::timestamp))
+fun List<Link>.filterAndSortForLinksActivity(): List<Link> {
+    val showSeen = Settings.showSeen
+    return if (!Link.IS_ALL_LINKS_DEBUG_ACTIVE)
+        this.filter { it.timestamp.isNotExpired24h() && !it.seen || (showSeen && it.seen) }.sortedWith(compareBy(Link::seen, Link::timestamp))
+    else
+        this.filter { !it.seen || (showSeen && it.seen) }.sortedWith(compareBy(Link::seen, Link::timestamp))
+}
 
 fun List<Link>.filterAndSortForNotification() =
         if (!Link.IS_ALL_LINKS_DEBUG_ACTIVE)

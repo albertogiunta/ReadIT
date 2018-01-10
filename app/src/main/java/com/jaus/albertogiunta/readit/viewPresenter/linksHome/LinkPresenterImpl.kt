@@ -62,6 +62,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
                         this.url = siteInfo.url
                     }.update(dao, linkList, editingIndex)
                     updateListInView()
+                    view?.showMessage("Link queued successfully")
                 }, { error ->
                     println(error)
                     view?.showError("Your link seems to be not a valid link :/")
@@ -111,6 +112,16 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
     }
 
     override fun shouldShowLinkList(): Boolean = linkList.isNotEmpty()
+
+    override fun onSeenToggleRequest() {
+        doAsync {
+            Settings.showSeen = !Settings.showSeen
+            linkList.clear()
+            linkList.addAll(dao.getAllLinksFromMostRecent())
+        }.get()
+        updateListInView(true)
+        view?.toggleSeen(Settings.showSeen)
+    }
 
     private fun updateListInView(forceRefresh: Boolean = false) {
         val list = linkList.filterAndSortForLinksActivity()// sort & filter
