@@ -2,6 +2,7 @@ package com.jaus.albertogiunta.readit.viewPresenter.linksHome
 
 import com.jaus.albertogiunta.readit.MyApplication
 import com.jaus.albertogiunta.readit.db.LinkDao
+import com.jaus.albertogiunta.readit.db.Settings
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.model.WebsiteInfo
 import com.jaus.albertogiunta.readit.networking.LinkService
@@ -36,9 +37,10 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
 
         var polishedURL: String = Link.EMPTY_LINK
         val indexOfProtocol = url.indexOf("http")
-
         if (indexOfProtocol == -1) {
-            // TODO link has no protocol
+            // TODO link has no protocol, also try to add www if missing (before adding protocol)
+            if (url.indexOf("www") == -1) polishedURL = "www.$polishedURL"
+            polishedURL = "https://$polishedURL"
         } else {
             polishedURL = url.substring(indexOfProtocol).replace("\\s+", "")
         }
@@ -127,7 +129,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
         view?.toggleSeenLinks(Settings.showSeen)
     }
 
-    override fun onCardToggleRequest(cardLayout: CARD_LAYOUT) {
+    override fun onCardToggleRequest(cardLayout: CardLayout) {
         if (Settings.cardLayout.id != cardLayout.id) Settings.cardLayout = cardLayout
         view?.toggleCardLayoutMenuItems()
     }

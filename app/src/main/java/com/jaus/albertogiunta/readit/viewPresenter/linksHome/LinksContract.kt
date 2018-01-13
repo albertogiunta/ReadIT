@@ -53,7 +53,7 @@ object LinksContract {
 
         fun onSeenToggleRequest()
 
-        fun onCardToggleRequest(cardLayout: CARD_LAYOUT)
+        fun onCardToggleRequest(cardLayout: CardLayout)
 
         fun shouldShowLinkList(): Boolean
     }

@@ -9,23 +9,9 @@
     <string name="low_channel_description">This channel is for low priority messages</string>
     <string name="adsLinksList">ca-app-pub-8963908741443055/8718544618</string>
     <string name="testadsLinksList">ca-app-pub-3940256099942544/6300978111</string>
-    <!--<string name="empty_list_desc">-->
-    <!--Oh, and what if you want to save\n-->
-    <!--a tweet, a post or a link for later?\n\n-->
 
-    <!--Use the Share button to share it to this app when you see it, thats\'it!\n\n-->
-
-    <!--Don\'t worry, you can also add it manually\n-->
-    <!--by clicking on that red big button below, see?-->
-    <!--</string>-->
-    <!--<string name="empty_list_desc">-->
-    <!--Now when you see a link, a video or whatever \n-->
-    <!--you want to checkout later-->
-    <!--just use the share button on the app you\'re on, to share it to ReadIT!-->
-
-    <!--Or just add it manually (or from the clipboard) by hitting on that red big button down there, see?-->
-    <!--</string>-->
-    <string name="empty_list_desc">
+    <string name="title_empty_link_list">No links here, you can relax now.</string>
+    <string name="desc_empty_link_list_1">
         Add any link (tweets, posts, videos…) \n
         by simply <b>sharing them to ReadIT</b>\n
         from whichever app you\'re on!\n\n
@@ -33,78 +19,23 @@
         to know how much time you have \'til they disappear.\n\n
         <b>It\'s as simple as that!</b>
     </string>
-    <string name="title_activity_settings">Settings</string>
 
-    <!-- Strings related to Settings -->
-
-    <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
-
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
-        based on your message history
+    <string name="title_about">
+        Hey you, ciao! 😁\n
     </string>
 
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
+    <string name="desc_about_1">
+        I\'m Alberto, an Italian developer who stopped counting unread articles on Pocket way too long ago.\n
+        During Christmas Break \'17 I decided to make this app, so that I wouldn\'t miss out on any link that I wanted to read in 2018.\n
+        I really hope you\'re gonna find it as useful as I do.
+    </string>
 
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
-    </string-array>
+    <string name="desc_about_2">
+        On a more technical note, I made it in Kotlin (and had a lot of fun while doing it) and the code is open source.
+    </string>
 
-    <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
-
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
-    </string-array>
-
-    <string-array name="list_preference_entries">
-        <item>Entry 1</item>
-        <item>Entry 2</item>
-        <item>Entry 3</item>
-    </string-array>
-
-    <string-array name="list_preference_entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="multi_select_list_preference_default_value"/>
-
-    <string name="pref_title_system_sync_settings">System sync settings</string>
-
-    <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
-
-    <string name="pref_title_new_message_notifications">New message notifications</string>
-
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
-
-    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="desc_about_3">
+        If you want to reach out or see the code, here are some buttons for you.
+    </string>
 
 </resources>

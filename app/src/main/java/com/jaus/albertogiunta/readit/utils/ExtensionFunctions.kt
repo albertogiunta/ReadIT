@@ -7,8 +7,9 @@ import android.view.*
 import android.widget.ImageView
 import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.db.LinkDao
+import com.jaus.albertogiunta.readit.db.Settings
 import com.jaus.albertogiunta.readit.model.Link
-import com.jaus.albertogiunta.readit.viewPresenter.linksHome.CARD_LAYOUT
+import com.jaus.albertogiunta.readit.viewPresenter.linksHome.CardLayout
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_link_1.view.*
 import okhttp3.ResponseBody
@@ -51,8 +52,8 @@ fun Menu.toggleSeen(displaySeenLinks: Boolean) = this.findItem(R.id.action_toggl
 
 fun Menu.togglePreferredCardRadioButton() = this.findItem(Settings.cardLayout.action).setIcon(R.drawable.ic_radio_button_checked)
 
-fun Menu.toggleCardsRadioButtons(preferredCard: CARD_LAYOUT = Settings.cardLayout) =
-        CARD_LAYOUT.values().forEach {
+fun Menu.toggleCardsRadioButtons(preferredCard: CardLayout = Settings.cardLayout) =
+        CardLayout.values().forEach {
             when (preferredCard.action) {
                 it.action -> this.findItem(it.action).setIcon(R.drawable.ic_radio_button_checked)
                 else -> this.findItem(it.action).setIcon(R.drawable.ic_radio_button_unchecked)

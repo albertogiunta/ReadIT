@@ -21,6 +21,7 @@ class MyApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
+        MobileAds.initialize(this, "ca-app-pub-8963908741443055~5545586366")
 
         // setup database
         if (IS_DB_DEBUG_ACTIVE) this.deleteDatabase(DB_NAME)
@@ -31,7 +32,6 @@ class MyApplication: Application() {
 
         // init all the things
         FirebaseCrash.setCrashCollectionEnabled(!BuildConfig.DEBUG)
-        MobileAds.initialize(this, "ca-app-pub-8963908741443055~5545586366")
         JodaTimeAndroid.init(this)
         Kotpref.init(this)
         NotificationBuilder.init(this)

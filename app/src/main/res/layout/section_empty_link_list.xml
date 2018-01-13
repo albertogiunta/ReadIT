@@ -26,7 +26,7 @@
             />
 
     <TextView
-            android:text="No links here, you can relax now."
+            android:text="@string/title_empty_link_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textView"
@@ -43,7 +43,7 @@
             app:layout_constraintVertical_bias="0.06999999"
             />
     <TextView
-            android:text="@string/empty_list_desc"
+            android:text="@string/desc_empty_link_list_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textView2"

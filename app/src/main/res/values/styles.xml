@@ -5,7 +5,7 @@
         <item name="android:navigationBarColor">@color/appBG</item>
         <item name="android:statusBarColor">@color/appBG</item>
         <item name="colorPrimary">@color/appBG</item>
-        <item name="android:textColorPrimary">@color/btnTextPrimary</item>
+        <item name="android:textColorPrimary">@color/appBG</item>
     </style>
 
 </resources>

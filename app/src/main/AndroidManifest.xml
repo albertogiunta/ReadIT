@@ -15,11 +15,15 @@
             android:theme="@style/MyCustomTheme">
 
         <activity
+                android:name=".viewPresenter.intro.IntroActivity"
+                android:label="Intro"
+                />
+
+        <activity
                 android:name=".viewPresenter.linksHome.LinksActivity"
                 android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>

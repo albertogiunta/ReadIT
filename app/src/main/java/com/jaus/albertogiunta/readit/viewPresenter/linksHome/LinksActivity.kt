@@ -13,17 +13,18 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.android.gms.ads.AdRequest
 import com.jaus.albertogiunta.readit.R
+import com.jaus.albertogiunta.readit.db.Prefs
+import com.jaus.albertogiunta.readit.db.Settings
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.notifications.NotificationBuilder
 import com.jaus.albertogiunta.readit.utils.*
 import com.jaus.albertogiunta.readit.viewPresenter.base.BaseActivity
+import com.jaus.albertogiunta.readit.viewPresenter.intro.IntroActivity
 import kotlinx.android.synthetic.main.activity_links.*
 import kotlinx.android.synthetic.main.dialog_manual_input.view.*
 import kotlinx.android.synthetic.main.section_ad.*
 import kotlinx.android.synthetic.main.section_link_options.view.*
-import org.jetbrains.anko.browse
-import org.jetbrains.anko.indeterminateProgressDialog
-import org.jetbrains.anko.share
+import org.jetbrains.anko.*
 
 
 class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), LinksContract.View {
@@ -57,17 +58,21 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         adView.loadAd(AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build())
 
         fabAdd.setOnClickListener { displayNewLinkDialog() }
+//        fabAdd.setOnClickListener { startActivity(intentFor<IntroActivity>()) }
 
         // LIST initialization
         rvLinks.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
         rvLinks.adapter = LinkAdapter(presenter.linkList, itemOnClick, itemOnLongClick)
-        updateLinkListUI()
 
         // DIALOG initialization
         urlFetchingWaitDialog = indeterminateProgressDialog(message = "Imma fetch all the info for ya", title = "Noice, you got a new link!")
         urlFetchingWaitDialog.cancel()
 
         onNewIntent(intent)
+
+        doAsync {
+            if (!Prefs.tutorialSeen) startActivity(intentFor<IntroActivity>())
+        }
     }
 
     override fun onResume() {
@@ -91,8 +96,8 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         return with(item) {
             when (itemId) {
                 R.id.action_toggle_seen -> consumeOptionButton { presenter.onSeenToggleRequest() }
-                R.id.action_toggle_card_1 -> consumeOptionButton { presenter.onCardToggleRequest(CARD_LAYOUT.CARD1) }
-                R.id.action_toggle_card_2 -> consumeOptionButton { presenter.onCardToggleRequest(CARD_LAYOUT.CARD2) }
+                R.id.action_toggle_card_1 -> consumeOptionButton { presenter.onCardToggleRequest(CardLayout.CARD1) }
+                R.id.action_toggle_card_2 -> consumeOptionButton { presenter.onCardToggleRequest(CardLayout.CARD2) }
                 R.id.action_refer -> consumeOptionButton { share("Try ReadIT for Android, and never forget to read a link again: https://play.google.com/store/apps/details?id=$packageName") }
                 R.id.action_review -> consumeOptionButton { openPlayStore() }
                 R.id.action_about -> consumeOptionButton { TODO() }
@@ -107,6 +112,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
             if (Intent.ACTION_SEND == action && type != null && "text/plain" == type) {
                 getStringExtra(Intent.EXTRA_TEXT)?.let {
                     if (it != Link.EMPTY_LINK) presenter.onLinkAdditionRequest(true, it)
+                    getIntent().removeExtra(Intent.EXTRA_TEXT)
                 }
             }
         }

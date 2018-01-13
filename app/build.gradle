@@ -28,14 +28,16 @@ dependencies {
 
     // firebase
     implementation 'com.android.support:support-v4:26.1.0'
-    compile "com.google.firebase:firebase-core:$firebase_version"
-    compile "com.google.firebase:firebase-ads:$firebase_version"
-    compile "com.google.firebase:firebase-crash:$firebase_version"
-    compile "com.google.android.gms:play-services-ads:$firebase_version"
+    implementation "com.google.firebase:firebase-core:$firebase_version"
+    implementation "com.google.firebase:firebase-ads:$firebase_version"
+    implementation "com.google.firebase:firebase-crash:$firebase_version"
+    implementation "com.google.android.gms:play-services-ads:$firebase_version"
 
     // utility
+    implementation "com.github.apl-devs:appintro:v$appintro_version"
     implementation "com.chibatching.kotpref:kotpref:$kotpref_version"
-    compile "com.chibatching.kotpref:enum-support:$kotpref_version"
+    implementation "com.chibatching.kotpref:enum-support:$kotpref_version"
+    implementation "co.trikita:log:$log_version"
 
 //    implementation "com.chibatching.kotpref:gson-support:2.2.0"
 //    implementation "com.google.code.gson:gson:$gson_version"
