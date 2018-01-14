@@ -41,6 +41,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="8dp"
             app:layout_constraintVertical_bias="0.06999999"
+            android:fontFamily="sans-serif"
             />
     <TextView
             android:text="@string/desc_empty_link_list_1"
@@ -57,8 +58,9 @@
             app:layout_constraintTop_toBottomOf="@+id/textView"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="8dp"
-            app:layout_constraintVertical_bias="0.25"
+            app:layout_constraintVertical_bias="0.51"
             android:lineSpacingExtra="4dp"
+            android:fontFamily="sans-serif-condensed"
             />
 
 </android.support.constraint.ConstraintLayout>

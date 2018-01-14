@@ -50,7 +50,7 @@
                     />
 
             <TextView
-                    android:layout_width="320dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/tvTitle"
                     tools:text="Google Wins Trial Against Oracle, Saves $9 Billion "
@@ -66,6 +66,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     android:textSize="18sp"
                     app:layout_constraintStart_toEndOf="@+id/ivFavicon"
+                    android:fontFamily="sans-serif"
                     />
             <TextView
                     android:id="@+id/tvUrl"
@@ -83,6 +84,7 @@
                     app:layout_constraintStart_toEndOf="@+id/ivFavicon"
                     android:layout_marginTop="8dp"
                     app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+                    android:fontFamily="sans-serif-condensed"
                     />
             <TextView
                     android:layout_width="wrap_content"

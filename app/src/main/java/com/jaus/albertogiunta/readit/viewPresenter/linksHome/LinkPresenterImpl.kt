@@ -35,14 +35,11 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
             view?.showError("Your link seems to be empty or not a valid link :/"); return
         }
 
-        var polishedURL: String = Link.EMPTY_LINK
-        val indexOfProtocol = url.indexOf("http")
-        if (indexOfProtocol == -1) {
-            // TODO link has no protocol, also try to add www if missing (before adding protocol)
-            if (url.indexOf("www") == -1) polishedURL = "www.$polishedURL"
-            polishedURL = "https://$polishedURL"
-        } else {
-            polishedURL = url.substring(indexOfProtocol).replace("\\s+", "")
+        var polishedURL: String = url.replace("\\s+", "")
+        try {
+            if (url.indexOf("http") == -1) polishedURL = "http://$polishedURL"
+        } catch (e: Exception) {
+            view?.showError("Your link seems to be empty or not a valid link :/"); return
         }
 
         NetworkingFactory

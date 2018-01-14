@@ -8,4 +8,10 @@
         <item name="android:textColorPrimary">@color/appBG</item>
     </style>
 
+    <style name="MyCustomDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowMinWidthMajor">98%</item>
+        <item name="android:windowMinWidthMinor">98%</item>
+    </style>
+
 </resources>

@@ -12,30 +12,42 @@
 
     <string name="title_empty_link_list">No links here, you can relax now.</string>
     <string name="desc_empty_link_list_1">
-        Add any link (tweets, posts, videos…) \n
-        by simply <b>sharing them to ReadIT</b>\n
-        from whichever app you\'re on!\n\n
-        Also, checkout the remaining <b>time in the notification</b>\n
-        to know how much time you have \'til they disappear.\n\n
-        <b>It\'s as simple as that!</b>
+        <b>1)</b> Add links also by <b>sharing them</b> to ReadIT\n\n
+        <b>2)</b> Check the remaining time <b>live in the notification</b>\n\n
+        <b>3) Read IT!</b>\n\n
+        <b>It\'s really as simple as that!</b>
+    </string>
+
+    <string name="desc_empty_link_list_emoji">
+        <b>1)</b> Add 🔗 links by <b>sharing them</b> to ReadIT\n\n
+        <b>2)</b> Check the ⏳ remaining time <b>live in the notification</b>\n\n
+        <b>3)</b> 🤓 <b>Read IT!</b>\n\n
+        <b>It\'s really as simple as that!</b>
     </string>
 
     <string name="title_about">
-        Hey you, ciao! 😁\n
+        Hey you, ciao!\n
+    </string>
+
+    <string name="title_about_emoji">
+        Hey you, ciao! 🤓\n
     </string>
 
     <string name="desc_about_1">
-        I\'m Alberto, an Italian developer who stopped counting unread articles on Pocket way too long ago.\n
-        During Christmas Break \'17 I decided to make this app, so that I wouldn\'t miss out on any link that I wanted to read in 2018.\n
-        I really hope you\'re gonna find it as useful as I do.
+        \nI\'m <b>Alberto</b>, an Italian developer who stopped counting unread articles on Pocket way too long ago.\n
+        During Christmas break \'17 I decided to make this app, <b>so that I wouldn\'t miss out on any new link</b> that I wanted to read in 2018.\n
+        <b>I really hope you\'re gonna find it as useful as I do.</b>
     </string>
 
     <string name="desc_about_2">
-        On a more technical note, I made it in Kotlin (and had a lot of fun while doing it) and the code is open source.
+        On a more technical note, I made this app in <b>Kotlin</b> (and had a lot of fun while doing it) and the code is <b>open source</b>.
     </string>
 
     <string name="desc_about_3">
-        If you want to reach out or see the code, here are some buttons for you.
+        If you want to reach out to me (and I\'d be more than happy if you do) or see the code, <b>here are some links for you</b>\n\n
+        • <a href="https://www.twitter.com/albigiu">tweet me @ albigiu</a>\n\n
+        • <a href="mailto:albertogiuntadev@gmail.com">mail me @ albertogiuntadev@gmail.com</a>\n\n
+        • <a href="https://github.com/albertogiunta/ReadIT">see the code @ Github</a>
     </string>
 
 </resources>

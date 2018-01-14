@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.text.method.LinkMovementMethod
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -21,6 +22,7 @@ import com.jaus.albertogiunta.readit.utils.*
 import com.jaus.albertogiunta.readit.viewPresenter.base.BaseActivity
 import com.jaus.albertogiunta.readit.viewPresenter.intro.IntroActivity
 import kotlinx.android.synthetic.main.activity_links.*
+import kotlinx.android.synthetic.main.dialog_about.view.*
 import kotlinx.android.synthetic.main.dialog_manual_input.view.*
 import kotlinx.android.synthetic.main.section_ad.*
 import kotlinx.android.synthetic.main.section_link_options.view.*
@@ -100,7 +102,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
                 R.id.action_toggle_card_2 -> consumeOptionButton { presenter.onCardToggleRequest(CardLayout.CARD2) }
                 R.id.action_refer -> consumeOptionButton { share("Try ReadIT for Android, and never forget to read a link again: https://play.google.com/store/apps/details?id=$packageName") }
                 R.id.action_review -> consumeOptionButton { openPlayStore() }
-                R.id.action_about -> consumeOptionButton { TODO() }
+                R.id.action_about -> consumeOptionButton { displayAboutDialog() }
                 else -> super.onOptionsItemSelected(this)
             }
         }
@@ -188,7 +190,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
     private fun displayInputDialog(isNew: Boolean, url: String = Link.EMPTY_LINK) {
         val inflater = layoutInflater
         val dialogView = inflater.inflate(R.layout.dialog_manual_input, null)
-        val builder = AlertDialog.Builder(getContext())
+        val builder = AlertDialog.Builder(getContext(), R.style.MyCustomDialogTheme)
 
         if (url != Link.EMPTY_LINK) dialogView.etUrl.setText(url, TextView.BufferType.EDITABLE)
 
@@ -211,5 +213,20 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
 
         dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         dialog.show()
+    }
+
+    private fun displayAboutDialog() {
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.dialog_about, null)
+        val builder = AlertDialog.Builder(getContext(), R.style.MyCustomDialogTheme)
+        dialogView.tvAbout3.movementMethod = LinkMovementMethod.getInstance()
+
+        val dialog = builder
+                .setTitle(R.string.title_about)
+                .setView(dialogView)
+                .setPositiveButton("GOTCHA", { _, _ -> })
+                .create()
+        dialog.show()
+
     }
 }

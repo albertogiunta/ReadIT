@@ -4,11 +4,11 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     kapt { generateStubs = true }
-    compileSdkVersion 26
+    compileSdkVersion 27
     defaultConfig {
         applicationId "com.jaus.albertogiunta.readit"
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "0.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -27,7 +27,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
     // firebase
-    implementation 'com.android.support:support-v4:26.1.0'
+    implementation "com.android.support:support-v4:$support_version"
     implementation "com.google.firebase:firebase-core:$firebase_version"
     implementation "com.google.firebase:firebase-ads:$firebase_version"
     implementation "com.google.firebase:firebase-crash:$firebase_version"
@@ -65,10 +65,12 @@ dependencies {
     implementation "org.jsoup:jsoup:$jsoup_version"
 
     // design
-    implementation "com.android.support:recyclerview-v7:$design_version"
+    implementation "com.android.support:recyclerview-v7:$support_version"
     implementation "com.android.support.constraint:constraint-layout:$contraintlayout_version"
-    implementation "com.android.support:cardview-v7:$design_version"
-    implementation "com.android.support:design:$design_version"
+    implementation "com.android.support:cardview-v7:$support_version"
+    implementation "com.android.support:design:$support_version"
+    implementation "com.android.support:support-emoji:$support_version"
+
 
     // tests
     testImplementation "junit:junit:$junit_version"
