@@ -25,8 +25,8 @@ class IntroActivity : AppIntro2() {
             descColor = ResourcesCompat.getColor(resources, R.color.cardTxtPrimary, null)
         }
 
-        addSlide(AppIntroFragment.newInstance(newSlider("\"I'll read it whenever\" no more", "Share any link (tweets, articles, videos, cat gifs...) you might want to check out later to ReadIT", R.drawable.img_smirking_face)))
-        addSlide(AppIntroFragment.newInstance(newSlider("Either read it or drop it", "A link lasts 24 hours and after that it's gone.\n\nIn fact, science says that if you really care about it you're wanna gonna read it, otherwise not much of a loss uh?", R.drawable.img_hourglass)))
+        addSlide(AppIntroFragment.newInstance(newSlider("\"I'll read it whenever\"\nno more", "Share any link (tweets, articles, cat gifs)\nyou might want to check out later\nto ReadIT", R.drawable.img_smirking_face)))
+        addSlide(AppIntroFragment.newInstance(newSlider("24 hours are enough", "\"If I don't read it in the next 24h,\nthat's because it wasn't interesting enough!\"\n\t\t~ Anonymous", R.drawable.img_hourglass)))
 
 
         showStatusBar(true)
