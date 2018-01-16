@@ -21,6 +21,11 @@
                 />
 
         <activity
+                android:name=".viewPresenter.settings.SettingsActivity"
+                android:label="Settings"
+                />
+
+        <activity
                 android:name=".viewPresenter.linksHome.LinksActivity"
                 android:launchMode="singleInstance">
             <intent-filter>

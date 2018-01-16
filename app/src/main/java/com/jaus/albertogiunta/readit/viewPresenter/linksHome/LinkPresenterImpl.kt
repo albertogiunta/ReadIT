@@ -8,6 +8,8 @@ import com.jaus.albertogiunta.readit.model.WebsiteInfo
 import com.jaus.albertogiunta.readit.networking.LinkService
 import com.jaus.albertogiunta.readit.networking.NetworkingFactory
 import com.jaus.albertogiunta.readit.utils.*
+import com.jaus.albertogiunta.readit.utils.FirebaseAction.*
+import com.jaus.albertogiunta.readit.utils.FirebaseContentType.LINK_INTERACTION
 import com.jaus.albertogiunta.readit.viewPresenter.base.BasePresenterImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import okhttp3.ResponseBody
@@ -62,6 +64,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
                     }.update(dao, linkList, editingIndex)
                     updateListInView()
                     view?.showMessage("Link queued successfully")
+                    sendFirebaseEvent(LINK_INTERACTION, LINK_ADD)
                 }, { error ->
                     println(error)
                     view?.showError("Your link seems to be not a valid link :/")
@@ -69,6 +72,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
     }
 
     override fun onLinkBrowsingRequest(position: Int) {
+        sendFirebaseEvent(LINK_INTERACTION, LINK_BROWSE)
         doAsync {
             val link = dao.getLinkById(linkList[position].id)
             link.apply { seen = true }.update(dao, linkList, position)
@@ -78,12 +82,14 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
     }
 
     override fun onLinkSharingRequest(position: Int) {
+        sendFirebaseEvent(LINK_INTERACTION, LINK_SHARE)
         doAsync {
             view?.launchShare(dao.getLinkById(linkList[position].id))
         }
     }
 
     override fun onLinkCopyRequest(position: Int) {
+        sendFirebaseEvent(LINK_INTERACTION, LINK_COPY)
         view?.run {
             this.getContext().saveURLToClipboard(linkList[position].url)
             this.showMessage("Link copied to your Clipboard!")
@@ -91,6 +97,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
     }
 
     override fun onLinkRemovalRequest(position: Int) {
+        sendFirebaseEvent(LINK_INTERACTION, LINK_REMOVE)
         doAsync {
             linkList[position].remove(dao, linkList, position)
             updateListInView()
@@ -101,6 +108,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
     }
 
     override fun onLinkUpdateRequest(position: Int) {
+        sendFirebaseEvent(LINK_INTERACTION, LINK_UPDATE)
         editingIndex = position
         doAsync {
             val link = dao.getLinkById(linkList[position].id)
@@ -140,5 +148,9 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
                 if (!forceRefresh) view?.updateLinkListUI() else view?.completelyRedrawList() // update UI
             }
         }
+    }
+
+    private fun sendFirebaseEvent(contentType: FirebaseContentType, action: FirebaseAction) {
+        view?.getContext()?.sendFirebaseEvent(contentType, action)
     }
 }

@@ -12,6 +12,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.db.Prefs
@@ -57,18 +58,30 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
             }
         }
 
-        adView.loadAd(AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build())
+        with(adView) {
+            loadAd(AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build())
+            adListener = object : AdListener() {
+                override fun onAdLoaded() {
+                    super.onAdLoaded()
+                    this@LinksActivity.pbAdLoading.gone()
+                    this@LinksActivity.tvAdLoading.gone()
+                }
+            }
+        }
 
         fabAdd.setOnClickListener { displayNewLinkDialog() }
-//        fabAdd.setOnClickListener { startActivity(intentFor<IntroActivity>()) }
 
         // LIST initialization
-        rvLinks.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
-        rvLinks.adapter = LinkAdapter(presenter.linkList, itemOnClick, itemOnLongClick)
+        with(rvLinks) {
+            layoutManager = LinearLayoutManager(this@LinksActivity, LinearLayout.VERTICAL, false)
+            adapter = LinkAdapter(presenter.linkList, itemOnClick, itemOnLongClick)
+        }
 
         // DIALOG initialization
         urlFetchingWaitDialog = indeterminateProgressDialog(message = "Imma fetch all the info for ya", title = "Noice, you got a new link!")
-        urlFetchingWaitDialog.cancel()
+        with(urlFetchingWaitDialog) {
+            urlFetchingWaitDialog.cancel()
+        }
 
         onNewIntent(intent)
 
@@ -138,16 +151,18 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
             // show content if list is not empty, show empty state activity otherwise
             showContent(presenter.shouldShowLinkList())
             if (presenter.shouldShowLinkList()) rvLinks.adapter.notifyDataSetChanged()
-            notificationManager.sendBundledNotification()
         }
+        updateNotification()
     }
 
     override fun completelyRedrawList() {
         runOnUiThread {
-            rvLinks.adapter = null
-            rvLinks.layoutManager = null
-            rvLinks.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
-            rvLinks.adapter = LinkAdapter(presenter.linkList, itemOnClick, itemOnLongClick)
+            with(rvLinks) {
+                adapter = null
+                layoutManager = null
+                layoutManager = LinearLayoutManager(this@LinksActivity, LinearLayout.VERTICAL, false)
+                adapter = LinkAdapter(presenter.linkList, itemOnClick, itemOnLongClick)
+            }
             updateLinkListUI()
         }
     }
@@ -215,6 +230,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         dialog.show()
     }
 
+    @SuppressLint("InflateParams")
     private fun displayAboutDialog() {
         val inflater = layoutInflater
         val dialogView = inflater.inflate(R.layout.dialog_about, null)

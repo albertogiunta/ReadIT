@@ -2,9 +2,11 @@ package com.jaus.albertogiunta.readit.utils
 
 import android.content.*
 import android.net.Uri
+import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.ImageView
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.db.LinkDao
 import com.jaus.albertogiunta.readit.db.Settings
@@ -116,6 +118,16 @@ fun Context.openPlayStore() {
     } catch (anfe: ActivityNotFoundException) {
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packageName)))
     }
+}
+
+fun Context.sendFirebaseEvent(contentType: FirebaseContentType, action: FirebaseAction) {
+    val bundle = Bundle()
+    with(bundle) {
+        putString(FirebaseAnalytics.Param.CONTENT_TYPE, contentType.description)
+        putString(FirebaseAnalytics.Param.ITEM_ID, action.description)
+    }
+
+    FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
 }
 
 fun DateTime.getRemainingTime() = Period(this.plusDays(1), DateTime.now())

@@ -15,6 +15,7 @@ import com.jaus.albertogiunta.readit.BuildConfig
 import com.jaus.albertogiunta.readit.MyApplication
 import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.db.LinkDao
+import com.jaus.albertogiunta.readit.db.Settings
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.utils.Utils.atLeast
 import com.jaus.albertogiunta.readit.utils.filterAndSortForNotification
@@ -96,13 +97,19 @@ class NotificationBuilder private constructor(ctx: Context) {
 
     fun sendBundledNotification() {
         with(notificationManager) {
-            channelBuilder.ensureChannelsExist(createChannel)
-            notify(NOTIFICATION_ID, buildNotification(NORMAL_CHANNEL_ID))
+            fillLinksList()
+            if (Settings.hideNotificationIfEmpty && linkList.isEmpty()) {
+                // remove notification
+                cancelAll()
+            } else {
+                // set notification
+                channelBuilder.ensureChannelsExist(createChannel)
+                notify(NOTIFICATION_ID, buildNotification(NORMAL_CHANNEL_ID))
+            }
         }
     }
 
     private fun buildNotification(channelId: String): Notification {
-        fillLinksList()
         val intent = buildOnNotificationClickIntent()
         val (title, body, expandToSeeMore) = buildStrings()
         return with(NotificationCompat.Builder(context, channelId)) {

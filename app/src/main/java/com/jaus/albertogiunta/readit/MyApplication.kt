@@ -4,6 +4,7 @@ import android.app.Application
 import android.arch.persistence.room.Room
 import com.chibatching.kotpref.Kotpref
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crash.FirebaseCrash
 import com.jaus.albertogiunta.readit.db.AppDatabase
 import com.jaus.albertogiunta.readit.db.AppDatabase.Companion.DB_NAME
@@ -31,6 +32,7 @@ class MyApplication: Application() {
         }
 
         // init all the things
+        FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(!BuildConfig.DEBUG)
         FirebaseCrash.setCrashCollectionEnabled(!BuildConfig.DEBUG)
         JodaTimeAndroid.init(this)
         Kotpref.init(this)

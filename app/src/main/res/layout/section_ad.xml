@@ -10,6 +10,7 @@
         >
 
     <ProgressBar
+            android:id="@+id/pbAdLoading"
             android:layout_width="20dp"
             android:layout_height="20dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -24,6 +25,7 @@
             />
 
     <TextView
+            android:id="@+id/tvAdLoading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Loading Ad..."

@@ -7,6 +7,7 @@ import com.jaus.albertogiunta.readit.viewPresenter.linksHome.CardLayout
 object Settings : KotprefModel() {
     var showSeen by booleanPref(true)
     var cardLayout by enumValuePref(CardLayout.CARD1)
+    var hideNotificationIfEmpty by booleanPref(true)
 }
 
 object Prefs : KotprefModel() {
