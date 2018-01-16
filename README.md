@@ -26,7 +26,9 @@ Hope you find this at least as useful as I do!
 
 ## Release History
 
-* `0.5 - First release`
+* `0.6 - The fix that should have 🙅 never existed`
+    * Now the notification hides itself when there are no links to be read.
+* `0.5 - First 🔥 release`
     * Seen/unseen state for links
     * Copy from clipboard feature when adding new link
     * Auto-addition when a link is shared to ReadIT
