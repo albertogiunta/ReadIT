@@ -26,6 +26,8 @@ Hope you find this at least as useful as I do!
 
 ## Release History
 
+* `0.65 - Damn I thought 🤔 I had already fixed that`
+    * Fixed links polishing not working with links preceded by normal text or blank spaces
 * `0.6 - The fix that should have 🙅 never existed`
     * Now the notification hides itself when there are no links to be read.
 * `0.5 - First 🔥 release`
