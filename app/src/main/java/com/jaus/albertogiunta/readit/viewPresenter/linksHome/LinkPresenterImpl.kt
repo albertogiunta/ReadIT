@@ -37,9 +37,14 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
             view?.showError("Your link seems to be empty or not a valid link :/"); return
         }
 
-        var polishedURL: String = url.replace("\\s+", "")
+        // ✅ text text text https://www.website.com
+        // ✅ https://www.website.com
+        // ✅ www.website.com
+        // ✅ website.com
+        // ❌ text text text www.website.com
+        val polishedURL: String
         try {
-            if (url.indexOf("http") == -1) polishedURL = "http://$polishedURL"
+            polishedURL = if (url.hasProtocol()) url.substringAtProtocol() else url.addProtocol()
         } catch (e: Exception) {
             view?.showError("Your link seems to be empty or not a valid link :/"); return
         }

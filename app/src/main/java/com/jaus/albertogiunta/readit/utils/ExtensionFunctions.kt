@@ -24,7 +24,7 @@ import org.jsoup.nodes.Document
 
 
 /**
- * VIEWS
+ * VIEW
  */
 
 fun View.toggleVisibility(setAsVisible: Boolean) = if (setAsVisible) this.visible() else this.gone()
@@ -130,7 +130,16 @@ fun Context.sendFirebaseEvent(contentType: FirebaseContentType, action: Firebase
     FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
 }
 
-fun DateTime.getRemainingTime() = Period(this.plusDays(1), DateTime.now())
+/**
+ * STRING
+ */
+fun String.hasProtocol() = this.indexOf("http") != -1
+
+fun String.cleanFromSpaces() = this.replace("\\s+".toRegex(), "")
+
+fun String.substringAtProtocol() = this.substring(indexOf("http")).cleanFromSpaces()
+
+fun String.addProtocol() = "http://" + this.cleanFromSpaces()
 
 /**
  * RETROFIT
@@ -176,6 +185,13 @@ fun List<Link>.filterAndSortForNotification() =
         else
             this.reversed().filter { !it.seen }
 
+/**
+ * DATETIME
+ */
+fun DateTime.getRemainingTime() = Period(this.plusDays(1), DateTime.now())
+
+fun DateTime.isNotExpired24h(): Boolean = this.isAfter(DateTime.now().minusHours(24))
+
 fun Period.toLiteralString(verbose: Boolean): String {
     var timeString = ""
     val h = Math.abs(hours)
@@ -215,5 +231,3 @@ fun Period.toHHmm(): String {
         toFormatter()
     }.print(this).replace("-", "")
 }
-
-fun DateTime.isNotExpired24h(): Boolean = this.isAfter(DateTime.now().minusHours(24))
