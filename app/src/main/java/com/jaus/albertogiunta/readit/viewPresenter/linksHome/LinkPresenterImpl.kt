@@ -37,17 +37,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
             view?.showError("Your link seems to be empty or not a valid link :/"); return
         }
 
-        // ✅ text text text https://www.website.com
-        // ✅ https://www.website.com
-        // ✅ www.website.com
-        // ✅ website.com
-        // ❌ text text text www.website.com
-        val polishedURL: String
-        try {
-            polishedURL = if (url.hasProtocol()) url.substringAtProtocol() else url.addProtocol()
-        } catch (e: Exception) {
-            view?.showError("Your link seems to be empty or not a valid link :/"); return
-        }
+        val polishedURL: String = url.polished()
 
         NetworkingFactory
                 .createService(LinkService::class.java)

@@ -50,17 +50,19 @@ inline fun MenuItem.consumeOptionButton(f: () -> Unit): Boolean {
     return true
 }
 
-fun Menu.toggleSeen(displaySeenLinks: Boolean) = this.findItem(R.id.action_toggle_seen).setIcon(if (displaySeenLinks) R.drawable.ic_seen_enabled else R.drawable.ic_seen_disabled)
+fun Menu.toggleSeen(displaySeenLinks: Boolean) =
+    this.findItem(R.id.action_toggle_seen).setIcon(if (displaySeenLinks) R.drawable.ic_seen_enabled else R.drawable.ic_seen_disabled)
 
-fun Menu.togglePreferredCardRadioButton() = this.findItem(Settings.cardLayout.action).setIcon(R.drawable.ic_radio_button_checked)
+fun Menu.togglePreferredCardRadioButton() =
+    this.findItem(Settings.cardLayout.action).setIcon(R.drawable.ic_radio_button_checked)
 
 fun Menu.toggleCardsRadioButtons(preferredCard: CardLayout = Settings.cardLayout) =
-        CardLayout.values().forEach {
-            when (preferredCard.action) {
-                it.action -> this.findItem(it.action).setIcon(R.drawable.ic_radio_button_checked)
-                else -> this.findItem(it.action).setIcon(R.drawable.ic_radio_button_unchecked)
-            }
+    CardLayout.values().forEach {
+        when (preferredCard.action) {
+            it.action -> this.findItem(it.action).setIcon(R.drawable.ic_radio_button_checked)
+            else -> this.findItem(it.action).setIcon(R.drawable.ic_radio_button_unchecked)
         }
+    }
 
 fun ViewGroup.inflate(layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
@@ -84,9 +86,9 @@ fun <T : RecyclerView.ViewHolder> T.onLongClick(event: (view: View, position: In
 fun ImageView.loadFavicon(url: String) {
     try {
         Picasso.with(context)
-                .load(url)
-                .placeholder(R.drawable.ic_placeholder)
-                .into(ivFavicon)
+            .load(url)
+            .placeholder(R.drawable.ic_placeholder)
+            .into(ivFavicon)
     } catch (e: Exception) {
         println("ERROR in PICASSO!!! $e")
     }
@@ -95,7 +97,8 @@ fun ImageView.loadFavicon(url: String) {
 /**
  * CONTEXT
  */
-fun Context.clipboard(): ClipboardManager = this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+fun Context.clipboard(): ClipboardManager =
+    this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
 fun Context.clearClipboard() {
     clipboard().primaryClip = ClipData.newPlainText("", Link.EMPTY_LINK)
@@ -116,7 +119,12 @@ fun Context.openPlayStore() {
     try {
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)))
     } catch (anfe: ActivityNotFoundException) {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packageName)))
+        startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://play.google.com/store/apps/details?id=" + packageName)
+            )
+        )
     }
 }
 
@@ -140,6 +148,8 @@ fun String.cleanFromSpaces() = this.replace("\\s+".toRegex(), "")
 fun String.substringAtProtocol() = this.substring(indexOf("http")).cleanFromSpaces()
 
 fun String.addProtocol() = "http://" + this.cleanFromSpaces()
+
+fun String.polished() = if (this.hasProtocol()) this.substringAtProtocol() else this.addProtocol()
 
 /**
  * RETROFIT
@@ -174,16 +184,23 @@ fun Link.faviconURL() = "https://${Utils.getHostOfURL(this.url)}/favicon.ico"
 fun List<Link>.filterAndSortForLinksActivity(): List<Link> {
     val showSeen = Settings.showSeen
     return if (!Link.IS_ALL_LINKS_DEBUG_ACTIVE)
-        this.filter { it.timestamp.isNotExpired24h() && !it.seen || (showSeen && it.seen) }.sortedWith(compareBy(Link::seen, Link::timestamp))
+        this.filter { it.timestamp.isNotExpired24h() && !it.seen || (showSeen && it.seen) }.sortedWith(
+            compareBy(Link::seen, Link::timestamp)
+        )
     else
-        this.filter { !it.seen || (showSeen && it.seen) }.sortedWith(compareBy(Link::seen, Link::timestamp))
+        this.filter { !it.seen || (showSeen && it.seen) }.sortedWith(
+            compareBy(
+                Link::seen,
+                Link::timestamp
+            )
+        )
 }
 
 fun List<Link>.filterAndSortForNotification() =
-        if (!Link.IS_ALL_LINKS_DEBUG_ACTIVE)
-            this.reversed().filter { !it.seen && it.timestamp.isNotExpired24h() }
-        else
-            this.reversed().filter { !it.seen }
+    if (!Link.IS_ALL_LINKS_DEBUG_ACTIVE)
+        this.reversed().filter { !it.seen && it.timestamp.isNotExpired24h() }
+    else
+        this.reversed().filter { !it.seen }
 
 /**
  * DATETIME
