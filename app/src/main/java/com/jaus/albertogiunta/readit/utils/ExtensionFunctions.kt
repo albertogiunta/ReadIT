@@ -181,6 +181,14 @@ fun Link.remove(dao: LinkDao, linkList: MutableList<Link>, position: Int) {
 
 fun Link.faviconURL() = "https://${Utils.getHostOfURL(this.url)}/favicon.ico"
 
+fun Link.notificationString(): String {
+    val customTitle = if (this.title.length >= 50) Pair(
+        this.title.substring(0, 45) + "...",
+        this.timestamp
+    ) else this.title
+    return "⌛️ ${this.timestamp.getRemainingTime().toHHmm()} ➡️ $customTitle\n"
+}
+
 fun List<Link>.filterAndSortForLinksActivity(): List<Link> {
     val showSeen = Settings.showSeen
     return if (!Link.IS_ALL_LINKS_DEBUG_ACTIVE)

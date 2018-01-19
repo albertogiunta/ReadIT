@@ -19,8 +19,7 @@ import com.jaus.albertogiunta.readit.db.Settings
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.utils.Utils.atLeast
 import com.jaus.albertogiunta.readit.utils.filterAndSortForNotification
-import com.jaus.albertogiunta.readit.utils.getRemainingTime
-import com.jaus.albertogiunta.readit.utils.toHHmm
+import com.jaus.albertogiunta.readit.utils.notificationString
 import com.jaus.albertogiunta.readit.viewPresenter.linksHome.LinksActivity
 import org.jetbrains.anko.doAsync
 import java.util.concurrent.atomic.AtomicBoolean
@@ -99,10 +98,10 @@ class NotificationBuilder private constructor(ctx: Context) {
         with(notificationManager) {
             fillLinksList()
             if (Settings.hideNotificationIfEmpty && linkList.isEmpty()) {
-                // remove notification
+                // remove notificationString
                 cancelAll()
             } else {
-                // set notification
+                // set notificationString
                 channelBuilder.ensureChannelsExist(createChannel)
                 notify(NOTIFICATION_ID, buildNotification(NORMAL_CHANNEL_ID))
             }
@@ -139,17 +138,15 @@ class NotificationBuilder private constructor(ctx: Context) {
 
     private fun buildStrings(): Triple<String, String, String> {
         val title = "${linkList.size} link${if (linkList.size != 1) "s" else ""} to be read"
-        val expandToSeeMore = if (linkList.isNotEmpty()) "Expand to see the more" else ""
+        val expandToSeeMore = when {
+            linkList.size == 1 -> linkList[0].notificationString()
+            linkList.size > 1 -> "Expand to see the more"
+            else -> "You're all set"
+        }
         val body: String =
                 if (linkList.isEmpty()) "You're all set!"
                 else linkList
-                        .map {
-                            if (it.title.length >= 50) Pair(it.title.substring(0, 45) + "...", it.timestamp)
-                            else Pair(it.title, it.timestamp)
-                        }
-                        .map {
-                            "⌛️ ${it.second.getRemainingTime().toHHmm()} ➡️ ${it.first}\n"
-                        }
+                    .map { it.notificationString() }
                         .reduce { acc, s -> "$acc$s" }
 
         return Triple(title, body, expandToSeeMore)

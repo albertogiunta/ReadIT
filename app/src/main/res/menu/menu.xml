@@ -54,7 +54,7 @@
             <item
                     android:id="@+id/action_about"
                     android:icon="@drawable/ic_info"
-                    android:title="About"
+                    android:title="About &amp; Contact Info"
                     app:showAsAction="ifRoom"/>
         </menu>
 
