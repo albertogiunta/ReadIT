@@ -11,6 +11,7 @@ import android.content.Intent
 import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
+import android.support.v4.content.res.ResourcesCompat
 import com.jaus.albertogiunta.readit.BuildConfig
 import com.jaus.albertogiunta.readit.MyApplication
 import com.jaus.albertogiunta.readit.R
@@ -20,7 +21,7 @@ import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.utils.Utils.atLeast
 import com.jaus.albertogiunta.readit.utils.filterAndSortForNotification
 import com.jaus.albertogiunta.readit.utils.notificationString
-import com.jaus.albertogiunta.readit.viewPresenter.linksHome.LinksActivity
+import com.jaus.albertogiunta.readit.viewPresenter.links.LinksActivity
 import org.jetbrains.anko.doAsync
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -99,6 +100,7 @@ class NotificationBuilder private constructor(ctx: Context) {
             fillLinksList()
             if (Settings.hideNotificationIfEmpty && linkList.isEmpty()) {
                 // remove notificationString
+                NotificationService.stop(context)
                 cancelAll()
             } else {
                 // set notificationString
@@ -108,6 +110,7 @@ class NotificationBuilder private constructor(ctx: Context) {
         }
     }
 
+    @Suppress("UsePropertyAccessSyntax")
     private fun buildNotification(channelId: String): Notification {
         val intent = buildOnNotificationClickIntent()
         val (title, body, expandToSeeMore) = buildStrings()
@@ -117,6 +120,7 @@ class NotificationBuilder private constructor(ctx: Context) {
             setContentText(expandToSeeMore)
             setStyle(NotificationCompat.BigTextStyle().bigText(body))
             setSmallIcon(R.drawable.ic_notification)
+            setColor(ResourcesCompat.getColor(context.resources, R.color.colorPrimary, null))
             if (BuildConfig.DEBUG) setShowWhen(true)
             setAutoCancel(false)
             setOngoing(true)

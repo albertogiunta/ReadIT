@@ -1,4 +1,4 @@
-package com.jaus.albertogiunta.readit.viewPresenter.linksHome
+package com.jaus.albertogiunta.readit.viewPresenter.links
 
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.viewPresenter.base.BasePresenter
@@ -52,6 +52,10 @@ object LinksContract {
         fun onLinkUpdateRequest(position: Int)
 
         fun onSeenToggleRequest()
+
+//        fun onCheckRewardExpirationRequest()
+
+        fun rewardUser()
 
         fun onCardToggleRequest(cardLayout: CardLayout)
 

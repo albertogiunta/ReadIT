@@ -1,9 +1,12 @@
 package com.jaus.albertogiunta.readit.utils
 
+import com.jaus.albertogiunta.readit.BuildConfig
 import java.net.URL
 
 
 object Utils {
+
+    const val dateTimeFormatISO8601 = "yyyy-MM-dd HH:mm:ss"
 
     fun getHostOfURL(url: String): String = URL(url).host
 
@@ -12,6 +15,8 @@ object Utils {
     }
 
     fun atLeast(version: Int): Boolean = android.os.Build.VERSION.SDK_INT >= version
+
+    fun isAdsDebugActive(): Boolean = if (!BuildConfig.DEBUG) BuildConfig.DEBUG else true
 
 }
 

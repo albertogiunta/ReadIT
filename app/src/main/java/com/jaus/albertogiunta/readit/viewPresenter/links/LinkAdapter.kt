@@ -1,4 +1,4 @@
-package com.jaus.albertogiunta.readit.viewPresenter.linksHome
+package com.jaus.albertogiunta.readit.viewPresenter.links
 
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
@@ -21,7 +21,7 @@ class LinkAdapter(private val items: List<Link>,
     override fun onBindViewHolder(holder: LinkViewHolder, position: Int) = holder.bind(items[position], position == items.size - 1)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LinkViewHolder {
-        val holder = LinkViewHolder(parent.inflate(preferredCardLayout.layout))
+        val holder = LinkViewHolder(parent.inflate(R.layout.item_link_1))
         holder.onClick(onClickListener)
         holder.onLongClick(onLongClickListener)
         return holder
@@ -53,7 +53,10 @@ class LinkAdapter(private val items: List<Link>,
 
 enum class CardLayout(val id: Int, val layout: Int, val action: Int) {
 
-    CARD1(1, R.layout.item_link_1, R.id.action_toggle_card_1),
-    CARD2(2, R.layout.item_link_2, R.id.action_toggle_card_2)
+//    CARD1(1, R.layout.item_link_1, R.id.action_toggle_card_1),
+//    CARD2(2, R.layout.item_link_2, R.id.action_toggle_card_2)
+
+    CARD1(1, R.layout.item_link_1, 0),
+    CARD2(2, R.layout.item_link_2, 0)
 
 }

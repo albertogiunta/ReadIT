@@ -1,4 +1,4 @@
-package com.jaus.albertogiunta.readit.viewPresenter.linksHome
+package com.jaus.albertogiunta.readit.viewPresenter.links
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -14,21 +14,20 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
 import com.jaus.albertogiunta.readit.R
-import com.jaus.albertogiunta.readit.db.Prefs
 import com.jaus.albertogiunta.readit.db.Settings
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.notifications.NotificationBuilder
 import com.jaus.albertogiunta.readit.utils.*
 import com.jaus.albertogiunta.readit.viewPresenter.base.BaseActivity
-import com.jaus.albertogiunta.readit.viewPresenter.intro.IntroActivity
 import kotlinx.android.synthetic.main.activity_links.*
 import kotlinx.android.synthetic.main.dialog_about.view.*
 import kotlinx.android.synthetic.main.dialog_manual_input.view.*
-import kotlinx.android.synthetic.main.section_ad.*
 import kotlinx.android.synthetic.main.section_link_options.view.*
-import org.jetbrains.anko.*
-
+import org.jetbrains.anko.browse
+import org.jetbrains.anko.indeterminateProgressDialog
+import org.jetbrains.anko.share
 
 class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), LinksContract.View {
 
@@ -38,6 +37,8 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
     private lateinit var itemOnLongClick: (View, Int, Int) -> Unit
     private val notificationManager = NotificationBuilder.instance
     private lateinit var menu: Menu
+    private lateinit var interstitialAd: InterstitialAd
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,16 +59,24 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
             }
         }
 
-        with(adView) {
-            loadAd(AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build())
-            adListener = object : AdListener() {
-                override fun onAdLoaded() {
-                    super.onAdLoaded()
-                    this@LinksActivity.pbAdLoading.gone()
-                    this@LinksActivity.tvAdLoading.gone()
-                }
-            }
+        interstitialAd = InterstitialAd(this)
+        interstitialAd.adUnitId = "ca-app-pub-8963908741443055/6426264012"
+        interstitialAd.loadAd(AdRequest.Builder().addTestDevice("304DDEB689F2F677C4C2CF7C6B6F35EE").build())
+
+        interstitialAd.adListener = object : AdListener() {
+            override fun onAdLoaded() =
+                if (isRewardActive()) btnUnlock.gone() else btnUnlock.visible()
+
+            override fun onAdFailedToLoad(errorCode: Int) {}
+
+            override fun onAdOpened() = presenter.rewardUser()
+
+            override fun onAdLeftApplication() {}
+
+            override fun onAdClosed() = interstitialAd.loadAd(AdRequest.Builder().build())
         }
+
+        btnUnlock.setOnClickListener { showInterstitialAd() }
 
         fabAdd.setOnClickListener { displayNewLinkDialog() }
 
@@ -85,9 +94,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
 
         onNewIntent(intent)
 
-        doAsync {
-            if (!Prefs.tutorialSeen) startActivity(intentFor<IntroActivity>())
-        }
+//        doAsync { if (!Prefs.tutorialSeen) startActivity(intentFor<IntroActivity>()) }
     }
 
     override fun onResume() {
@@ -103,7 +110,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menu.toggleSeen(Settings.showSeen)
-        menu.togglePreferredCardRadioButton()
+//        menu.togglePreferredCardRadioButton()
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -111,8 +118,8 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         return with(item) {
             when (itemId) {
                 R.id.action_toggle_seen -> consumeOptionButton { presenter.onSeenToggleRequest() }
-                R.id.action_toggle_card_1 -> consumeOptionButton { presenter.onCardToggleRequest(CardLayout.CARD1) }
-                R.id.action_toggle_card_2 -> consumeOptionButton { presenter.onCardToggleRequest(CardLayout.CARD2) }
+//                R.id.action_toggle_card_1 -> consumeOptionButton { presenter.onCardToggleRequest(CardLayout.CARD1) }
+//                R.id.action_toggle_card_2 -> consumeOptionButton { presenter.onCardToggleRequest(CardLayout.CARD2) }
                 R.id.action_refer -> consumeOptionButton { share("Try ReadIT for Android, and never forget to read a link again: https://play.google.com/store/apps/details?id=$packageName") }
                 R.id.action_review -> consumeOptionButton { openPlayStore() }
                 R.id.action_about -> consumeOptionButton { displayAboutDialog() }
@@ -140,8 +147,8 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
 
     //////////////////// EMPTY ACTIVITY
     override fun showContent(showContent: Boolean) {
+        checkIfUnlockBtnShouldBeShown()
         rvLinks.toggleVisibility(showContent)
-        adLayout.toggleVisibility(showContent)
         emptyLayout.toggleVisibility(!showContent)
     }
 
@@ -201,6 +208,13 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         completelyRedrawList()
     }
 
+    private fun checkIfUnlockBtnShouldBeShown() =
+        if (isRewardActive()) btnUnlock.gone() else btnUnlock.visible()
+
+    private fun showInterstitialAd() {
+        if (interstitialAd.isLoaded) interstitialAd.show()
+    }
+
     @SuppressLint("InflateParams")
     private fun displayInputDialog(isNew: Boolean, url: String = Link.EMPTY_LINK) {
         val inflater = layoutInflater
@@ -213,18 +227,19 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         val titleText = if (isNew) "Oh hey you! Got a new link for me?" else "Links like to change"
 
         val dialog = builder.setTitle(titleText)
-                .setView(dialogView)
-                .setPositiveButton(positiveButtonText, { _, _ ->
-                    presenter.onLinkAdditionRequest(isNew, dialogView.etUrl.text.toString())
-                })
-                .setNeutralButton("Paste from clipboard", { _, _ ->
-                    run {
-                        val urlFromClipboard: String? = getURLFromClipboard()
-                        urlFromClipboard?.let { presenter.onLinkAdditionRequest(isNew, urlFromClipboard) } ?: this.showError("No Link found in clipboard")
-                    }
-                })
-                .setNegativeButton("Cancel", { _, _ -> })
-                .create()
+            .setView(dialogView)
+            .setPositiveButton(positiveButtonText, { _, _ ->
+                presenter.onLinkAdditionRequest(isNew, dialogView.etUrl.text.toString())
+            })
+            .setNeutralButton("Paste from clipboard", { _, _ ->
+                run {
+                    val urlFromClipboard: String? = getURLFromClipboard()
+                    urlFromClipboard?.let { presenter.onLinkAdditionRequest(isNew, urlFromClipboard) }
+                            ?: this.showError("No Link found in clipboard")
+                }
+            })
+            .setNegativeButton("Cancel", { _, _ -> })
+            .create()
 
         dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         dialog.show()
@@ -238,10 +253,10 @@ class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), Lin
         dialogView.tvAbout3.movementMethod = LinkMovementMethod.getInstance()
 
         val dialog = builder
-                .setTitle(R.string.title_about)
-                .setView(dialogView)
-                .setPositiveButton("GOTCHA", { _, _ -> })
-                .create()
+            .setTitle(R.string.title_about)
+            .setView(dialogView)
+            .setPositiveButton("GOTCHA", { _, _ -> })
+            .create()
         dialog.show()
 
     }

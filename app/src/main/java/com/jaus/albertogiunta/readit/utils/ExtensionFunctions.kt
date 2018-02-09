@@ -9,15 +9,18 @@ import android.widget.ImageView
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.db.LinkDao
+import com.jaus.albertogiunta.readit.db.Prefs
 import com.jaus.albertogiunta.readit.db.Settings
 import com.jaus.albertogiunta.readit.model.Link
-import com.jaus.albertogiunta.readit.viewPresenter.linksHome.CardLayout
+import com.jaus.albertogiunta.readit.model.Link.Companion.REWARD_TIME
+import com.jaus.albertogiunta.readit.viewPresenter.links.CardLayout
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_link_1.view.*
 import okhttp3.ResponseBody
 import org.jetbrains.anko.doAsync
 import org.joda.time.DateTime
 import org.joda.time.Period
+import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.PeriodFormatterBuilder
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -128,6 +131,9 @@ fun Context.openPlayStore() {
     }
 }
 
+fun Context.getRewardedVideoAdString(): String =
+    this.resources.getString(if (Utils.isAdsDebugActive()) R.string.testMobileVideoAds else R.string.mobileVideoAds)
+
 fun Context.sendFirebaseEvent(contentType: FirebaseContentType, action: FirebaseAction) {
     val bundle = Bundle()
     with(bundle) {
@@ -182,40 +188,39 @@ fun Link.remove(dao: LinkDao, linkList: MutableList<Link>, position: Int) {
 fun Link.faviconURL() = "https://${Utils.getHostOfURL(this.url)}/favicon.ico"
 
 fun Link.notificationString(): String {
-    val customTitle = if (this.title.length >= 50) Pair(
-        this.title.substring(0, 45) + "...",
-        this.timestamp
-    ) else this.title
+    val customTitle =
+        if (this.title.length >= 50) this.title.substring(0, 45) + "..."
+        else this.title
     return "⌛️ ${this.timestamp.getRemainingTime().toHHmm()} ➡️ $customTitle\n"
 }
 
 fun List<Link>.filterAndSortForLinksActivity(): List<Link> {
     val showSeen = Settings.showSeen
-    return if (!Link.IS_ALL_LINKS_DEBUG_ACTIVE)
-        this.filter { it.timestamp.isNotExpired24h() && !it.seen || (showSeen && it.seen) }.sortedWith(
-            compareBy(Link::seen, Link::timestamp)
-        )
-    else
-        this.filter { !it.seen || (showSeen && it.seen) }.sortedWith(
-            compareBy(
-                Link::seen,
-                Link::timestamp
-            )
-        )
+    val rewardIsActive = isRewardActive()
+
+    return when {
+        Link.IS_ALL_LINKS_DEBUG_ACTIVE -> this.filter { !it.seen || (showSeen && it.seen) }
+            .sortedWith(compareBy(Link::seen, Link::id))
+        else -> this.filter { ((rewardIsActive || it.timestamp.isNotExpired24h()) && (!it.seen || (showSeen && it.seen))) }
+            .sortedWith(compareBy(Link::seen, Link::id))
+    }
 }
 
 fun List<Link>.filterAndSortForNotification() =
-    if (!Link.IS_ALL_LINKS_DEBUG_ACTIVE)
-        this.reversed().filter { !it.seen && it.timestamp.isNotExpired24h() }
-    else
-        this.reversed().filter { !it.seen }
+    when {
+        Link.IS_ALL_LINKS_DEBUG_ACTIVE -> this.reversed().filter { !it.seen }
+        else -> this.reversed().filter { !it.seen && it.timestamp.isNotExpired24h() }
+    }
+
+fun isRewardActive(): Boolean =
+    DateTime.parse(Prefs.expiredLinksLastActivationTimestamp, DateTimeFormat.forPattern(Utils.dateTimeFormatISO8601)).plusSeconds(REWARD_TIME).isAfterNow
 
 /**
  * DATETIME
  */
 fun DateTime.getRemainingTime() = Period(this.plusDays(1), DateTime.now())
 
-fun DateTime.isNotExpired24h(): Boolean = this.isAfter(DateTime.now().minusHours(24))
+fun DateTime.isNotExpired24h(): Boolean = this.plusHours(24).isAfterNow
 
 fun Period.toLiteralString(verbose: Boolean): String {
     var timeString = ""

@@ -8,14 +8,16 @@
     <string name="low_channel_name">Low Channel</string>
     <string name="low_channel_description">This channel is for low priority messages</string>
     <string name="adsLinksList">ca-app-pub-8963908741443055/8718544618</string>
+    <string name="mobileVideoAds">ca-app-pub-8963908741443055/8895445450</string>
+    <string name="testMobileVideoAds">ca-app-pub-3940256099942544/5224354917</string>
     <string name="testadsLinksList">ca-app-pub-3940256099942544/6300978111</string>
 
     <string name="title_empty_link_list">No links here, you can relax now.</string>
     <string name="desc_empty_link_list_1">
-        <b>1)</b> Add links also by <b>sharing them</b> to ReadIT\n\n
-        <b>2)</b> Check the remaining time <b>live in the notification</b>\n\n
-        <b>3) Read IT!</b>\n\n
-        <b>It\'s really as simple as that!</b>
+        <b>1)</b> <b>Share a link</b> to ReadIT\n\n
+        <b>2)</b> Read it in the next <b>24 hours</b>\n\n
+        <b>3)</b> <b>???</b>\n\n
+        <b>4)</b> <b>Profit!</b>\n\n
     </string>
 
     <string name="desc_empty_link_list_emoji">

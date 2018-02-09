@@ -1,7 +1,8 @@
-package com.jaus.albertogiunta.readit.viewPresenter.linksHome
+package com.jaus.albertogiunta.readit.viewPresenter.links
 
 import com.jaus.albertogiunta.readit.MyApplication
 import com.jaus.albertogiunta.readit.db.LinkDao
+import com.jaus.albertogiunta.readit.db.Prefs
 import com.jaus.albertogiunta.readit.db.Settings
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.model.WebsiteInfo
@@ -15,6 +16,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import okhttp3.ResponseBody
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import org.joda.time.DateTime
 
 class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract.Presenter {
 
@@ -24,12 +26,12 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
 
     init {
         doAsync {
-            linkList.addAll(dao.getAllLinksFromMostRecent().filterAndSortForLinksActivity())
+            linkList.addAll(dao.getAllLinksFromMostRecent())
         }
     }
 
     override fun onActivityResumed() {
-        updateListInView(true)
+        refreshList(true)
     }
 
     override fun onLinkAdditionRequest(isNew: Boolean, url: String) {
@@ -57,7 +59,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
                         this.title = siteInfo.title
                         this.url = siteInfo.url
                     }.update(dao, linkList, editingIndex)
-                    updateListInView()
+                    refreshList()
                     view?.showMessage("Link queued successfully")
                     sendFirebaseEvent(LINK_INTERACTION, LINK_ADD)
                 }, { error ->
@@ -72,7 +74,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
             val link = dao.getLinkById(linkList[position].id)
             link.apply { seen = true }.update(dao, linkList, position)
             view?.launchBrowser(link)
-            updateListInView()
+            refreshList()
         }
     }
 
@@ -95,7 +97,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
         sendFirebaseEvent(LINK_INTERACTION, LINK_REMOVE)
         doAsync {
             linkList[position].remove(dao, linkList, position)
-            updateListInView()
+            refreshList()
             uiThread {
                 view?.showMessage("Link removed successfully")
             }
@@ -119,14 +121,15 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
         doAsync {
             // toggle shared preferences
             Settings.showSeen = !Settings.showSeen
-
-            // re-init linkList because otherwise un-toggling doesn't work (the whole fresh list is needed)
-            linkList.clear()
-            linkList.addAll(dao.getAllLinksFromMostRecent())
         }.get()
 
-        updateListInView(true)
+        refreshList(true)
         view?.toggleSeenLinks(Settings.showSeen)
+    }
+
+    override fun rewardUser() {
+        Prefs.expiredLinksLastActivationTimestamp = DateTime.now().toString(Utils.dateTimeFormatISO8601)
+        refreshList(true)
     }
 
     override fun onCardToggleRequest(cardLayout: CardLayout) {
@@ -134,13 +137,19 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
         view?.toggleCardLayoutMenuItems()
     }
 
-    private fun updateListInView(forceRefresh: Boolean = false) {
-        val list = linkList.filterAndSortForLinksActivity() // sort & filter
+    private fun fetchLinksForActivity() {
+        val list = dao.getAllLinksFromMostRecent().filterAndSortForLinksActivity() // sort & filter
         linkList.clear()
         linkList.addAll(list)
-        doAsync {
-            uiThread {
-                if (!forceRefresh) view?.updateLinkListUI() else view?.completelyRedrawList() // update UI
+    }
+
+    private fun refreshList(forceRefresh: Boolean = false) {
+        doAsync { fetchLinksForActivity() }.get().also {
+            doAsync {
+                uiThread {
+                    view?.showContent(true)
+                    if (forceRefresh) view?.completelyRedrawList() else view?.updateLinkListUI() // update UI
+                }
             }
         }
     }

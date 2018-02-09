@@ -16,6 +16,7 @@ class NotificationService : JobService() {
     }
 
     override fun onStopJob(params: JobParameters): Boolean {
+        isAlreadyScheduled = false
         return false
     }
 
@@ -38,5 +39,9 @@ class NotificationService : JobService() {
             jobScheduler.schedule(builder)
             isAlreadyScheduled = true
         }
+
+        fun stop(context: Context) =
+            (context.applicationContext.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler).cancel(JOB_ID)
+
     }
 }

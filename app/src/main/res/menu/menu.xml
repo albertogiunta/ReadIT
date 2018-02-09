@@ -13,28 +13,29 @@
             android:id="@+id/action_more"
             android:orderInCategory="100"
             android:icon="@drawable/ic_dots"
-            android:title="More"
+            android:title="More options"
             app:showAsAction="always">
         <menu>
-            <item
-                    android:id="@+id/action_toggle_cards"
-                    android:icon="@drawable/ic_cards"
-                    android:title="Cards layout"
-                    app:showAsAction="ifRoom">
-                <menu>
-                    <item
-                            android:id="@+id/action_toggle_card_1"
-                            android:icon="@drawable/ic_radio_button_unchecked"
-                            android:title="Card Layout 1"
-                            app:showAsAction="ifRoom"/>
 
-                    <item
-                            android:id="@+id/action_toggle_card_2"
-                            android:icon="@drawable/ic_radio_button_unchecked"
-                            android:title="Card Layout 2"
-                            app:showAsAction="ifRoom"/>
-                </menu>
-            </item>
+            <!--<item-->
+            <!--android:id="@+id/action_toggle_cards"-->
+            <!--android:icon="@drawable/ic_cards"-->
+            <!--android:title="Cards layout"-->
+            <!--app:showAsAction="ifRoom">-->
+            <!--<menu>-->
+            <!--<item-->
+            <!--android:id="@+id/action_toggle_card_1"-->
+            <!--android:icon="@drawable/ic_radio_button_unchecked"-->
+            <!--android:title="Card Layout 1"-->
+            <!--app:showAsAction="ifRoom"/>-->
+
+            <!--<item-->
+            <!--android:id="@+id/action_toggle_card_2"-->
+            <!--android:icon="@drawable/ic_radio_button_unchecked"-->
+            <!--android:title="Card Layout 2"-->
+            <!--app:showAsAction="ifRoom"/>-->
+            <!--</menu>-->
+            <!--</item>-->
 
             <item
                     android:id="@+id/action_refer"
