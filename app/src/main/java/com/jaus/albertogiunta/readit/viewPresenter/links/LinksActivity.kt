@@ -29,9 +29,9 @@ import org.jetbrains.anko.browse
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.share
 
-class LinksActivity : BaseActivity<LinksContract.View, LinkPresenterImpl>(), LinksContract.View {
+class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(), LinksContract.View {
 
-    override var presenter: LinkPresenterImpl = LinkPresenterImpl()
+    override var presenter: LinksContract.Presenter = LinkPresenterImpl()
     private lateinit var urlFetchingWaitDialog: AlertDialog
     private lateinit var itemOnClick: (View, Int, Int) -> Unit
     private lateinit var itemOnLongClick: (View, Int, Int) -> Unit
