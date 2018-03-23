@@ -103,9 +103,8 @@ fun ImageView.loadFavicon(url: String) {
 fun Context.clipboard(): ClipboardManager =
     this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
-fun Context.clearClipboard() {
-    clipboard().primaryClip = ClipData.newPlainText("", Link.EMPTY_LINK)
-}
+fun Context.clearClipboard() =
+    apply { clipboard().primaryClip = ClipData.newPlainText("", Link.EMPTY_LINK) }
 
 fun Context.hasItemInClipboard(): Boolean = clipboard().primaryClip != null
 
@@ -114,9 +113,8 @@ fun Context.getURLFromClipboard(): String? {
     return if (clipboard.primaryClip != null) clipboard.primaryClip.getItemAt(0).text.toString() else null
 }
 
-fun Context.saveURLToClipboard(url: String) {
-    clipboard().primaryClip = ClipData.newPlainText("url", url)
-}
+fun Context.saveURLToClipboard(url: String) =
+    apply { clipboard().primaryClip = ClipData.newPlainText("url", url) }
 
 fun Context.openPlayStore() {
     try {
@@ -160,9 +158,7 @@ fun String.polished() = if (this.hasProtocol()) this.substringAtProtocol() else 
 /**
  * RETROFIT
  */
-fun ResponseBody.toJsoupDocument(): Document {
-    return Jsoup.parse(this.byteStream(), "UTF-8", "")
-}
+fun ResponseBody.toJsoupDocument(): Document = Jsoup.parse(this.byteStream(), "UTF-8", "")
 
 /**
  * MODEL
