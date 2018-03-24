@@ -29,7 +29,6 @@ import org.jsoup.nodes.Document
 /**
  * VIEW
  */
-
 fun View.toggleVisibility(setAsVisible: Boolean) = if (setAsVisible) this.visible() else this.gone()
 
 fun View.toggleVisibility() = if (this.visibility == View.VISIBLE) this.gone() else this.visible()
@@ -145,15 +144,15 @@ fun Context.sendFirebaseEvent(contentType: FirebaseContentType, action: Firebase
 /**
  * STRING
  */
-fun String.hasProtocol() = this.indexOf("http") != -1
+fun String.polished() = if (this.hasProtocol()) this.substringAtProtocol() else this.addProtocol()
 
-fun String.cleanFromSpaces() = this.replace("\\s+".toRegex(), "")
+fun String.hasProtocol() = this.indexOf("http") != -1
 
 fun String.substringAtProtocol() = this.substring(indexOf("http")).cleanFromSpaces()
 
 fun String.addProtocol() = "http://" + this.cleanFromSpaces()
 
-fun String.polished() = if (this.hasProtocol()) this.substringAtProtocol() else this.addProtocol()
+fun String.cleanFromSpaces() = this.replace("\\s+".toRegex(), "")
 
 /**
  * RETROFIT
@@ -190,10 +189,7 @@ fun Link.notificationString(): String {
     return "⌛️ ${this.timestamp.getRemainingTime().toHHmm()} ➡️ $customTitle\n"
 }
 
-fun List<Link>.filterAndSortForLinksActivity(): List<Link> {
-    val showSeen = Settings.showSeen
-    val rewardIsActive = isRewardActive()
-
+fun List<Link>.filterAndSortForLinksActivity(showSeen: Boolean = Settings.showSeen, rewardIsActive: Boolean = isRewardActive()): List<Link> {
     return when {
         Link.IS_ALL_LINKS_DEBUG_ACTIVE -> this.filter { !it.seen || (showSeen && it.seen) }
             .sortedWith(compareBy(Link::seen, Link::id))
@@ -214,18 +210,27 @@ fun isRewardActive(): Boolean =
 /**
  * DATETIME
  */
-fun DateTime.getRemainingTime() = Period(this.plusDays(1), DateTime.now())
+fun DateTime.getRemainingTime() = Period(DateTime.now(), this.plusDays(1))
 
 fun DateTime.isNotExpired24h(): Boolean = this.plusHours(24).isAfterNow
 
 fun Period.toLiteralString(verbose: Boolean): String {
     var timeString = ""
+    val d = Math.abs(days)
     val h = Math.abs(hours)
     val m = Math.abs(minutes)
 
     when (verbose) {
         true -> {
+            if (d != 0) {
+                timeString += "$d day"
+                if (d != 1) timeString += "s"
+            }
+
             if (h != 0) {
+                if (d != 0) {
+                    timeString += if (m != 0) ", " else " and "
+                }
                 timeString += "$h hour"
                 if (h != 1) timeString += "s"
             }
@@ -237,14 +242,20 @@ fun Period.toLiteralString(verbose: Boolean): String {
             }
         }
         false -> {
+            if (d != 0) timeString += "${d}d "
             if (h != 0) timeString += "${h}h "
             if (m != 0) timeString += "${m}m"
         }
     }
 
-    timeString += " left"
+    if (timeString.isNotBlank() && timeString.last().toString() != " ") timeString += " "
 
-    return timeString
+    return when {
+        days < 0 || hours < 0 || minutes < 0 -> "Expired ${timeString}ago"
+        timeString.isNotBlank() -> "${timeString}left"
+        else -> ""
+    }
+
 }
 
 fun Period.toHHmm(): String {

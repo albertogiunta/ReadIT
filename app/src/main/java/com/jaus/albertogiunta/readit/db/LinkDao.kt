@@ -9,7 +9,7 @@ interface LinkDao {
     @Query("SELECT MAX(id) FROM link")
     fun getMaxId(): Int
 
-    @Query("SELECT * FROM link WHERE id = :arg0")
+    @Query("SELECT * FROM link WHERE id = :id")
     fun getLinkById(id: Int): Link
 
     @Query("SELECT * FROM link ORDER BY id DESC")
@@ -27,7 +27,7 @@ interface LinkDao {
     @Query("DELETE FROM link")
     fun deleteAll()
 
-    @Query("DELETE FROM link WHERE timestamp < :arg0")
+    @Query("DELETE FROM link WHERE timestamp < :limitTimestamp")
     fun deleteAllOlderThan24h(limitTimestamp: Long)
 
 }
