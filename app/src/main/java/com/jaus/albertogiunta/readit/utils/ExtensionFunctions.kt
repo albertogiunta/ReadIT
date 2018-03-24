@@ -216,7 +216,8 @@ fun DateTime.isNotExpired24h(): Boolean = this.plusHours(24).isAfterNow
 
 fun Period.toLiteralString(verbose: Boolean): String {
     var timeString = ""
-    val d = Math.abs(days)
+    if (Math.abs(months) > 0 || Math.abs(years) > 0) return "Expired a while ago"
+    val d = Math.abs(toStandardDays().days)
     val h = Math.abs(hours)
     val m = Math.abs(minutes)
 
