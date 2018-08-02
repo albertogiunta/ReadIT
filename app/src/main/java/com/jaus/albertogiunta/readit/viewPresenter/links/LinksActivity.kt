@@ -167,18 +167,6 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
         updateNotification()
     }
 
-    override fun completelyRedrawList() {
-        runOnUiThread {
-            with(rvLinks) {
-                adapter = null
-                layoutManager = null
-                layoutManager = LinearLayoutManager(this@LinksActivity, LinearLayout.VERTICAL, false)
-                adapter = LinkAdapter(presenter.linkListForView, itemOnClick, itemOnLongClick)
-            }
-            updateLinkListUI()
-        }
-    }
-
     override fun updateNotification() {
         notificationManager.sendBundledNotification()
     }
@@ -213,7 +201,6 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
 
     override fun toggleSeenLinks(displaySeenLink: Boolean) {
         menu.toggleSeen(displaySeenLink)
-        completelyRedrawList()
     }
 
 //    override fun toggleCardLayoutMenuItems() {

@@ -31,7 +31,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
     }
 
     override fun onActivityResumed() {
-        refreshListToUpdateView(true)
+        refreshListToUpdateView()
     }
 
     override fun onLinkAdditionRequest(isNew: Boolean, url: String) {
@@ -128,13 +128,13 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
 
     override fun onSeenToggleRequest() {
         doAsync { Settings.showSeen = !Settings.showSeen }.get()
-        refreshListToUpdateView(true)
+        refreshListToUpdateView()
         view?.toggleSeenLinks(Settings.showSeen)
     }
 
     override fun rewardUser() {
         Prefs.expiredLinksLastActivationTimestamp = DateTime.now().toString(Utils.dateTimeFormatISO8601)
-        refreshListToUpdateView(true)
+        refreshListToUpdateView()
     }
 
 //    override fun onCardToggleRequest(cardLayout: CardLayout) {
@@ -148,19 +148,19 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
         linkListForView.addAll(list)
     }
 
-    private fun refreshListToUpdateView(forceRefresh: Boolean = false) {
+    private fun refreshListToUpdateView() {
         doAsync { fetchLinksForActivity() }
             .get()
             .also {
-            doAsync {
-                val unreadExpiredCount = dao.getAllUnseenExpiredLinks()
-                uiThread {
-                    view?.toggleActivityContentVisibilityTo(true)
-                    if (forceRefresh) view?.completelyRedrawList() else view?.updateLinkListUI() // update UI
-                    view?.updateUnreadExpiredLinksCount(unreadExpiredCount)
+                doAsync {
+                    val unreadExpiredCount = dao.getAllUnseenExpiredLinks()
+                    uiThread {
+                        view?.toggleActivityContentVisibilityTo(true)
+                        view?.updateLinkListUI()
+                        view?.updateUnreadExpiredLinksCount(unreadExpiredCount)
+                    }
                 }
             }
-        }
     }
 
     private fun sendFirebaseEvent(contentType: FirebaseContentType, action: FirebaseAction) {
