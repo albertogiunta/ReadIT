@@ -13,7 +13,6 @@ import com.jaus.albertogiunta.readit.db.Prefs
 import com.jaus.albertogiunta.readit.db.Settings
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.model.Link.Companion.REWARD_TIME
-import com.jaus.albertogiunta.readit.viewPresenter.links.CardLayout
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_link_1.view.*
 import okhttp3.ResponseBody
@@ -60,17 +59,6 @@ fun Menu.toggleSeen(displaySeenLinks: Boolean) =
     with(this.findItem(R.id.action_toggle_seen)) {
         this.isVisible = true
         this.setIcon(if (displaySeenLinks) R.drawable.ic_seen_enabled else R.drawable.ic_seen_disabled)
-    }
-
-fun Menu.togglePreferredCardRadioButton() =
-    this.findItem(Settings.cardLayout.action).setIcon(R.drawable.ic_radio_button_checked)
-
-fun Menu.toggleCardsRadioButtons(preferredCard: CardLayout = Settings.cardLayout) =
-    CardLayout.values().forEach {
-        when (preferredCard.action) {
-            it.action -> this.findItem(it.action).setIcon(R.drawable.ic_radio_button_checked)
-            else -> this.findItem(it.action).setIcon(R.drawable.ic_radio_button_unchecked)
-        }
     }
 
 fun ViewGroup.inflate(layoutRes: Int): View {

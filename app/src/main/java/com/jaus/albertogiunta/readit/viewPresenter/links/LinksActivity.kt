@@ -114,7 +114,6 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
         } else {
             menu.hideToggleSeenButton()
         }
-//        menu.togglePreferredCardRadioButton()
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -122,8 +121,6 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
         return with(item) {
             when (itemId) {
                 R.id.action_toggle_seen -> consumeOptionButton { presenter.onSeenToggleRequest() }
-//                R.id.action_toggle_card_1 -> consumeOptionButton { presenter.onCardToggleRequest(CardLayout.CARD1) }
-//                R.id.action_toggle_card_2 -> consumeOptionButton { presenter.onCardToggleRequest(CardLayout.CARD2) }
                 R.id.action_refer -> consumeOptionButton { share("Try ReadIT for Android, and never forget to read a link again: https://play.google.com/store/apps/details?id=$packageName") }
                 R.id.action_review -> consumeOptionButton { openPlayStore() }
                 R.id.action_about -> consumeOptionButton { displayAboutDialog() }
@@ -202,11 +199,6 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
     override fun toggleSeenLinks(displaySeenLink: Boolean) {
         menu.toggleSeen(displaySeenLink)
     }
-
-//    override fun toggleCardLayoutMenuItems() {
-//        menu.toggleCardsRadioButtons()
-//        completelyRedrawList()
-//    }
 
     private fun toggleUnlockButtonVisibility() =
         if (isRewardActive()) btnUnlock.gone() else btnUnlock.visible()

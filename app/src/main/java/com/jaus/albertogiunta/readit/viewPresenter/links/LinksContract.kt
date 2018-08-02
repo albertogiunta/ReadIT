@@ -14,8 +14,6 @@ object LinksContract {
 
         fun toggleActivityContentVisibilityTo(showContent: Boolean)
 
-        fun completelyRedrawList()
-
         fun updateLinkListUI()
 
         fun updateNotification()
@@ -31,8 +29,6 @@ object LinksContract {
         fun displayNewLinkDialog()
 
         fun toggleSeenLinks(displaySeenLink: Boolean)
-
-//        fun toggleCardLayoutMenuItems()
     }
 
     interface Presenter : BasePresenter<View> {
@@ -61,7 +57,6 @@ object LinksContract {
 
         fun shouldShowLinkList(): Boolean
 
-//        fun onCardToggleRequest(cardLayout: CardLayout)
         fun shouldShowLinkReadToggleButton(): Boolean
     }
 

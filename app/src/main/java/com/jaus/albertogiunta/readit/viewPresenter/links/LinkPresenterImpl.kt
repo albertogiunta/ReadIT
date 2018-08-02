@@ -137,11 +137,6 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
         refreshListToUpdateView()
     }
 
-//    override fun onCardToggleRequest(cardLayout: CardLayout) {
-//        if (Settings.cardLayout.id != cardLayout.id) Settings.cardLayout = cardLayout
-//        view?.toggleCardLayoutMenuItems()
-//    }
-
     private fun fetchLinksForActivity() {
         val list = dao.getAllLinksFromMostRecent().filterAndSortForLinksActivity() // sort & filter
         linkListForView.clear()
