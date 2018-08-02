@@ -106,6 +106,7 @@ class NotificationBuilder private constructor(ctx: Context) {
                 // set notificationString
                 channelBuilder.ensureChannelsExist(createChannel)
                 notify(NOTIFICATION_ID, buildNotification(NORMAL_CHANNEL_ID))
+                NotificationService.schedule(context.applicationContext)
             }
         }
     }
