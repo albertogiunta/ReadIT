@@ -2,6 +2,7 @@ package com.jaus.albertogiunta.readit.db
 
 import android.arch.persistence.room.*
 import com.jaus.albertogiunta.readit.model.Link
+import org.joda.time.DateTime
 
 @Dao
 interface LinkDao {
@@ -14,6 +15,9 @@ interface LinkDao {
 
     @Query("SELECT * FROM link ORDER BY id DESC")
     fun getAllLinksFromMostRecent(): List<Link>
+
+    @Query("SELECT COUNT(*) FROM link WHERE seen = :seen AND timestamp < :beforeTimestamp")
+    fun getAllUnseenExpiredLinks(seen: Boolean = false, beforeTimestamp: Long = DateTime.now().minusHours(24).millis): Int
 
     @Insert
     fun insert(vararg repos: Link)

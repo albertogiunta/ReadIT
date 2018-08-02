@@ -83,7 +83,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
         // LIST initialization
         with(rvLinks) {
             layoutManager = LinearLayoutManager(this@LinksActivity, LinearLayout.VERTICAL, false)
-            adapter = LinkAdapter(presenter.linkList, itemOnClick, itemOnLongClick)
+            adapter = LinkAdapter(presenter.linkListForView, itemOnClick, itemOnLongClick)
         }
 
         // DIALOG initialization
@@ -158,6 +158,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
             // show content if list is not empty, show empty state activity otherwise
             showContent(presenter.shouldShowLinkList())
             if (presenter.shouldShowLinkList()) rvLinks.adapter.notifyDataSetChanged()
+            updateUnreadExpiredLinksCount(presenter.linkListForView.getUnreadExpiredCount())
         }
         updateNotification()
     }
@@ -168,7 +169,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
                 adapter = null
                 layoutManager = null
                 layoutManager = LinearLayoutManager(this@LinksActivity, LinearLayout.VERTICAL, false)
-                adapter = LinkAdapter(presenter.linkList, itemOnClick, itemOnLongClick)
+                adapter = LinkAdapter(presenter.linkListForView, itemOnClick, itemOnLongClick)
             }
             updateLinkListUI()
         }
@@ -176,6 +177,14 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
 
     override fun updateNotification() {
         notificationManager.sendBundledNotification()
+    }
+
+    override fun updateUnreadExpiredLinksCount(count: Int) {
+        val buttonText = when {
+            count > 0 -> "You've $count unread link${if (count > 1) "s" else ""}!\nWhy not just read 'em now?"
+            else -> "Unlock all links older\nthan 24h for 10 minutes!"
+        }
+        btnUnlock.text = buttonText
     }
 
     override fun displayUpdateDialog(link: Link) {
@@ -228,17 +237,17 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
 
         val dialog = builder.setTitle(titleText)
             .setView(dialogView)
-            .setPositiveButton(positiveButtonText, { _, _ ->
+            .setPositiveButton(positiveButtonText) { _, _ ->
                 presenter.onLinkAdditionRequest(isNew, dialogView.etUrl.text.toString())
-            })
-            .setNeutralButton("Paste from clipboard", { _, _ ->
+            }
+            .setNeutralButton("Paste from clipboard") { _, _ ->
                 run {
                     val urlFromClipboard: String? = getURLFromClipboard()
                     urlFromClipboard?.let { presenter.onLinkAdditionRequest(isNew, urlFromClipboard) }
                             ?: this.showError("No Link found in clipboard")
                 }
-            })
-            .setNegativeButton("Cancel", { _, _ -> })
+            }
+            .setNegativeButton("Cancel") { _, _ -> }
             .create()
 
         dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
@@ -255,7 +264,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
         val dialog = builder
             .setTitle(R.string.title_about)
             .setView(dialogView)
-            .setPositiveButton("GOTCHA", { _, _ -> })
+            .setPositiveButton("GOTCHA") { _, _ -> }
             .create()
         dialog.show()
 

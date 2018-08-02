@@ -204,6 +204,8 @@ fun List<Link>.filterAndSortForNotification() =
         else -> this.reversed().filter { !it.seen && it.timestamp.isNotExpired24h() }
     }
 
+fun List<Link>.getUnreadExpiredCount(): Int = this.filter { !it.seen && it.timestamp.isExpired24h() }.count()
+
 fun isRewardActive(): Boolean =
     DateTime.parse(Prefs.expiredLinksLastActivationTimestamp, DateTimeFormat.forPattern(Utils.dateTimeFormatISO8601)).plusSeconds(REWARD_TIME).isAfterNow
 
@@ -213,6 +215,8 @@ fun isRewardActive(): Boolean =
 fun DateTime.getRemainingTime() = Period(DateTime.now(), this.plusDays(1))
 
 fun DateTime.isNotExpired24h(): Boolean = this.plusHours(24).isAfterNow
+
+fun DateTime.isExpired24h(): Boolean = this.plusHours(24).isBeforeNow
 
 fun Period.toLiteralString(verbose: Boolean): String {
     var timeString = ""

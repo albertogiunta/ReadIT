@@ -20,13 +20,13 @@ import org.joda.time.DateTime
 
 class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract.Presenter {
 
-    override var linkList = mutableListOf<Link>() // treated as FIFO queue (newer links go to the bottom)
+    override var linkListForView = mutableListOf<Link>() // treated as FIFO queue (newer links go to the bottom)
     private val dao: LinkDao = MyApplication.database.linkDao()
     private var editingIndex: Int = 0
 
     init {
         doAsync {
-            linkList.addAll(dao.getAllLinksFromMostRecent())
+            linkListForView.addAll(dao.getAllLinksFromMostRecent())
         }
     }
 
@@ -36,43 +36,44 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
 
     override fun onLinkAdditionRequest(isNew: Boolean, url: String) {
         if (url == Link.EMPTY_LINK) {
-            view?.showError("Your link seems to be empty or not a valid link :/"); return
+            view?.showError("Your link seems to be empty or not a valid link :/")
+            return
         }
 
         val polishedURL: String = url.polished()
 
         NetworkingFactory
-                .createService(LinkService::class.java)
-                .contactWebsite(polishedURL)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { view?.startLoadingState() }
-                .doAfterTerminate { view?.stopLoadingState() }
-                .map { result: ResponseBody ->
-                    with(result.toJsoupDocument()) {
-                        result.close()
-                        WebsiteInfo(polishedURL, title())
-                    }
+            .createService(LinkService::class.java)
+            .contactWebsite(polishedURL)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { view?.startLoadingState() }
+            .doAfterTerminate { view?.stopLoadingState() }
+            .map { result: ResponseBody ->
+                with(result.toJsoupDocument()) {
+                    result.close()
+                    WebsiteInfo(polishedURL, title())
                 }
-                .subscribe({ siteInfo: WebsiteInfo ->
-                    if (isNew) Link(title = siteInfo.title, url = siteInfo.url).addTo(dao, linkList)
-                    else linkList[editingIndex].apply {
-                        this.title = siteInfo.title
-                        this.url = siteInfo.url
-                    }.update(dao, linkList, editingIndex)
-                    refreshList()
-                    view?.showMessage("Link queued successfully")
-                    sendFirebaseEvent(LINK_INTERACTION, LINK_ADD)
-                }, { error ->
-                    println(error)
-                    view?.showError("Your link seems to be not a valid link :/")
-                })
+            }
+            .subscribe({ siteInfo: WebsiteInfo ->
+                if (isNew) Link(title = siteInfo.title, url = siteInfo.url).addTo(dao, linkListForView)
+                else linkListForView[editingIndex].apply {
+                    this.title = siteInfo.title
+                    this.url = siteInfo.url
+                }.update(dao, linkListForView, editingIndex)
+                refreshList()
+                view?.showMessage("Link queued successfully")
+                sendFirebaseEvent(LINK_INTERACTION, LINK_ADD)
+            }, { error ->
+                println(error)
+                view?.showError("Your link seems to be not a valid link :/")
+            })
     }
 
     override fun onLinkBrowsingRequest(position: Int) {
         sendFirebaseEvent(LINK_INTERACTION, LINK_BROWSE)
         doAsync {
-            val link = dao.getLinkById(linkList[position].id)
-            link.apply { seen = true }.update(dao, linkList, position)
+            val link = dao.getLinkById(linkListForView[position].id)
+            link.apply { seen = true }.update(dao, linkListForView, position)
             view?.launchBrowser(link)
             refreshList()
         }
@@ -81,14 +82,14 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
     override fun onLinkSharingRequest(position: Int) {
         sendFirebaseEvent(LINK_INTERACTION, LINK_SHARE)
         doAsync {
-            view?.launchShare(dao.getLinkById(linkList[position].id))
+            view?.launchShare(dao.getLinkById(linkListForView[position].id))
         }
     }
 
     override fun onLinkCopyRequest(position: Int) {
         sendFirebaseEvent(LINK_INTERACTION, LINK_COPY)
         view?.run {
-            this.getContext().saveURLToClipboard(linkList[position].url)
+            this.getContext().saveURLToClipboard(linkListForView[position].url)
             this.showMessage("Link copied to your Clipboard!")
         }
     }
@@ -96,7 +97,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
     override fun onLinkRemovalRequest(position: Int) {
         sendFirebaseEvent(LINK_INTERACTION, LINK_REMOVE)
         doAsync {
-            linkList[position].remove(dao, linkList, position)
+            linkListForView[position].remove(dao, linkListForView, position)
             refreshList()
             uiThread {
                 view?.showMessage("Link removed successfully")
@@ -108,14 +109,14 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
         sendFirebaseEvent(LINK_INTERACTION, LINK_UPDATE)
         editingIndex = position
         doAsync {
-            val link = dao.getLinkById(linkList[position].id)
+            val link = dao.getLinkById(linkListForView[position].id)
             uiThread {
                 view?.displayUpdateDialog(link)
             }
         }
     }
 
-    override fun shouldShowLinkList(): Boolean = linkList.isNotEmpty()
+    override fun shouldShowLinkList(): Boolean = linkListForView.isNotEmpty()
 
     override fun onSeenToggleRequest() {
         doAsync {
@@ -139,16 +140,18 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
 
     private fun fetchLinksForActivity() {
         val list = dao.getAllLinksFromMostRecent().filterAndSortForLinksActivity() // sort & filter
-        linkList.clear()
-        linkList.addAll(list)
+        linkListForView.clear()
+        linkListForView.addAll(list)
     }
 
     private fun refreshList(forceRefresh: Boolean = false) {
         doAsync { fetchLinksForActivity() }.get().also {
             doAsync {
+                val unreadExpiredCount = dao.getAllUnseenExpiredLinks()
                 uiThread {
                     view?.showContent(true)
                     if (forceRefresh) view?.completelyRedrawList() else view?.updateLinkListUI() // update UI
+                    view?.updateUnreadExpiredLinksCount(unreadExpiredCount)
                 }
             }
         }

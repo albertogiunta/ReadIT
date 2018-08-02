@@ -20,6 +20,8 @@ object LinksContract {
 
         fun updateNotification()
 
+        fun updateUnreadExpiredLinksCount(count: Int = 0)
+
         fun launchBrowser(link: Link)
 
         fun launchShare(link: Link)
@@ -35,7 +37,7 @@ object LinksContract {
 
     interface Presenter : BasePresenter<View> {
 
-        var linkList: MutableList<Link>
+        var linkListForView: MutableList<Link>
 
         fun onActivityResumed()
 

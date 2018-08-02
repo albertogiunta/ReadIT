@@ -57,7 +57,7 @@
             android:drawablePadding="8dp"
             android:textAlignment="viewStart"
             android:paddingEnd="17dp"
-            android:text="Unlock all links older\nthan 24h for 10 minutes!"
+            tools:text="You've 10 unread links!\nWhy not just read 'em now?"
             android:textAllCaps="false"
             app:layout_constraintVertical_bias="0.97"
             app:layout_constraintTop_toTopOf="parent"
