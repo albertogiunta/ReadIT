@@ -14,11 +14,11 @@
 
     <string name="title_empty_link_list">No links here, you can relax now.</string>
     <string name="desc_empty_link_list_1">
-        <b><i>HOW TO USE READIT</i></b>
-        <b>1)</b> <b>Share a link</b> to ReadIT\n\n
-        <b>2)</b> Read it in the next <b>24 hours</b>\n\n
-        <b>3)</b> <b>???</b>\n\n
-        <b>4)</b> <b>Profit!</b>\n\n
+        <b><i>HOW TO USE READIT</i></b>\n\n
+        <b>1.</b> <b>Share a link</b> to ReadIT\n\n
+        <b>2.</b> Read it in the next <b>24 hours</b>\n\n
+        <b>3.</b> <b>???</b>\n\n
+        <b>4.</b> <b>Profit!</b>\n\n
     </string>
 
     <string name="desc_empty_link_list_emoji">
@@ -38,7 +38,7 @@
 
     <string name="desc_about_1">
         \nI\'m <b>Alberto</b>, an Italian developer who stopped counting unread articles on Pocket way too long ago.\n
-        During Christmas break \'17 I decided to make this app, <b>so that I wouldn\'t miss out on any new link</b> that I wanted to read in 2018.\n
+        I therefore decided to make this app, <b>so that I wouldn\'t miss out on any new link</b> that I wanted to read in 2018.\n
         <b>I really hope you\'re gonna find it as useful as I do.</b>
     </string>
 
