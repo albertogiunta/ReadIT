@@ -12,7 +12,7 @@ object LinksContract {
 
         fun stopLoadingState()
 
-        fun showContent(showContent: Boolean)
+        fun toggleActivityContentVisibilityTo(showContent: Boolean)
 
         fun completelyRedrawList()
 
@@ -32,7 +32,7 @@ object LinksContract {
 
         fun toggleSeenLinks(displaySeenLink: Boolean)
 
-        fun toggleCardLayoutMenuItems()
+//        fun toggleCardLayoutMenuItems()
     }
 
     interface Presenter : BasePresenter<View> {
@@ -59,9 +59,10 @@ object LinksContract {
 
         fun rewardUser()
 
-        fun onCardToggleRequest(cardLayout: CardLayout)
-
         fun shouldShowLinkList(): Boolean
+
+//        fun onCardToggleRequest(cardLayout: CardLayout)
+        fun shouldShowLinkReadToggleButton(): Boolean
     }
 
 }

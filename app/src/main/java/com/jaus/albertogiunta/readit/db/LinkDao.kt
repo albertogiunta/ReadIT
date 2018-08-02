@@ -19,6 +19,9 @@ interface LinkDao {
     @Query("SELECT COUNT(*) FROM link WHERE seen = :seen AND timestamp < :beforeTimestamp")
     fun getAllUnseenExpiredLinks(seen: Boolean = false, beforeTimestamp: Long = DateTime.now().minusHours(24).millis): Int
 
+    @Query("SELECT COUNT(*) FROM link WHERE seen = :seen")
+    fun getAllSeenLinksCount(seen: Boolean = true): Int
+
     @Insert
     fun insert(vararg repos: Link)
 

@@ -52,8 +52,15 @@ inline fun MenuItem.consumeOptionButton(f: () -> Unit): Boolean {
     return true
 }
 
+fun Menu.hideToggleSeenButton() =
+    this.findItem(R.id.action_toggle_seen).setVisible(false)
+
+
 fun Menu.toggleSeen(displaySeenLinks: Boolean) =
-    this.findItem(R.id.action_toggle_seen).setIcon(if (displaySeenLinks) R.drawable.ic_seen_enabled else R.drawable.ic_seen_disabled)
+    with(this.findItem(R.id.action_toggle_seen)) {
+        this.isVisible = true
+        this.setIcon(if (displaySeenLinks) R.drawable.ic_seen_enabled else R.drawable.ic_seen_disabled)
+    }
 
 fun Menu.togglePreferredCardRadioButton() =
     this.findItem(Settings.cardLayout.action).setIcon(R.drawable.ic_radio_button_checked)
@@ -204,7 +211,8 @@ fun List<Link>.filterAndSortForNotification() =
         else -> this.reversed().filter { !it.seen && it.timestamp.isNotExpired24h() }
     }
 
-fun List<Link>.getUnreadExpiredCount(): Int = this.filter { !it.seen && it.timestamp.isExpired24h() }.count()
+fun List<Link>.getUnreadExpiredCount(): Int =
+    this.filter { !it.seen && it.timestamp.isExpired24h() }.count()
 
 fun isRewardActive(): Boolean =
     DateTime.parse(Prefs.expiredLinksLastActivationTimestamp, DateTimeFormat.forPattern(Utils.dateTimeFormatISO8601)).plusSeconds(REWARD_TIME).isAfterNow

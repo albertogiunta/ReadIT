@@ -31,7 +31,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
     }
 
     override fun onActivityResumed() {
-        refreshList(true)
+        refreshListToUpdateView(true)
     }
 
     override fun onLinkAdditionRequest(isNew: Boolean, url: String) {
@@ -60,7 +60,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
                     this.title = siteInfo.title
                     this.url = siteInfo.url
                 }.update(dao, linkListForView, editingIndex)
-                refreshList()
+                refreshListToUpdateView()
                 view?.showMessage("Link queued successfully")
                 sendFirebaseEvent(LINK_INTERACTION, LINK_ADD)
             }, { error ->
@@ -75,7 +75,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
             val link = dao.getLinkById(linkListForView[position].id)
             link.apply { seen = true }.update(dao, linkListForView, position)
             view?.launchBrowser(link)
-            refreshList()
+            refreshListToUpdateView()
         }
     }
 
@@ -98,7 +98,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
         sendFirebaseEvent(LINK_INTERACTION, LINK_REMOVE)
         doAsync {
             linkListForView[position].remove(dao, linkListForView, position)
-            refreshList()
+            refreshListToUpdateView()
             uiThread {
                 view?.showMessage("Link removed successfully")
             }
@@ -118,25 +118,29 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
 
     override fun shouldShowLinkList(): Boolean = linkListForView.isNotEmpty()
 
-    override fun onSeenToggleRequest() {
+    override fun shouldShowLinkReadToggleButton(): Boolean {
+        var unseenCount = 0
         doAsync {
-            // toggle shared preferences
-            Settings.showSeen = !Settings.showSeen
+            unseenCount = dao.getAllSeenLinksCount()
         }.get()
+        return unseenCount != 0
+    }
 
-        refreshList(true)
+    override fun onSeenToggleRequest() {
+        doAsync { Settings.showSeen = !Settings.showSeen }.get()
+        refreshListToUpdateView(true)
         view?.toggleSeenLinks(Settings.showSeen)
     }
 
     override fun rewardUser() {
         Prefs.expiredLinksLastActivationTimestamp = DateTime.now().toString(Utils.dateTimeFormatISO8601)
-        refreshList(true)
+        refreshListToUpdateView(true)
     }
 
-    override fun onCardToggleRequest(cardLayout: CardLayout) {
-        if (Settings.cardLayout.id != cardLayout.id) Settings.cardLayout = cardLayout
-        view?.toggleCardLayoutMenuItems()
-    }
+//    override fun onCardToggleRequest(cardLayout: CardLayout) {
+//        if (Settings.cardLayout.id != cardLayout.id) Settings.cardLayout = cardLayout
+//        view?.toggleCardLayoutMenuItems()
+//    }
 
     private fun fetchLinksForActivity() {
         val list = dao.getAllLinksFromMostRecent().filterAndSortForLinksActivity() // sort & filter
@@ -144,12 +148,14 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
         linkListForView.addAll(list)
     }
 
-    private fun refreshList(forceRefresh: Boolean = false) {
-        doAsync { fetchLinksForActivity() }.get().also {
+    private fun refreshListToUpdateView(forceRefresh: Boolean = false) {
+        doAsync { fetchLinksForActivity() }
+            .get()
+            .also {
             doAsync {
                 val unreadExpiredCount = dao.getAllUnseenExpiredLinks()
                 uiThread {
-                    view?.showContent(true)
+                    view?.toggleActivityContentVisibilityTo(true)
                     if (forceRefresh) view?.completelyRedrawList() else view?.updateLinkListUI() // update UI
                     view?.updateUnreadExpiredLinksCount(unreadExpiredCount)
                 }

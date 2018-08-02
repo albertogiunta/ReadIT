@@ -109,7 +109,11 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menu.toggleSeen(Settings.showSeen)
+        if (presenter.shouldShowLinkReadToggleButton()) {
+            menu.toggleSeen(Settings.showSeen)
+        } else {
+            menu.hideToggleSeenButton()
+        }
 //        menu.togglePreferredCardRadioButton()
         return super.onPrepareOptionsMenu(menu)
     }
@@ -146,8 +150,8 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
     override fun stopLoadingState() = urlFetchingWaitDialog.cancel()
 
     //////////////////// EMPTY ACTIVITY
-    override fun showContent(showContent: Boolean) {
-        checkIfUnlockBtnShouldBeShown()
+    override fun toggleActivityContentVisibilityTo(showContent: Boolean) {
+        toggleUnlockButtonVisibility()
         rvLinks.toggleVisibility(showContent)
         emptyLayout.toggleVisibility(!showContent)
     }
@@ -156,7 +160,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
     override fun updateLinkListUI() {
         runOnUiThread {
             // show content if list is not empty, show empty state activity otherwise
-            showContent(presenter.shouldShowLinkList())
+            toggleActivityContentVisibilityTo(presenter.shouldShowLinkList())
             if (presenter.shouldShowLinkList()) rvLinks.adapter.notifyDataSetChanged()
             updateUnreadExpiredLinksCount(presenter.linkListForView.getUnreadExpiredCount())
         }
@@ -212,12 +216,12 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
         completelyRedrawList()
     }
 
-    override fun toggleCardLayoutMenuItems() {
-        menu.toggleCardsRadioButtons()
-        completelyRedrawList()
-    }
+//    override fun toggleCardLayoutMenuItems() {
+//        menu.toggleCardsRadioButtons()
+//        completelyRedrawList()
+//    }
 
-    private fun checkIfUnlockBtnShouldBeShown() =
+    private fun toggleUnlockButtonVisibility() =
         if (isRewardActive()) btnUnlock.gone() else btnUnlock.visible()
 
     private fun showInterstitialAd() {
