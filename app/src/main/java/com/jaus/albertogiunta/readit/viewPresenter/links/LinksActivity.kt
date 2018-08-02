@@ -93,8 +93,6 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
         }
 
         onNewIntent(intent)
-
-//        doAsync { if (!Prefs.tutorialSeen) startActivity(intentFor<IntroActivity>()) }
     }
 
     override fun onResume() {

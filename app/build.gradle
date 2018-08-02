@@ -35,7 +35,6 @@ dependencies {
     implementation "com.google.android.gms:play-services-ads:$firebase_version"
 
     // utility
-    implementation "com.github.apl-devs:appintro:v$appintro_version"
     implementation "com.chibatching.kotpref:kotpref:$kotpref_version"
     implementation "com.chibatching.kotpref:enum-support:$kotpref_version"
     implementation "co.trikita:log:$log_version"

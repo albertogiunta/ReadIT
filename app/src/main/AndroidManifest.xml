@@ -16,11 +16,6 @@
             android:theme="@style/MyCustomTheme">
 
         <activity
-                android:name=".viewPresenter.intro.IntroActivity"
-                android:label="Intro"
-                />
-
-        <activity
                 android:name=".viewPresenter.settings.SettingsActivity"
                 android:label="Settings"
                 />
