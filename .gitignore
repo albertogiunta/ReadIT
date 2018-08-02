@@ -8,3 +8,6 @@
 /captures
 .externalNativeBuild
 .idea/
+*.apk
+app/release/output.json
+keystores/android.jks
