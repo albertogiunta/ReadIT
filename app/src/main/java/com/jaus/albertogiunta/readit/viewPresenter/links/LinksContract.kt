@@ -12,13 +12,9 @@ object LinksContract {
 
         fun stopLoadingState()
 
-        fun toggleActivityContentVisibilityTo(showContent: Boolean)
-
-        fun updateLinkListUI()
+        fun updateHomeContent()
 
         fun updateNotification()
-
-        fun updateUnreadExpiredLinksCount(count: Int = 0)
 
         fun launchBrowser(link: Link)
 
@@ -51,13 +47,13 @@ object LinksContract {
 
         fun onSeenToggleRequest()
 
-//        fun onCheckRewardExpirationRequest()
-
         fun rewardUser()
 
         fun shouldShowLinkList(): Boolean
 
         fun shouldShowLinkReadToggleButton(): Boolean
+
+        fun shouldShowUnlockButton(): Boolean
     }
 
 }

@@ -65,7 +65,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
 
         interstitialAd.adListener = object : AdListener() {
             override fun onAdLoaded() =
-                if (isRewardActive()) btnUnlock.gone() else btnUnlock.visible()
+                if (presenter.shouldShowUnlockButton()) btnUnlock.visible() else btnUnlock.gone()
 
             override fun onAdFailedToLoad(errorCode: Int) {}
 
@@ -145,33 +145,20 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
     override fun stopLoadingState() = urlFetchingWaitDialog.cancel()
 
     //////////////////// EMPTY ACTIVITY
-    override fun toggleActivityContentVisibilityTo(showContent: Boolean) {
-        toggleUnlockButtonVisibility()
-        rvLinks.toggleVisibility(showContent)
-        emptyLayout.toggleVisibility(!showContent)
+    override fun updateHomeContent() {
+        val shouldShowLinks = presenter.shouldShowLinkList()
+
+        emptyLayout.toggleVisibility(!shouldShowLinks)
+        rvLinks.toggleVisibility(shouldShowLinks)
+        rvLinks.adapter.notifyDataSetChanged()
+
+        updateNotification()
+        updateUnlockButton()
     }
 
     //////////////////// LINK INTERACTION
-    override fun updateLinkListUI() {
-        runOnUiThread {
-            // show content if list is not empty, show empty state activity otherwise
-            toggleActivityContentVisibilityTo(presenter.shouldShowLinkList())
-            if (presenter.shouldShowLinkList()) rvLinks.adapter.notifyDataSetChanged()
-            updateUnreadExpiredLinksCount(presenter.linkListForView.getUnreadExpiredCount())
-        }
-        updateNotification()
-    }
-
     override fun updateNotification() {
         notificationManager.sendBundledNotification()
-    }
-
-    override fun updateUnreadExpiredLinksCount(count: Int) {
-        val buttonText = when {
-            count > 0 -> "You've $count unread link${if (count > 1) "s" else ""}!\nWhy not just read 'em now?"
-            else -> "Unlock all links older\nthan 24h for 10 minutes!"
-        }
-        btnUnlock.text = buttonText
     }
 
     override fun displayUpdateDialog(link: Link) {
@@ -198,8 +185,19 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
         menu.toggleSeen(displaySeenLink)
     }
 
-    private fun toggleUnlockButtonVisibility() =
-        if (isRewardActive()) btnUnlock.gone() else btnUnlock.visible()
+    private fun updateUnlockButton() {
+        if (presenter.shouldShowUnlockButton()) {
+            val count = presenter.linkListForView.getUnreadExpiredCount()
+            val buttonText = when {
+                count > 0 -> "You've $count unread link${if (count > 1) "s" else ""}!\nWhy not just read 'em now?"
+                else -> "Unlock all links older\nthan 24h for 10 minutes!"
+            }
+            btnUnlock.text = buttonText
+            btnUnlock.visible()
+        } else {
+            btnUnlock.gone()
+        }
+    }
 
     private fun showInterstitialAd() {
         if (interstitialAd.isLoaded) interstitialAd.show()
