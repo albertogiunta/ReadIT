@@ -16,11 +16,6 @@
             android:theme="@style/MyCustomTheme">
 
         <activity
-                android:name=".viewPresenter.settings.SettingsActivity"
-                android:label="Settings"
-                />
-
-        <activity
                 android:name=".viewPresenter.links.LinksActivity"
                 android:launchMode="singleInstance">
             <intent-filter>
@@ -32,6 +27,50 @@
                 <action android:name="android.intent.action.SEND"/>
                 <data android:mimeType="text/plain"/>
             </intent-filter>
+        </activity>
+
+        <activity
+                android:name=".viewPresenter.BrowserInterceptActivity"
+                android:theme="@android:style/Theme.NoDisplay"
+                android:noHistory="true"
+                >
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                        android:scheme="http"
+                        android:host="*"
+                        />
+                <data
+                        android:scheme="https"
+                        android:host="*"
+                        />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                        android:scheme="http"
+                        android:host="*"
+                        />
+                <data
+                        android:scheme="https"
+                        android:host="*"
+                        />
+                <data android:mimeType="text/html"/>
+                <data android:mimeType="text/plain"/>
+                <data android:mimeType="application/xhtml+xml"/>
+
+            </intent-filter>
+
         </activity>
 
         <service

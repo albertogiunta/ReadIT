@@ -75,7 +75,6 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
             val link = dao.getLinkById(linkListForView[position].id)
             link.apply { seen = true }.update(dao, linkListForView, position)
             view?.launchBrowser(link)
-            refreshListToUpdateView()
         }
     }
 
@@ -126,6 +125,10 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
         return unseenCount != 0
     }
 
+    override fun shouldShowUnlockButton(): Boolean {
+        return !isRewardActive() && linkListForView.getExpiredCount() > 0
+    }
+
     override fun onSeenToggleRequest() {
         doAsync { Settings.showSeen = !Settings.showSeen }.get()
         refreshListToUpdateView()
@@ -146,16 +149,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
     private fun refreshListToUpdateView() {
         doAsync { fetchLinksForActivity() }
             .get()
-            .also {
-                doAsync {
-                    val unreadExpiredCount = dao.getAllUnseenExpiredLinks()
-                    uiThread {
-                        view?.toggleActivityContentVisibilityTo(true)
-                        view?.updateLinkListUI()
-                        view?.updateUnreadExpiredLinksCount(unreadExpiredCount)
-                    }
-                }
-            }
+        view?.updateHomeContent()
     }
 
     private fun sendFirebaseEvent(contentType: FirebaseContentType, action: FirebaseAction) {
