@@ -108,7 +108,8 @@
             tools:ignore="RtlSymmetry"
             />
 
-    <include layout="@layout/section_link_options"/>
+    <include layout="@layout/section_link_options"
+            android:id="@+id/clEditButtonsLayout"/>
 
     <include layout="@layout/section_empty_bottom_spacing"/>
 
