@@ -1,4 +1,4 @@
-package com.jaus.albertogiunta.readit.viewPresenter.links
+package com.jaus.albertogiunta.readit.viewPresenter.linksList
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -20,18 +20,19 @@ import com.jaus.albertogiunta.readit.db.Settings
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.notifications.NotificationBuilder
 import com.jaus.albertogiunta.readit.utils.*
-import com.jaus.albertogiunta.readit.viewPresenter.base.BaseActivity
+import com.jaus.albertogiunta.readit.viewPresenter.base.BaseCompatActivity
 import kotlinx.android.synthetic.main.activity_links.*
 import kotlinx.android.synthetic.main.dialog_about.view.*
 import kotlinx.android.synthetic.main.dialog_manual_input.view.*
+import kotlinx.android.synthetic.main.item_link_1.view.*
 import kotlinx.android.synthetic.main.section_link_options.view.*
 import org.jetbrains.anko.browse
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.share
 
-class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(), LinksContract.View {
+class LinksListCompatActivity : BaseCompatActivity<LinksListContract.View, LinksListContract.Presenter>(), LinksListContract.View {
 
-    override var presenter: LinksContract.Presenter = LinkPresenterImpl()
+    override var presenter: LinksListContract.Presenter = LinksListPresenter()
     private lateinit var urlFetchingWaitDialog: AlertDialog
     private lateinit var itemOnClick: (View, Int, Int) -> Unit
     private lateinit var itemOnLongClick: (View, Int, Int) -> Unit
@@ -49,8 +50,8 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
         itemOnClick = { _, position, _ -> presenter.onLinkBrowsingRequest(position) }
         itemOnLongClick = { view, position, _ ->
             run {
-                view.clEditButtons.toggleVisibility()
-                with(view.clEditButtons) {
+                view.clEditButtonsLayout.toggleVisibility()
+                with(view.clEditButtonsLayout) {
                     ibShare.setOnClickListener { consumeEditButton { presenter.onLinkSharingRequest(position) } }
                     ibEdit.setOnClickListener { consumeEditButton { presenter.onLinkUpdateRequest(position) } }
                     ibCopy.setOnClickListener { consumeEditButton { presenter.onLinkCopyRequest(position) } }
@@ -82,8 +83,8 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
 
         // LIST initialization
         with(rvLinks) {
-            layoutManager = LinearLayoutManager(this@LinksActivity, LinearLayout.VERTICAL, false)
-            adapter = LinkAdapter(presenter.linkListForView, itemOnClick, itemOnLongClick)
+            layoutManager = LinearLayoutManager(this@LinksListCompatActivity, LinearLayout.VERTICAL, false)
+            adapter = LinksListAdapter(presenter.linkListForView, itemOnClick, itemOnLongClick)
         }
 
         // DIALOG initialization
@@ -107,10 +108,10 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        if (presenter.shouldShowLinkReadToggleButton()) {
+        if (presenter.shouldShowShowSeenMenuButton()) {
             menu.toggleSeen(Settings.showSeen)
         } else {
-            menu.hideToggleSeenButton()
+            menu.hideShowSeenMenuButton()
         }
         return super.onPrepareOptionsMenu(menu)
     }
@@ -144,16 +145,32 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
 
     override fun stopLoadingState() = urlFetchingWaitDialog.cancel()
 
-    //////////////////// EMPTY ACTIVITY
-    override fun updateHomeContent() {
-        val shouldShowLinks = presenter.shouldShowLinkList()
+    //////////////////// UNLOCK BUTTON
+    override fun showUnlockButton(btnText: String) {
+        btnUnlock.text = btnText
+        btnUnlock.visible()
+    }
 
-        emptyLayout.toggleVisibility(!shouldShowLinks)
-        rvLinks.toggleVisibility(shouldShowLinks)
+    override fun hideUnlockButton() = btnUnlock.gone()
+
+    override fun showShowSeenMenuButton() {
+        menu.toggleSeen(Settings.showSeen)
+    }
+
+    override fun hideShowSeenMenuButton() {
+        menu.hideShowSeenMenuButton()
+    }
+
+    //////////////////// SCREEN MAIN CONTENT
+    override fun showContent() {
+        rvLinks.toggleVisibility(true)
         rvLinks.adapter.notifyDataSetChanged()
+        landingScreenLayout.toggleVisibility(false)
+    }
 
-        updateNotification()
-        updateUnlockButton()
+    override fun showLandingScreen() {
+        rvLinks.toggleVisibility(false)
+        landingScreenLayout.toggleVisibility(true)
     }
 
     //////////////////// LINK INTERACTION
@@ -173,7 +190,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
         try {
             browse(link.url)
         } catch (e: IllegalArgumentException) {
-            showError("This link seems to be broken :O")
+            showErrorSnackbar("This link seems to be broken :O")
         }
     }
 
@@ -183,20 +200,6 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
 
     override fun toggleSeenLinks(displaySeenLink: Boolean) {
         menu.toggleSeen(displaySeenLink)
-    }
-
-    private fun updateUnlockButton() {
-        if (presenter.shouldShowUnlockButton()) {
-            val count = presenter.linkListForView.getUnreadExpiredCount()
-            val buttonText = when {
-                count > 0 -> "You've $count unread link${if (count > 1) "s" else ""}!\nWhy not just read 'em now?"
-                else -> "Unlock all links older\nthan 24h for 10 minutes!"
-            }
-            btnUnlock.text = buttonText
-            btnUnlock.visible()
-        } else {
-            btnUnlock.gone()
-        }
     }
 
     private fun showInterstitialAd() {
@@ -223,7 +226,7 @@ class LinksActivity : BaseActivity<LinksContract.View, LinksContract.Presenter>(
                 run {
                     val urlFromClipboard: String? = getURLFromClipboard()
                     urlFromClipboard?.let { presenter.onLinkAdditionRequest(isNew, urlFromClipboard) }
-                            ?: this.showError("No Link found in clipboard")
+                            ?: this.showErrorSnackbar("No Link found in clipboard")
                 }
             }
             .setNegativeButton("Cancel") { _, _ -> }

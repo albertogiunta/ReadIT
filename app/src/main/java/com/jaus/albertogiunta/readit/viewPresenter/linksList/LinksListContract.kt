@@ -1,10 +1,10 @@
-package com.jaus.albertogiunta.readit.viewPresenter.links
+package com.jaus.albertogiunta.readit.viewPresenter.linksList
 
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.viewPresenter.base.BasePresenter
 import com.jaus.albertogiunta.readit.viewPresenter.base.BaseView
 
-object LinksContract {
+object LinksListContract {
 
     interface View : BaseView {
 
@@ -12,7 +12,17 @@ object LinksContract {
 
         fun stopLoadingState()
 
-        fun updateHomeContent()
+        fun showUnlockButton(btnText: String)
+
+        fun hideUnlockButton()
+
+        fun showShowSeenMenuButton()
+
+        fun hideShowSeenMenuButton()
+
+        fun showContent()
+
+        fun showLandingScreen()
 
         fun updateNotification()
 
@@ -51,7 +61,7 @@ object LinksContract {
 
         fun shouldShowLinkList(): Boolean
 
-        fun shouldShowLinkReadToggleButton(): Boolean
+        fun shouldShowShowSeenMenuButton(): Boolean
 
         fun shouldShowUnlockButton(): Boolean
     }

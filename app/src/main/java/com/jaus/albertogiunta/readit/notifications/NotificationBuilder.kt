@@ -21,7 +21,7 @@ import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.utils.Utils.atLeast
 import com.jaus.albertogiunta.readit.utils.filterAndSortForNotification
 import com.jaus.albertogiunta.readit.utils.notificationString
-import com.jaus.albertogiunta.readit.viewPresenter.links.LinksActivity
+import com.jaus.albertogiunta.readit.viewPresenter.linksList.LinksListCompatActivity
 import org.jetbrains.anko.doAsync
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -158,7 +158,7 @@ class NotificationBuilder private constructor(ctx: Context) {
     }
 
     private fun buildOnNotificationClickIntent(): PendingIntent {
-        val notificationIntent = Intent(context, LinksActivity::class.java)
+        val notificationIntent = Intent(context, LinksListCompatActivity::class.java)
         notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         return PendingIntent.getActivity(context, 0, notificationIntent, 0)
     }

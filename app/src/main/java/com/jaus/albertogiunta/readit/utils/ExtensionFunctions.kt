@@ -51,7 +51,7 @@ inline fun MenuItem.consumeOptionButton(f: () -> Unit): Boolean {
     return true
 }
 
-fun Menu.hideToggleSeenButton() =
+fun Menu.hideShowSeenMenuButton() =
     this.findItem(R.id.action_toggle_seen).setVisible(false)
 
 
@@ -157,7 +157,7 @@ fun ResponseBody.toJsoupDocument(): Document = Jsoup.parse(this.byteStream(), "U
 /**
  * MODEL
  */
-fun Link.addTo(dao: LinkDao, linkList: MutableList<Link>) {
+fun Link.addTo(dao: LinkDao, linkList: MutableList<Link> = mutableListOf()) {
     doAsync {
         dao.insert(this@addTo)
         val linkId = dao.getMaxId()

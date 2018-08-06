@@ -1,4 +1,4 @@
-package com.jaus.albertogiunta.readit.viewPresenter.links
+package com.jaus.albertogiunta.readit.viewPresenter.linksList
 
 import com.jaus.albertogiunta.readit.MyApplication
 import com.jaus.albertogiunta.readit.db.LinkDao
@@ -18,25 +18,25 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 
-class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract.Presenter {
+class LinksListPresenter : BasePresenterImpl<LinksListContract.View>(), LinksListContract.Presenter {
 
+    private var linkList = mutableListOf<Link>()
     override var linkListForView = mutableListOf<Link>() // treated as FIFO queue (newer links go to the bottom)
     private val dao: LinkDao = MyApplication.database.linkDao()
     private var editingIndex: Int = 0
 
     init {
-        doAsync {
-            linkListForView.addAll(dao.getAllLinksFromMostRecent())
-        }
+        refillLinksList()
     }
 
-    override fun onActivityResumed() {
-        refreshListToUpdateView()
-    }
+    private fun refillLinksList() =
+        linkList.clear().also { doAsync { linkList.addAll(dao.getAllLinksFromMostRecent()) }.get() }
+
+    override fun onActivityResumed() = refreshListToUpdateView()
 
     override fun onLinkAdditionRequest(isNew: Boolean, url: String) {
         if (url == Link.EMPTY_LINK) {
-            view?.showError("Your link seems to be empty or not a valid link :/")
+            view?.showErrorSnackbar(LINK_ADDITION_ERROR)
             return
         }
 
@@ -61,11 +61,11 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
                     this.url = siteInfo.url
                 }.update(dao, linkListForView, editingIndex)
                 refreshListToUpdateView()
-                view?.showMessage("Link queued successfully")
+                view?.showMessageSnackbar(LINK_ADDITION_OK)
                 sendFirebaseEvent(LINK_INTERACTION, LINK_ADD)
             }, { error ->
                 println(error)
-                view?.showError("Your link seems to be not a valid link :/")
+                view?.showErrorSnackbar(LINK_ADDITION_ERROR)
             })
     }
 
@@ -89,7 +89,7 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
         sendFirebaseEvent(LINK_INTERACTION, LINK_COPY)
         view?.run {
             this.getContext().saveURLToClipboard(linkListForView[position].url)
-            this.showMessage("Link copied to your Clipboard!")
+            this.showMessageSnackbar("Link copied to your Clipboard!")
         }
     }
 
@@ -97,9 +97,9 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
         sendFirebaseEvent(LINK_INTERACTION, LINK_REMOVE)
         doAsync {
             linkListForView[position].remove(dao, linkListForView, position)
-            refreshListToUpdateView()
             uiThread {
-                view?.showMessage("Link removed successfully")
+                refreshListToUpdateView()
+                view?.showMessageSnackbar("Link removed successfully")
             }
         }
     }
@@ -117,16 +117,10 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
 
     override fun shouldShowLinkList(): Boolean = linkListForView.isNotEmpty()
 
-    override fun shouldShowLinkReadToggleButton(): Boolean {
-        var unseenCount = 0
-        doAsync {
-            unseenCount = dao.getAllSeenLinksCount()
-        }.get()
-        return unseenCount != 0
-    }
+    override fun shouldShowShowSeenMenuButton(): Boolean = linkList.any { it.seen }
 
     override fun shouldShowUnlockButton(): Boolean {
-        return !isRewardActive() && linkListForView.getExpiredCount() > 0
+        return !isRewardActive() && linkList.getExpiredCount() > 0
     }
 
     override fun onSeenToggleRequest() {
@@ -137,19 +131,48 @@ class LinkPresenterImpl : BasePresenterImpl<LinksContract.View>(), LinksContract
 
     override fun rewardUser() {
         Prefs.expiredLinksLastActivationTimestamp = DateTime.now().toString(Utils.dateTimeFormatISO8601)
+        Settings.showSeen = true
         refreshListToUpdateView()
     }
 
-    private fun fetchLinksForActivity() {
-        val list = dao.getAllLinksFromMostRecent().filterAndSortForLinksActivity() // sort & filter
-        linkListForView.clear()
-        linkListForView.addAll(list)
+    private fun refreshListToUpdateView() {
+        fetchLinksForActivity()
+
+        view?.updateNotification()
+        toggleScreenContent()
+        toggleUnlockButton()
+//        toggleVisibilityShowSeenMenuButton()
+
     }
 
-    private fun refreshListToUpdateView() {
-        doAsync { fetchLinksForActivity() }
-            .get()
-        view?.updateHomeContent()
+    private fun toggleUnlockButton() {
+        if (shouldShowUnlockButton()) {
+            with(linkList.getUnreadExpiredCount()) {
+                val buttonText = when {
+                    this > 0 -> "You've $this unread & expired link${if (this > 1) "s" else ""}!\nLet's catch up?"
+                    else -> "Unlock now all links older\nthan 24h"
+                }
+            view?.showUnlockButton(buttonText)
+            }
+        } else {
+            view?.hideUnlockButton()
+        }
+    }
+
+    private fun toggleScreenContent() {
+        if (shouldShowLinkList()) view?.showContent() else view?.showLandingScreen()
+    }
+
+    private fun toggleVisibilityShowSeenMenuButton() {
+        if (shouldShowShowSeenMenuButton()) view?.showShowSeenMenuButton() else view?.hideShowSeenMenuButton()
+    }
+
+    private fun fetchLinksForActivity() {
+        refillLinksList()
+            .also {
+                linkListForView.clear()
+                linkListForView.addAll(linkList.filterAndSortForLinksActivity())
+            }
     }
 
     private fun sendFirebaseEvent(contentType: FirebaseContentType, action: FirebaseAction) {

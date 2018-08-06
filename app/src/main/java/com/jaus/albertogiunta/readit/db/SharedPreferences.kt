@@ -3,7 +3,7 @@ package com.jaus.albertogiunta.readit.db
 import com.chibatching.kotpref.KotprefModel
 import com.chibatching.kotpref.enumpref.enumValuePref
 import com.jaus.albertogiunta.readit.utils.Utils
-import com.jaus.albertogiunta.readit.viewPresenter.links.CardLayout
+import com.jaus.albertogiunta.readit.viewPresenter.linksList.CardLayout
 import org.joda.time.DateTime
 
 object Settings : KotprefModel() {
