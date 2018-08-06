@@ -16,24 +16,25 @@
             android:theme="@style/MyCustomTheme">
 
         <activity
-                android:name=".viewPresenter.links.LinksActivity"
+                android:name=".viewPresenter.linksList.LinksListCompatActivity"
                 android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+
+        <activity
+                android:name=".viewPresenter.backgroundAddition.BackgroundAdditionActivity"
+                android:theme="@android:style/Theme.NoDisplay"
+                android:noHistory="true"
+                android:label="Add to ReadIT"
+                >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <action android:name="android.intent.action.SEND"/>
                 <data android:mimeType="text/plain"/>
             </intent-filter>
-        </activity>
-
-        <activity
-                android:name=".viewPresenter.BrowserInterceptActivity"
-                android:theme="@android:style/Theme.NoDisplay"
-                android:noHistory="true"
-                >
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -49,28 +50,11 @@
                         android:scheme="https"
                         android:host="*"
                         />
+
+                <!--<data android:mimeType="text/html"/>-->
+                <!--<data android:mimeType="text/plain"/>-->
+                <!--<data android:mimeType="application/xhtml+xml"/>-->
             </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-
-                <data
-                        android:scheme="http"
-                        android:host="*"
-                        />
-                <data
-                        android:scheme="https"
-                        android:host="*"
-                        />
-                <data android:mimeType="text/html"/>
-                <data android:mimeType="text/plain"/>
-                <data android:mimeType="application/xhtml+xml"/>
-
-            </intent-filter>
-
         </activity>
 
         <service
