@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".viewPresenter.links.LinksActivity"
+        tools:context=".viewPresenter.linksList.LinksListCompatActivity"
         android:background="@color/appBG"
         >
 
@@ -21,8 +21,8 @@
             />
 
     <include
-            android:id="@+id/emptyLayout"
-            layout="@layout/section_empty_link_list"
+            android:id="@+id/landingScreenLayout"
+            layout="@layout/section_empty_link_list_2"
             tools:visibility="gone"
             />
 
