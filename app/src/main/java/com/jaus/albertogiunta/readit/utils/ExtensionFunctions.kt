@@ -12,7 +12,6 @@ import com.jaus.albertogiunta.readit.db.LinkDao
 import com.jaus.albertogiunta.readit.db.Prefs
 import com.jaus.albertogiunta.readit.db.Settings
 import com.jaus.albertogiunta.readit.model.Link
-import com.jaus.albertogiunta.readit.model.Link.Companion.REWARD_TIME
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_link_1.view.*
 import okhttp3.ResponseBody
@@ -207,7 +206,7 @@ fun List<Link>.getExpiredCount(): Int =
 
 
 fun isRewardActive(): Boolean =
-    DateTime.parse(Prefs.expiredLinksLastActivationTimestamp, DateTimeFormat.forPattern(Utils.dateTimeFormatISO8601)).plusSeconds(REWARD_TIME).isAfterNow
+    DateTime.parse(Prefs.expiredLinksLastActivationTimestamp, DateTimeFormat.forPattern(Utils.dateTimeFormatISO8601)).plusSeconds(Prefs.rewardIntervalInSeconds).isAfterNow
 
 /**
  * DATETIME

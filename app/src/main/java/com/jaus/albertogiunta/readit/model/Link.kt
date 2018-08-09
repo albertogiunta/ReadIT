@@ -17,11 +17,6 @@ data class Link(@PrimaryKey(autoGenerate = true)
     companion object {
         val IS_ALL_LINKS_DEBUG_ACTIVE = if (!BuildConfig.DEBUG) BuildConfig.DEBUG else false
         const val EMPTY_LINK = ""
-        private const val SECOND = 1
-        private const val MINUTE = 60
-        private const val TEN_SEC = SECOND * 10
-        private const val TEN_MIN = MINUTE * 10
-        const val REWARD_TIME = TEN_MIN
     }
 }
 

@@ -6,6 +6,7 @@ import com.chibatching.kotpref.Kotpref
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crash.FirebaseCrash
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.jaus.albertogiunta.readit.db.AppDatabase
 import com.jaus.albertogiunta.readit.db.AppDatabase.Companion.DB_NAME
 import com.jaus.albertogiunta.readit.db.AppDatabase.Companion.IS_DB_DEBUG_ACTIVE
@@ -34,6 +35,7 @@ class MyApplication: Application() {
         // init all the things
         FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(!BuildConfig.DEBUG)
         FirebaseCrash.setCrashCollectionEnabled(!BuildConfig.DEBUG)
+        FirebaseRemoteConfig.getInstance()
         JodaTimeAndroid.init(this)
         Kotpref.init(this)
         NotificationBuilder.init(this)

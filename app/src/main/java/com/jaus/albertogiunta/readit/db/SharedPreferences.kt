@@ -16,4 +16,5 @@ object Prefs : KotprefModel() {
     var tutorialSeen by booleanPref(false)
     var expiredLinksLastActivationTimestamp by stringPref(DateTime.now().minusDays(1).toString(Utils.dateTimeFormatISO8601))
     var lastInstalledVersion by intPref(0)
+    var rewardIntervalInSeconds by intPref(600)
 }

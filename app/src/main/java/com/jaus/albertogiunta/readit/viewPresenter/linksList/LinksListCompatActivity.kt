@@ -3,6 +3,7 @@ package com.jaus.albertogiunta.readit.viewPresenter.linksList
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.text.method.LinkMovementMethod
@@ -15,7 +16,11 @@ import android.widget.TextView
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.jaus.albertogiunta.readit.BuildConfig
 import com.jaus.albertogiunta.readit.R
+import com.jaus.albertogiunta.readit.db.Prefs
 import com.jaus.albertogiunta.readit.db.Settings
 import com.jaus.albertogiunta.readit.model.Link
 import com.jaus.albertogiunta.readit.notifications.NotificationBuilder
@@ -27,6 +32,7 @@ import kotlinx.android.synthetic.main.dialog_manual_input.view.*
 import kotlinx.android.synthetic.main.item_link_1.view.*
 import kotlinx.android.synthetic.main.section_link_options.view.*
 import org.jetbrains.anko.browse
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.share
 
@@ -94,6 +100,10 @@ class LinksListCompatActivity : BaseCompatActivity<LinksListContract.View, Links
         }
 
         onNewIntent(intent)
+
+        doAsync {
+            fetchRemoteConfig()
+        }
     }
 
     override fun onResume() {
@@ -121,6 +131,15 @@ class LinksListCompatActivity : BaseCompatActivity<LinksListContract.View, Links
             when (itemId) {
                 R.id.action_toggle_seen -> consumeOptionButton { presenter.onSeenToggleRequest() }
                 R.id.action_refer -> consumeOptionButton { share("Try ReadIT for Android, and never forget to read a link again: https://play.google.com/store/apps/details?id=$packageName") }
+                R.id.action_feedback -> consumeOptionButton {
+                    with(Intent(Intent.ACTION_SENDTO)) {
+                        type = "message/rfc822"
+                        data = Uri.parse("mailto:")
+                        putExtra(Intent.EXTRA_EMAIL, arrayOf("albertogiuntadev@gmail.com"))
+                        putExtra(Intent.EXTRA_SUBJECT, "ReadIT: Feature Suggestion / Problem Report")
+                        getContext().startActivity(Intent.createChooser(this, "Send email..."))
+                    }
+                }
                 R.id.action_review -> consumeOptionButton { openPlayStore() }
                 R.id.action_about -> consumeOptionButton { displayAboutDialog() }
                 else -> super.onOptionsItemSelected(this)
@@ -251,5 +270,29 @@ class LinksListCompatActivity : BaseCompatActivity<LinksListContract.View, Links
             .create()
         dialog.show()
 
+    }
+
+    private fun fetchRemoteConfig() {
+        with(FirebaseRemoteConfig.getInstance()) {
+            val configSettings = FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                .build()
+            this.setConfigSettings(configSettings)
+            this.setDefaults(R.xml.remote_config_defaults)
+
+            var cacheExpiration: Long = 720 // 1/5 hour in seconds.
+            if (this.info.configSettings.isDeveloperModeEnabled) {
+                cacheExpiration = 0
+            }
+
+            this.fetch(cacheExpiration)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        this.activateFetched()
+                    }
+
+                    Prefs.rewardIntervalInSeconds = this.getLong("expiration_interval_in_seconds").toInt()
+                }
+        }
     }
 }
