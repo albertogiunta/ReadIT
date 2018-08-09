@@ -44,6 +44,12 @@
                     app:showAsAction="ifRoom"/>
 
             <item
+                    android:id="@+id/action_feedback"
+                    android:icon="@drawable/ic_whatshot"
+                    android:title="Bugs? Suggestions? Write to me!"
+                    app:showAsAction="ifRoom"/>
+
+            <item
                     android:id="@+id/action_review"
                     android:icon="@drawable/ic_rate_review"
                     android:title="Review on the Play Store"
