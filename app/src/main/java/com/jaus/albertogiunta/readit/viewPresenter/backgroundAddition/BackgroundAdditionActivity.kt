@@ -68,7 +68,7 @@ class BackgroundAdditionActivity : BaseActivity<BackgroundAdditionContract.View,
                 Link(title = siteInfo.title, url = siteInfo.url).addTo(dao)
                 showMessageToast("Link added to your reading list. Great!")
                 NotificationBuilder.instance.sendBundledNotification()
-//                sendFirebaseEvent(FirebaseContentType.LINK_INTERACTION, FirebaseAction.LINK_ADD)
+                sendFirebaseEvent(FirebaseContentType.LINK_INTERACTION, FirebaseAction.LINK_ADD_BG)
             }, { error ->
                 println(error)
                 showErrorToast("Your link doesn't seem to be valid :/")

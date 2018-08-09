@@ -29,6 +29,7 @@ enum class FirebaseContentType(val description: String) {
 enum class FirebaseAction(val description: String) {
 
     LINK_ADD("link_add"),
+    LINK_ADD_BG("link_add_bg"),
     LINK_REMOVE("link_delete"),
     LINK_UPDATE("link_edit"),
     LINK_BROWSE("link_browse"),
