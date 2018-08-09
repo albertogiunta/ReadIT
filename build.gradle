@@ -2,9 +2,13 @@
 
 buildscript {
     ext.support_version = '27.1.1'
-    ext.gradle_version = '3.0.1'
-    ext.kotlin_version = '1.2.51'
-    ext.gms_version = '3.1.1'
+    ext.gradle_version = '3.1.4'
+    ext.kotlin_version = '1.2.60'
+    ext.gms_version = '4.0.1'
+    ext.firebase_core_version = '16.0.1'
+    ext.firebase_crash_version = '16.0.1'
+    ext.firebase_config_version = '16.0.0'
+    ext.gms_ads_version = '15.0.1'
     ext.firebase_version = '11.8.0'
     ext.kotpref_version = '2.2.0'
     ext.anko_version = '0.10.3'
@@ -30,7 +34,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.3'
+        classpath "com.android.tools.build:gradle:$gradle_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.gms:google-services:$gms_version"
         // NOTE: Do not place your application dependencies here; they belong

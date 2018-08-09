@@ -30,18 +30,16 @@ dependencies {
 
     // firebase
     implementation "com.android.support:support-v4:$support_version"
-    implementation "com.google.firebase:firebase-core:$firebase_version"
-    implementation "com.google.firebase:firebase-crash:$firebase_version"
-    implementation "com.google.firebase:firebase-ads:$firebase_version"
-    implementation "com.google.android.gms:play-services-ads:$firebase_version"
+    implementation "com.google.firebase:firebase-core:$firebase_core_version"
+    implementation "com.google.firebase:firebase-crash:$firebase_crash_version"
+    implementation "com.google.firebase:firebase-config:$firebase_config_version"
+    implementation "com.google.android.gms:play-services-ads:$gms_ads_version"
 
     // utility
     implementation "com.chibatching.kotpref:kotpref:$kotpref_version"
     implementation "com.chibatching.kotpref:enum-support:$kotpref_version"
     implementation "co.trikita:log:$log_version"
 
-//    implementation "com.chibatching.kotpref:gson-support:2.2.0"
-//    implementation "com.google.code.gson:gson:$gson_version"
     implementation "net.danlew:android.joda:$joda_version"
     implementation "org.jetbrains.anko:anko:$anko_version"
     implementation "org.jetbrains.anko:anko-design:$anko_version" // For SnackBars
@@ -58,7 +56,6 @@ dependencies {
 
 //     networking
     implementation("com.squareup.retrofit2:retrofit:$retrofit_version") { exclude module: 'okhttp' }
-//    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
