@@ -22,7 +22,7 @@
 
     <include
             android:id="@+id/landingScreenLayout"
-            layout="@layout/section_empty_link_list_2"
+            layout="@layout/section_empty_link_list"
             tools:visibility="gone"
             />
 
