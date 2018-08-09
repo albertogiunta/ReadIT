@@ -88,7 +88,7 @@ class LinksListCompatActivity : BaseCompatActivity<LinksListContract.View, Links
         }
 
         // DIALOG initialization
-        urlFetchingWaitDialog = indeterminateProgressDialog(message = "Imma fetch all the info for ya", title = "Noice, you got a new link!")
+        urlFetchingWaitDialog = indeterminateProgressDialog(message = getString(R.string.dialog_adding_body), title = getString(R.string.dialog_adding_title))
         with(urlFetchingWaitDialog) {
             urlFetchingWaitDialog.cancel()
         }
@@ -190,7 +190,7 @@ class LinksListCompatActivity : BaseCompatActivity<LinksListContract.View, Links
         try {
             browse(link.url)
         } catch (e: IllegalArgumentException) {
-            showErrorSnackbar("This link seems to be broken :O")
+            showErrorSnackbar(getString(R.string.toast_onfailure_link_addition))
         }
     }
 
@@ -214,22 +214,23 @@ class LinksListCompatActivity : BaseCompatActivity<LinksListContract.View, Links
 
         if (url != Link.EMPTY_LINK) dialogView.etUrl.setText(url, TextView.BufferType.EDITABLE)
 
-        val positiveButtonText = if (isNew) "Add" else "Update"
-        val titleText = if (isNew) "Oh hey you! Got a new link for me?" else "Links like to change"
+        val positiveButtonText = if (isNew) getString(R.string.newlink_dialog_add_link) else getString(R.string.newlink_dialog_update_link)
+        val titleText = if (isNew) getString(R.string.newlink_dialog_title) else getString(R.string.editlink_dialog_title)
 
         val dialog = builder.setTitle(titleText)
             .setView(dialogView)
             .setPositiveButton(positiveButtonText) { _, _ ->
                 presenter.onLinkAdditionRequest(isNew, dialogView.etUrl.text.toString())
+                sendFirebaseEvent(FirebaseContentType.LINK_INTERACTION, FirebaseAction.LINK_ADD_BG)
             }
-            .setNeutralButton("Paste from clipboard") { _, _ ->
+            .setNeutralButton(getString(R.string.newlink_dialog_copyfromclipboard)) { _, _ ->
                 run {
                     val urlFromClipboard: String? = getURLFromClipboard()
                     urlFromClipboard?.let { presenter.onLinkAdditionRequest(isNew, urlFromClipboard) }
-                            ?: this.showErrorSnackbar("No Link found in clipboard")
+                            ?: this.showErrorSnackbar(getString(R.string.newlink_dialog_onfailure_copyfromclipboard))
                 }
             }
-            .setNegativeButton("Cancel") { _, _ -> }
+            .setNegativeButton(getString(R.string.newlink_dialog_cancel)) { _, _ -> }
             .create()
 
         dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
@@ -244,9 +245,9 @@ class LinksListCompatActivity : BaseCompatActivity<LinksListContract.View, Links
         dialogView.tvAbout3.movementMethod = LinkMovementMethod.getInstance()
 
         val dialog = builder
-            .setTitle(R.string.title_about)
+            .setTitle(getString(R.string.title_about))
             .setView(dialogView)
-            .setPositiveButton("GOTCHA") { _, _ -> }
+            .setPositiveButton(getString(R.string.about_dialog_ok)) { _, _ -> }
             .create()
         dialog.show()
 

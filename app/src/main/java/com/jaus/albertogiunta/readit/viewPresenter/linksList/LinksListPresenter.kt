@@ -1,6 +1,7 @@
 package com.jaus.albertogiunta.readit.viewPresenter.linksList
 
 import com.jaus.albertogiunta.readit.MyApplication
+import com.jaus.albertogiunta.readit.R
 import com.jaus.albertogiunta.readit.db.LinkDao
 import com.jaus.albertogiunta.readit.db.Prefs
 import com.jaus.albertogiunta.readit.db.Settings
@@ -36,7 +37,7 @@ class LinksListPresenter : BasePresenterImpl<LinksListContract.View>(), LinksLis
 
     override fun onLinkAdditionRequest(isNew: Boolean, url: String) {
         if (url == Link.EMPTY_LINK) {
-            view?.showErrorSnackbar(LINK_ADDITION_ERROR)
+            view?.run { this.showErrorSnackbar(this.getContext().getString(R.string.toast_onfailure_link_addition)) }
             return
         }
 
@@ -61,11 +62,10 @@ class LinksListPresenter : BasePresenterImpl<LinksListContract.View>(), LinksLis
                     this.url = siteInfo.url
                 }.update(dao, linkListForView, editingIndex)
                 refreshListToUpdateView()
-                view?.showMessageSnackbar(LINK_ADDITION_OK)
-                sendFirebaseEvent(LINK_INTERACTION, LINK_ADD)
+                view?.run { this.showErrorSnackbar(this.getContext().getString(R.string.toast_onsuccess_link_addition)) }
             }, { error ->
                 println(error)
-                view?.showErrorSnackbar(LINK_ADDITION_ERROR)
+                view?.run { this.showErrorSnackbar(this.getContext().getString(R.string.toast_onfailure_link_addition)) }
             })
     }
 
@@ -89,7 +89,7 @@ class LinksListPresenter : BasePresenterImpl<LinksListContract.View>(), LinksLis
         sendFirebaseEvent(LINK_INTERACTION, LINK_COPY)
         view?.run {
             this.getContext().saveURLToClipboard(linkListForView[position].url)
-            this.showMessageSnackbar("Link copied to your Clipboard!")
+            this.showMessageSnackbar(this.getContext().getString(R.string.toast_link_copied_to_clipboard))
         }
     }
 
@@ -99,7 +99,9 @@ class LinksListPresenter : BasePresenterImpl<LinksListContract.View>(), LinksLis
             linkListForView[position].remove(dao, linkListForView, position)
             uiThread {
                 refreshListToUpdateView()
-                view?.showMessageSnackbar("Link removed successfully")
+                view?.run {
+                    this.showMessageSnackbar(this.getContext().getString(R.string.toast_link_removed))
+                }
             }
         }
     }
@@ -150,7 +152,7 @@ class LinksListPresenter : BasePresenterImpl<LinksListContract.View>(), LinksLis
             with(linkList.getUnreadExpiredCount()) {
                 val buttonText = when {
                     this > 0 -> "You've $this unread & expired link${if (this > 1) "s" else ""}!\nLet's catch up?"
-                    else -> "Unlock now all links older\nthan 24h"
+                    else -> "Unlock your expired links"
                 }
             view?.showUnlockButton(buttonText)
             }

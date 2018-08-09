@@ -12,21 +12,8 @@
     <string name="testMobileVideoAds">ca-app-pub-3940256099942544/5224354917</string>
     <string name="testadsLinksList">ca-app-pub-3940256099942544/6300978111</string>
 
-    <string name="title_empty_link_list">No links here, you can relax now.</string>
-    <string name="desc_empty_link_list_1">
-        <b><i>HOW TO USE READIT</i></b>\n\n
-        <b>1.</b> <b>Share a link</b> to ReadIT\n\n
-        <b>2.</b> Read it in the next <b>24 hours</b>\n\n
-        <b>3.</b> <b>???</b>\n\n
-        <b>4.</b> <b>Profit!</b>\n\n
-    </string>
 
-    <string name="desc_empty_link_list_emoji">
-        <b>1)</b> Add 🔗 links by <b>sharing them</b> to ReadIT\n\n
-        <b>2)</b> Check the ⏳ remaining time <b>live in the notification</b>\n\n
-        <b>3)</b> 🤓 <b>Read IT!</b>\n\n
-        <b>It\'s really as simple as that!</b>
-    </string>
+    <string name="title_empty_link_list">No links here, you can relax now.</string>
 
     <string name="title_about">
         Hey you, ciao!\n
@@ -53,4 +40,19 @@
         • <a href="https://github.com/albertogiunta/ReadIT">see the code @ Github</a>
     </string>
 
+
+    <string name="newlink_dialog_add_link">Add</string>
+    <string name="newlink_dialog_update_link">Update</string>
+    <string name="newlink_dialog_title">Oh hey you! Got a new link for me?</string>
+    <string name="editlink_dialog_title">Links like to change</string>
+    <string name="toast_onsuccess_link_addition">Link added to your reading list 🎉</string>
+    <string name="toast_onfailure_link_addition">Your link does not seem to be valid 😕</string>
+    <string name="newlink_dialog_copyfromclipboard">Paste from clipboard</string>
+    <string name="newlink_dialog_onfailure_copyfromclipboard">No Link found in clipboard</string>
+    <string name="newlink_dialog_cancel">Cancel</string>
+    <string name="about_dialog_ok">GOTCHA</string>
+    <string name="dialog_adding_body">Imma fetch all the info for ya</string>
+    <string name="dialog_adding_title">Noice, you got a new link!</string>
+    <string name="toast_link_copied_to_clipboard">Link copied to your Clipboard!</string>
+    <string name="toast_link_removed">Link removed successfully</string>
 </resources>
