@@ -7,11 +7,6 @@
     <string name="normal_channel_description">This channel is for normal priority messages</string>
     <string name="low_channel_name">Low Channel</string>
     <string name="low_channel_description">This channel is for low priority messages</string>
-    <string name="adsLinksList">ca-app-pub-8963908741443055/8718544618</string>
-    <string name="mobileVideoAds">ca-app-pub-8963908741443055/8895445450</string>
-    <string name="testMobileVideoAds">ca-app-pub-3940256099942544/5224354917</string>
-    <string name="testadsLinksList">ca-app-pub-3940256099942544/6300978111</string>
-
 
     <string name="title_empty_link_list">No links here, you can relax now.</string>
 
