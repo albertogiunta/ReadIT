@@ -122,9 +122,6 @@ fun Context.openPlayStore() {
     }
 }
 
-fun Context.getRewardedVideoAdString(): String =
-    this.resources.getString(if (Utils.isAdsDebugActive()) R.string.testMobileVideoAds else R.string.mobileVideoAds)
-
 fun Context.sendFirebaseEvent(contentType: FirebaseContentType, action: FirebaseAction) {
     val bundle = Bundle()
     with(bundle) {
