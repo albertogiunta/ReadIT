@@ -51,7 +51,7 @@ Alberto Giunta
 
 - [albertogiuntadev@gmail.com](mailto:albertogiuntadev@gmail.com)
 
-Distributed under the GPU license. See ``LICENSE`` for more information.
+Distributed under the GPL license. See ``LICENSE`` for more information.
 
 ## Contributing
 
